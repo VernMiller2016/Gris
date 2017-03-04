@@ -171,16 +171,24 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\PaySourcesController.cs" />
+    <Compile Include="Controllers\ProgramsController.cs" />
+    <Compile Include="Controllers\ServersController.cs" />
+    <Compile Include="Controllers\ServicesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703041553371_initial.cs" />
+    <Compile Include="Migrations\201703041553371_initial.Designer.cs">
+      <DependentUpon>201703041553371_initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\PaySource.cs" />
     <Compile Include="Models\PlaceOfService.cs" />
     <Compile Include="Models\Program.cs" />
-    <Compile Include="Models\ProgramPaySource.cs" />
     <Compile Include="Models\Server.cs" />
     <Compile Include="Models\Service.cs" />
     <Compile Include="Models\ServiceDetail.cs" />
@@ -259,6 +267,26 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Programs\Create.cshtml" />
+    <Content Include="Views\Programs\Delete.cshtml" />
+    <Content Include="Views\Programs\Details.cshtml" />
+    <Content Include="Views\Programs\Edit.cshtml" />
+    <Content Include="Views\Programs\Index.cshtml" />
+    <Content Include="Views\PaySources\Create.cshtml" />
+    <Content Include="Views\PaySources\Delete.cshtml" />
+    <Content Include="Views\PaySources\Details.cshtml" />
+    <Content Include="Views\PaySources\Edit.cshtml" />
+    <Content Include="Views\PaySources\Index.cshtml" />
+    <Content Include="Views\Services\Create.cshtml" />
+    <Content Include="Views\Services\Delete.cshtml" />
+    <Content Include="Views\Services\Details.cshtml" />
+    <Content Include="Views\Services\Edit.cshtml" />
+    <Content Include="Views\Services\Index.cshtml" />
+    <Content Include="Views\Servers\Create.cshtml" />
+    <Content Include="Views\Servers\Delete.cshtml" />
+    <Content Include="Views\Servers\Details.cshtml" />
+    <Content Include="Views\Servers\Edit.cshtml" />
+    <Content Include="Views\Servers\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -268,6 +296,11 @@
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201703041553371_initial.resx">
+      <DependentUpon>201703041553371_initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

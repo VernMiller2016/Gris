@@ -37,5 +37,7 @@ namespace GRis.Models
         public System.Data.Entity.DbSet<GRis.Models.PlaceOfService> PlaceOfServices { get; set; }
 
         public System.Data.Entity.DbSet<GRis.Models.Server> Servers { get; set; }
+
+        public System.Data.Entity.DbSet<GRis.Models.Service> Services { get; set; }
     }
 }

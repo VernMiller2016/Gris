@@ -8,11 +8,6 @@ namespace GRis.Models
         [Required]
         public int SubUnitId { get; set; }
 
-        [Required]
-        [Display(Name = "SubUnit Code")]
-        [StringLength(10)]
-        public string SubUnitCode { get; set; }
-
         [Display(Name = "Description")]
         [StringLength(50)]
         public string SubUnitDescription { get; set; }

@@ -1,11 +1,14 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GRis.Models
 {
     public class PlaceOfService
     {
         [Required]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int PlaceOfServiceId { get; set; }
 
         [Required]

@@ -10,12 +10,14 @@ namespace GRis.Models
     public class Program
     {
         [Required]
+        [Display(Name = "Program Id")]
         public int ProgramId { get; set; }
 
         [Required]
         [StringLength(50)]
         public string Description { get; set; }
 
+        [Display(Name = "GP Project")]
         [StringLength(9)]
         public string GpProject { get; set; }
 

@@ -9,11 +9,6 @@ namespace GRis.Models
         [Required]
         public int UnitId { get; set; }
 
-        [Required]
-        [Display(Name = "Unit Code")]
-        [StringLength(10)]
-        public string UnitCode { get; set; }
-
         [Display(Name = "Description")]
         [StringLength(50)]
         public string UnitDescription { get; set; }

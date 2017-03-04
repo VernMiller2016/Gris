@@ -1,17 +1,16 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GRis.Models
 {
     public class Server
     {
         [Required]
-        public int ServerId { get; set; }
-
-        [Required]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Display(Name = "Server Id")]
-        [StringLength(10)]
-        public string ServerNumber { get; set; }
+        public int ServerId { get; set; }
 
         [Required]
         [Display(Name = "First Name")]
