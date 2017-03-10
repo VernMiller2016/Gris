@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using GRis.Models;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using GRis.Models;
 
 namespace GRis.Controllers
 {
@@ -110,7 +106,7 @@ namespace GRis.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Server server = db.Servers.Find(id);
-            db.Servers.Remove(server);
+            if (server != null) db.Servers.Remove(server);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
