@@ -47,6 +47,7 @@ namespace GRis.Controllers
             if (ModelState.IsValid)
             {
                 db.Servers.Add(server);
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
