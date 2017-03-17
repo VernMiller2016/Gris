@@ -183,17 +183,6 @@
       <DependentUpon>201703041553371_initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\PaySource.cs" />
-    <Compile Include="Models\PlaceOfService.cs" />
-    <Compile Include="Models\Program.cs" />
-    <Compile Include="Models\Server.cs" />
-    <Compile Include="Models\Service.cs" />
-    <Compile Include="Models\ServiceDetail.cs" />
-    <Compile Include="Models\SubUnit.cs" />
-    <Compile Include="Models\Unit.cs" />
     <Compile Include="Models\UploadedExcelSheetViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -311,6 +300,10 @@
     <ProjectReference Include="..\GRis.Core\GRis.Core.csproj">
       <Project>{39a54105-99f0-4e52-bb69-c806247981d7}</Project>
       <Name>GRis.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Gris.Domain.Core\Gris.Domain.Core.csproj">
+      <Project>{dd4e5cec-aa0d-48cc-bad1-e6a381c9d11b}</Project>
+      <Name>Gris.Domain.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
