@@ -1,5 +1,10 @@
-﻿using GRis.Models;
+﻿using GRis.Core.Extensions;
+using GRis.Core.Utils;
+using GRis.Models;
+using System;
+using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
@@ -38,7 +43,7 @@ namespace GRis.Controllers
         }
 
         // POST: Servers/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -71,7 +76,7 @@ namespace GRis.Controllers
         }
 
         // POST: Servers/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -110,6 +115,42 @@ namespace GRis.Controllers
             if (server != null) db.Servers.Remove(server);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public ActionResult Upload()
+        {
+            return View(new UploadedExcelSheetViewModel());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Upload(UploadedExcelSheetViewModel viewmodel)
+        {
+            if (ModelState.IsValid) // validate file exist
+            {
+                if (viewmodel.ExcelFile != null && viewmodel.ExcelFile.ContentLength > 0)
+                {
+                    var fileName = Path.GetFileName(viewmodel.ExcelFile.FileName);
+                    var path = Path.Combine(Server.MapPath("~/Uploads/Servers/"), DateTime.Now.GetTimeStamp() + "_" + fileName);
+                    viewmodel.ExcelFile.SaveAs(path); // save a copy of the uploaded file.
+                    // convert the uploaded file into datatable, then add/update db entities.
+                    var dtServers = ImportUtils.ImportXlsxToDataTable(viewmodel.ExcelFile.InputStream, true);
+                    foreach (var row in dtServers.AsEnumerable().ToList())
+                    {
+                        var server = new Server()
+                        {
+                            ServerId = int.Parse(row["Staff"].ToString()),
+                            // some columns does not have ',' separater.
+                            FirstName = row["Sort Name"].ToString().Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)[1],
+                            LastName = row["Sort Name"].ToString().Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)[0],
+                            Active = row["active"].ToString() == "Y" ? true : false
+                        };
+                    }
+                }
+            }
+
+            return View(viewmodel);
         }
 
         protected override void Dispose(bool disposing)

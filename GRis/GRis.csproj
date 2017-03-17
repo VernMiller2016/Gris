@@ -194,8 +194,10 @@
     <Compile Include="Models\ServiceDetail.cs" />
     <Compile Include="Models\SubUnit.cs" />
     <Compile Include="Models\Unit.cs" />
+    <Compile Include="Models\UploadedExcelSheetViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Validations\AllowedFileExtensionAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -287,9 +289,12 @@
     <Content Include="Views\Servers\Details.cshtml" />
     <Content Include="Views\Servers\Edit.cshtml" />
     <Content Include="Views\Servers\Index.cshtml" />
+    <Content Include="Views\Servers\Upload.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FileUpload.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Uploads\Servers\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -301,6 +306,12 @@
     <EmbeddedResource Include="Migrations\201703041553371_initial.resx">
       <DependentUpon>201703041553371_initial.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GRis.Core\GRis.Core.csproj">
+      <Project>{39a54105-99f0-4e52-bb69-c806247981d7}</Project>
+      <Name>GRis.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
