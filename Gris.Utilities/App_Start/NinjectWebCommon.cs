@@ -10,7 +10,7 @@ namespace Gris.Utilities.App_Start
 
     using Ninject;
     using Ninject.Web.Common;
-    using GRis.Models;
+    
     using Application.Core.Interfaces;
     using Infrastructure.Core;
     using Infrastructure.Core.Repositories;

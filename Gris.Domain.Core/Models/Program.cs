@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace GRis.Models
+namespace Gris.Domain.Core.Models
 {
     /// <summary>
     /// States, Medicaids, all other-contracts, ...

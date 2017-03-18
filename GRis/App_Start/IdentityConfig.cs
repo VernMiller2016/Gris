@@ -11,6 +11,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using GRis.Models;
+using Gris.Domain.Core.Models;
 
 namespace GRis
 {

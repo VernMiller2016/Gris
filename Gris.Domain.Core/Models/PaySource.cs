@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GRis.Models
+namespace Gris.Domain.Core.Models
 {
     public class PaySource
     {

@@ -1,5 +1,6 @@
 namespace Gris.Infrastructure.Core.Migrations
 {
+    using Domain.Core.Models;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
@@ -19,13 +20,14 @@ namespace Gris.Infrastructure.Core.Migrations
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data. E.g.
             //
-            //    context.People.AddOrUpdate(
-            //      p => p.FullName,
-            //      new Person { FullName = "Andrew Peters" },
-            //      new Person { FullName = "Brice Lambson" },
-            //      new Person { FullName = "Rowan Miller" }
-            //    );
-            //
+            context.Categories.AddOrUpdate(
+              c => c.Id,
+              new Category { Id = 1,Name= "Combined-admin" },
+              new Category { Id = 2, Name = "MH-admin" },
+              new Category { Id =3, Name = "MED-admin" },
+              new Category { Id = 4, Name = "CD-Admin" }
+            );
+
         }
     }
 }

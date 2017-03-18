@@ -1,4 +1,5 @@
-﻿using GRis.Models;
+﻿using Gris.Domain.Core.Models;
+using GRis.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;

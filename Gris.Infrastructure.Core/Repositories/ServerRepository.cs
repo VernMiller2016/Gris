@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GRis.Models;
 using Gris.Infrastructure.Core.DAL;
+using Gris.Domain.Core.Models;
 
 namespace Gris.Infrastructure.Core.Repositories
 {
@@ -50,6 +50,7 @@ namespace Gris.Infrastructure.Core.Repositories
             oldServer.FirstName = server.FirstName;
             oldServer.LastName = server.LastName;
             oldServer.ServerId = server.ServerId;
+            oldServer.CategoryId = server.CategoryId;
             _dbContext.Entry(oldServer).State = System.Data.Entity.EntityState.Modified;
             return oldServer;
         }

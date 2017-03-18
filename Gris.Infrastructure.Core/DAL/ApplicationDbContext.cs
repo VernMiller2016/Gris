@@ -1,4 +1,4 @@
-﻿using GRis.Models;
+﻿using Gris.Domain.Core.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
@@ -73,14 +73,16 @@ namespace Gris.Infrastructure.Core.DAL
             return new ApplicationDbContext();
         }
 
-        public System.Data.Entity.DbSet<GRis.Models.Program> Programs { get; set; }
+        public System.Data.Entity.DbSet<Program> Programs { get; set; }
 
-        public System.Data.Entity.DbSet<GRis.Models.PaySource> PaySources { get; set; }
+        public System.Data.Entity.DbSet<PaySource> PaySources { get; set; }
 
-        public System.Data.Entity.DbSet<GRis.Models.PlaceOfService> PlaceOfServices { get; set; }
+        public System.Data.Entity.DbSet<PlaceOfService> PlaceOfServices { get; set; }
 
-        public System.Data.Entity.DbSet<GRis.Models.Server> Servers { get; set; }
+        public System.Data.Entity.DbSet<Server> Servers { get; set; }
 
-        public System.Data.Entity.DbSet<GRis.Models.Service> Services { get; set; }
+        public System.Data.Entity.DbSet<Category> Categories { get; set; }
+
+        public System.Data.Entity.DbSet<Service> Services { get; set; }
     }
 }

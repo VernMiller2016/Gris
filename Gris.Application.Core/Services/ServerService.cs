@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GRis.Models;
 using Gris.Infrastructure.Core.Interfaces;
+using Gris.Domain.Core.Models;
 
 namespace Gris.Application.Core.Services
 {

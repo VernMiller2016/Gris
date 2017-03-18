@@ -1,4 +1,5 @@
-﻿using GRis.Models;
+﻿
+using Gris.Domain.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

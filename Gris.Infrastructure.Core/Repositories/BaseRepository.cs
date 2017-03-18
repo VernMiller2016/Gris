@@ -1,5 +1,4 @@
 ﻿using Gris.Infrastructure.Core.DAL;
-using GRis.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

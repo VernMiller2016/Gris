@@ -1,8 +1,9 @@
-﻿using System.ComponentModel;
+﻿using Gris.Domain.Core.Models;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GRis.Models
+namespace Gris.Domain.Core.Models
 {
     public class Server
     {
@@ -24,6 +25,10 @@ namespace GRis.Models
 
         [DefaultValue(true)]
         public bool Active { get; set; }
+
+        public int? CategoryId { get; set; }
+
+        public Category Category { get; set; }
 
         [Display(Name = "Full Name")]
         public string FullName => LastName + ", " + FirstName;

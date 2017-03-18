@@ -1,4 +1,5 @@
 ﻿using Gris.Application.Core.Interfaces;
+using Gris.Domain.Core.Models;
 using GRis.Core.Extensions;
 using GRis.Core.Utils;
 using GRis.Models;
@@ -141,7 +142,7 @@ namespace GRis.Controllers
                 {
                     var fileName = Path.GetFileName(viewmodel.ExcelFile.FileName);
                     var path = Path.Combine(Server.MapPath("~/Uploads/Servers/"), DateTime.Now.GetTimeStamp() + "_" + fileName);
-                    List<Server> addedServers = new List<Models.Server>();
+                    List<Server> addedServers = new List<Server>();
                     viewmodel.ExcelFile.SaveAs(path); // save a copy of the uploaded file.
                     // convert the uploaded file into datatable, then add/update db entities.
                     var dtServers = ImportUtils.ImportXlsxToDataTable(viewmodel.ExcelFile.InputStream, true);
@@ -153,7 +154,8 @@ namespace GRis.Controllers
                             // some columns does not have ',' separater.
                             FirstName = row["Sort Name"].ToString().Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)[1],
                             LastName = row["Sort Name"].ToString().Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)[0],
-                            Active = row["active"].ToString() == "Y" ? true : false
+                            Active = row["active"].ToString() == "Y" ? true : false,
+                            CategoryId = CategoryConverter.ConvertFromCategoryNameToId(row["Category"].ToString())
                         };
                         //check if server does not exist
                         if(server.ServerId != 0)
@@ -168,7 +170,10 @@ namespace GRis.Controllers
                             }
                         }
                     }
-                    _serverService.AddServers(addedServers);
+                    if (addedServers.Any())
+                    {
+                        _serverService.AddServers(addedServers);
+                    }
                 }
             }
 
