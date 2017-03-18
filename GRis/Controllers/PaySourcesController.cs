@@ -1,5 +1,13 @@
-﻿using GRis.Models;
+﻿using Gris.Application.Core.Interfaces;
+using Gris.Domain.Core.Models;
+using GRis.Core.Extensions;
+using GRis.Core.Utils;
+using GRis.Models;
+using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
@@ -8,12 +16,17 @@ namespace GRis.Controllers
 {
     public class PaySourcesController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private IPaySourceService _paySourceService;
+
+        public PaySourcesController(IPaySourceService paySourceService)
+        {
+            _paySourceService = paySourceService;
+        }
 
         // GET: PaySources
         public ActionResult Index()
         {
-            var paySources = db.PaySources.Include(p => p.Program);
+            var paySources = _paySourceService.GetPaySources();
             return View(paySources.ToList());
         }
 
@@ -24,7 +37,7 @@ namespace GRis.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PaySource paySource = db.PaySources.Find(id);
+            var paySource = _paySourceService.GetPaySourceById(id.Value);
             if (paySource == null)
             {
                 return HttpNotFound();
@@ -33,27 +46,48 @@ namespace GRis.Controllers
         }
 
         // GET: PaySources/Create
+        //public ActionResult Create()
+        //{
+        //    ViewBag.ProgramId = new SelectList(db.Programs, "ProgramId", "Description");
+        //    return View();
+        //}
+
         public ActionResult Create()
         {
-            ViewBag.ProgramId = new SelectList(db.Programs, "ProgramId", "Description");
             return View();
         }
 
         // POST: PaySources/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Create([Bind(Include = "PaySourceId,Description,Active,ProgramId")] PaySource paySource)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.PaySources.Add(paySource);
+        //        db.SaveChanges();
+        //        return RedirectToAction("Index");
+        //    }
+
+        //    ViewBag.ProgramId = new SelectList(db.Programs, "ProgramId", "Description", paySource.ProgramId);
+        //    return View(paySource);
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "PaySourceId,Description,Active,ProgramId")] PaySource paySource)
         {
             if (ModelState.IsValid)
             {
-                db.PaySources.Add(paySource);
-                db.SaveChanges();
+                _paySourceService.AddPaySource(paySource);
+
+                //db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ProgramId = new SelectList(db.Programs, "ProgramId", "Description", paySource.ProgramId);
+            //ViewBag.ProgramId = new SelectList(db.Programs, "ProgramId", "Description", paySource.ProgramId);
             return View(paySource);
         }
 
@@ -64,12 +98,12 @@ namespace GRis.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PaySource paySource = db.PaySources.Find(id);
+            PaySource paySource = _paySourceService.GetPaySourceById(id.Value);
             if (paySource == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ProgramId = new SelectList(db.Programs, "ProgramId", "Description", paySource.ProgramId);
+            //ViewBag.ProgramId = new SelectList(db.Programs, "ProgramId", "Description", paySource.ProgramId);
             return View(paySource);
         }
 
@@ -82,11 +116,12 @@ namespace GRis.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(paySource).State = EntityState.Modified;
-                db.SaveChanges();
+                //db.Entry(paySource).State = EntityState.Modified;
+                //db.SaveChanges();
+                _paySourceService.UpdatePaySource(paySource);
                 return RedirectToAction("Index");
             }
-            ViewBag.ProgramId = new SelectList(db.Programs, "ProgramId", "Description", paySource.ProgramId);
+            //ViewBag.ProgramId = new SelectList(db.Programs, "ProgramId", "Description", paySource.ProgramId);
             return View(paySource);
         }
 
@@ -97,7 +132,7 @@ namespace GRis.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PaySource paySource = db.PaySources.Find(id);
+            PaySource paySource = _paySourceService.GetPaySourceById(id.Value);
             if (paySource == null)
             {
                 return HttpNotFound();
@@ -110,19 +145,74 @@ namespace GRis.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            PaySource paySource = db.PaySources.Find(id);
-            if (paySource != null) db.PaySources.Remove(paySource);
-            db.SaveChanges();
+            PaySource paySource = _paySourceService.GetPaySourceById(id);
+            if (paySource != null) _paySourceService.Remove(paySource);
+            //db.SaveChanges();
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
+        //
+        [HttpGet]
+        public ActionResult Upload()
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
+            return View(new UploadedExcelSheetViewModel());
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Upload(UploadedExcelSheetViewModel viewmodel)
+        {
+            if (ModelState.IsValid) // validate file exist
+            {
+                if (viewmodel.ExcelFile != null && viewmodel.ExcelFile.ContentLength > 0)
+                {
+                    var fileName = Path.GetFileName(viewmodel.ExcelFile.FileName);
+                    var path = Path.Combine(Server.MapPath("~/Uploads/PaySources/"), DateTime.Now.GetTimeStamp() + "_" + fileName);
+                    List<PaySource> addedPaySources = new List<PaySource>();
+                    viewmodel.ExcelFile.SaveAs(path); // save a copy of the uploaded file.
+                    // convert the uploaded file into datatable, then add/update db entities.
+                    var dtServers = ImportUtils.ImportXlsxToDataTable(viewmodel.ExcelFile.InputStream, true);
+                    foreach (var row in dtServers.AsEnumerable().ToList())
+                    {
+                        var paySource = new PaySource()
+                        {
+                            PaySourceId = int.Parse(row["PaySourceId"].ToString()),
+                            // some columns does not have ',' separater.
+                            Description = row["Description"].ToString(),
+                            //ProgramId = row["Sort Name"].ToString().Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)[0],
+                            Active = row["active"].ToString() == "Y" ? true : false,
+                        };
+                        //check if server does not exist
+                        if (!string.IsNullOrWhiteSpace(row["PaySourceId"].ToString()))
+                        {
+                            if (_paySourceService.GetPaySourceById(paySource.PaySourceId) == null)
+                            {
+                                addedPaySources.Add(paySource);
+                            }
+                            else
+                            {
+                                _paySourceService.UpdatePaySource(paySource);
+                            }
+                        }
+                    }
+                    if (addedPaySources.Any())
+                    {
+                        _paySourceService.AddPaySources(addedPaySources);
+                    }
+                }
+            }
+
+            return View(viewmodel);
+        }
+        //
+
+        //protected override void Dispose(bool disposing)
+        //{
+        //    if (disposing)
+        //    {
+        //        db.Dispose();
+        //    }
+        //    base.Dispose(disposing);
+        //}
     }
 }

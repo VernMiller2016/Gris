@@ -75,6 +75,9 @@ namespace Gris.Utilities.App_Start
 
             kernel.Bind<IServerRepository>().To<ServerRepository>();
             kernel.Bind<IServerService>().To<ServerService>();
+
+            kernel.Bind<IPaySourceRepository>().To<PaySourceRepository>();
+            kernel.Bind<IPaySourceService>().To<PaySourceService>();
         }        
     }
 

@@ -175,6 +175,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PaySourcesController.cs" />
     <Compile Include="Controllers\ServersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -281,9 +282,11 @@
     <Content Include="Views\Servers\Index.cshtml" />
     <Content Include="Views\Servers\Upload.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\FileUpload.cshtml" />
+    <Content Include="Views\PaySources\Upload.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Uploads\PaySources\" />
     <Folder Include="Uploads\Servers\" />
   </ItemGroup>
   <ItemGroup>
