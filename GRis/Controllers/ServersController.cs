@@ -1,7 +1,9 @@
-﻿using GRis.Core.Extensions;
+﻿using Gris.Application.Core.Interfaces;
+using GRis.Core.Extensions;
 using GRis.Core.Utils;
 using GRis.Models;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.IO;
@@ -13,12 +15,17 @@ namespace GRis.Controllers
 {
     public class ServersController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private IServerService _serverService;
+        public ServersController(IServerService serverService)
+        {
+            _serverService = serverService;
+        }
 
         // GET: Servers
         public ActionResult Index()
         {
-            return View(db.Servers.ToList());
+            var servers = _serverService.GetServers();
+            return View(servers.ToList());
         }
 
         // GET: Servers/Details/5
@@ -28,7 +35,7 @@ namespace GRis.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Server server = db.Servers.Find(id);
+            Server server = _serverService.GetServerById(id.Value);
             if (server == null)
             {
                 return HttpNotFound();
@@ -51,9 +58,9 @@ namespace GRis.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Servers.Add(server);
+                _serverService.AddServer(server);
 
-                db.SaveChanges();
+                //db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
@@ -67,7 +74,8 @@ namespace GRis.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Server server = db.Servers.Find(id);
+
+            Server server = _serverService.GetServerById(id.Value);
             if (server == null)
             {
                 return HttpNotFound();
@@ -84,8 +92,8 @@ namespace GRis.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(server).State = EntityState.Modified;
-                db.SaveChanges();
+               _serverService.UpdateServer(server);
+                //db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(server);
@@ -98,7 +106,7 @@ namespace GRis.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Server server = db.Servers.Find(id);
+            Server server = _serverService.GetServerById(id.Value);
             if (server == null)
             {
                 return HttpNotFound();
@@ -111,9 +119,9 @@ namespace GRis.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Server server = db.Servers.Find(id);
-            if (server != null) db.Servers.Remove(server);
-            db.SaveChanges();
+            Server server = _serverService.GetServerById(id);
+            if (server != null) _serverService.Remove(server);
+            //db.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -133,6 +141,7 @@ namespace GRis.Controllers
                 {
                     var fileName = Path.GetFileName(viewmodel.ExcelFile.FileName);
                     var path = Path.Combine(Server.MapPath("~/Uploads/Servers/"), DateTime.Now.GetTimeStamp() + "_" + fileName);
+                    List<Server> addedServers = new List<Models.Server>();
                     viewmodel.ExcelFile.SaveAs(path); // save a copy of the uploaded file.
                     // convert the uploaded file into datatable, then add/update db entities.
                     var dtServers = ImportUtils.ImportXlsxToDataTable(viewmodel.ExcelFile.InputStream, true);
@@ -146,20 +155,33 @@ namespace GRis.Controllers
                             LastName = row["Sort Name"].ToString().Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)[0],
                             Active = row["active"].ToString() == "Y" ? true : false
                         };
+                        //check if server does not exist
+                        if(server.ServerId != 0)
+                        {
+                            if (_serverService.GetServerById(server.ServerId) == null)
+                            {
+                                addedServers.Add(server);
+                            }
+                            else
+                            {
+                                _serverService.UpdateServer(server);
+                            }
+                        }
                     }
+                    _serverService.AddServers(addedServers);
                 }
             }
 
             return View(viewmodel);
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+        //protected override void Dispose(bool disposing)
+        //{
+        //    if (disposing)
+        //    {
+        //        db.Dispose();
+        //    }
+        //    base.Dispose(disposing);
+        //}
     }
 }

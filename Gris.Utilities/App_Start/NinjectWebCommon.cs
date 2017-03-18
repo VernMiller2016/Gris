@@ -16,6 +16,9 @@ namespace Gris.Utilities.App_Start
     using Infrastructure.Core.Repositories;
     using Infrastructure.Core.Interfaces;
     using Application.Core.Services;
+    using System.Collections.Generic;
+    using System.Web.Http.Dependencies;
+    using Infrastructure.Core.DAL;
 
     public static class NinjectWebCommon 
     {
@@ -74,4 +77,6 @@ namespace Gris.Utilities.App_Start
             kernel.Bind<IServerService>().To<ServerService>();
         }        
     }
+
+  
 }

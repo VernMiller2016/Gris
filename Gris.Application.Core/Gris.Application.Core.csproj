@@ -45,9 +45,17 @@
     <Compile Include="Services\ServerService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GRis.Core\GRis.Core.csproj">
+      <Project>{39a54105-99f0-4e52-bb69-c806247981d7}</Project>
+      <Name>GRis.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Gris.Domain.Core\Gris.Domain.Core.csproj">
       <Project>{dd4e5cec-aa0d-48cc-bad1-e6a381c9d11b}</Project>
       <Name>Gris.Domain.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Gris.Infrastructure.Core\Gris.Infrastructure.Core.csproj">
+      <Project>{850ed0f8-f00e-450f-a859-d0d112c0fd00}</Project>
+      <Name>Gris.Infrastructure.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

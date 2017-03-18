@@ -66,6 +66,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -109,6 +110,10 @@
     <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivatorEx.2.0\lib\net40\WebActivatorEx.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
@@ -170,11 +175,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\PaySourcesController.cs" />
-    <Compile Include="Controllers\ProgramsController.cs" />
     <Compile Include="Controllers\ServersController.cs" />
-    <Compile Include="Controllers\ServicesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -297,6 +298,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Gris.Application.Core\Gris.Application.Core.csproj">
+      <Project>{b2e0c4a9-f9aa-426d-a869-caee2c92bd70}</Project>
+      <Name>Gris.Application.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GRis.Core\GRis.Core.csproj">
       <Project>{39a54105-99f0-4e52-bb69-c806247981d7}</Project>
       <Name>GRis.Core</Name>
@@ -304,6 +309,10 @@
     <ProjectReference Include="..\Gris.Domain.Core\Gris.Domain.Core.csproj">
       <Project>{dd4e5cec-aa0d-48cc-bad1-e6a381c9d11b}</Project>
       <Name>Gris.Domain.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Gris.Utilities\Gris.Utilities.csproj">
+      <Project>{61ca03a8-9f59-4567-a913-3ea46342f202}</Project>
+      <Name>Gris.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

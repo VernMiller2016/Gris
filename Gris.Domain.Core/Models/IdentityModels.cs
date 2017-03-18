@@ -3,6 +3,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System;
+using System.Data.Entity.ModelConfiguration;
 
 namespace GRis.Models
 {
@@ -18,26 +20,4 @@ namespace GRis.Models
         }
     }
 
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
-    {
-        public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
-        {
-        }
-
-        public static ApplicationDbContext Create()
-        {
-            return new ApplicationDbContext();
-        }
-
-        public System.Data.Entity.DbSet<GRis.Models.Program> Programs { get; set; }
-
-        public System.Data.Entity.DbSet<GRis.Models.PaySource> PaySources { get; set; }
-
-        public System.Data.Entity.DbSet<GRis.Models.PlaceOfService> PlaceOfServices { get; set; }
-
-        public System.Data.Entity.DbSet<GRis.Models.Server> Servers { get; set; }
-
-        public System.Data.Entity.DbSet<GRis.Models.Service> Services { get; set; }
-    }
 }
