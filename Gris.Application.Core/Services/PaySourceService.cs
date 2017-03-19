@@ -1,11 +1,7 @@
 ﻿using Gris.Application.Core.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Gris.Domain.Core.Models;
 using Gris.Infrastructure.Core.Interfaces;
+using System.Collections.Generic;
 
 namespace Gris.Application.Core.Services
 {
@@ -19,38 +15,45 @@ namespace Gris.Application.Core.Services
             _unitOfWork = unitOfWork;
             _paySourceRepoitory = paySourceRepository;
         }
-        public PaySource AddPaySource(PaySource paySource)
+
+        public void AddPaySource(PaySource paySource)
         {
-            return _paySourceRepoitory.AddPaySource(paySource);
+            _paySourceRepoitory.Add(paySource);
+            _unitOfWork.Commit();
         }
 
         public IEnumerable<PaySource> AddPaySources(IEnumerable<PaySource> paySources)
         {
-            var addedServers = _paySourceRepoitory.AddPaySources(paySources);
+            var addedPaysources = _paySourceRepoitory.AddPaySources(paySources);
             _unitOfWork.Commit();
-            return addedServers;
+            return addedPaysources;
         }
 
-        public PaySource GetPaySourceById(int id)
+        public PaySource GetById(int id)
         {
-            return _paySourceRepoitory.GetServerById(id);
+            return _paySourceRepoitory.GetById(id);
+        }
+
+        public PaySource GetByPaySourceId(int paysourceId)
+        {
+            return _paySourceRepoitory.OneOrDefault(t => t.PaySourceId == paysourceId);
         }
 
         public IEnumerable<PaySource> GetPaySources()
         {
-            return _paySourceRepoitory.GetServers();
+            return _paySourceRepoitory.GetAll();
         }
 
         public void Remove(PaySource paySource)
         {
-            _paySourceRepoitory.Remove(paySource);
+            _paySourceRepoitory.Delete(paySource);
+            _unitOfWork.Commit();
         }
 
-        public PaySource UpdatePaySource(PaySource server)
+        public void UpdatePaySource(PaySource paySource)
         {
-            var updatedPaySource = _paySourceRepoitory.UpdateServer(server);
+            _paySourceRepoitory.Update(paySource);
             _unitOfWork.Commit();
-            return updatedPaySource;
         }
     }
 }

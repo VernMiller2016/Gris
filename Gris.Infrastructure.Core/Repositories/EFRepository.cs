@@ -1,0 +1,212 @@
+﻿using Gris.Infrastructure.Core.DAL;
+using Gris.Infrastructure.Core.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
+
+namespace Gris.Infrastructure.Core.Repositories
+{
+    public class EFRepository<T> : IRepository<T>, IDisposable where T : class
+    {
+        public EFRepository(ApplicationDbContext dbContext)
+        {
+            if (dbContext == null)
+                throw new ArgumentNullException("dbContext");
+            _dbContext = dbContext;
+            _dbSet = _dbContext.Set<T>();
+        }
+
+        #region Properties
+
+        protected ApplicationDbContext _dbContext;
+
+        protected DbSet<T> _dbSet;
+
+        #endregion Properties
+
+        #region IRepository Methods
+
+        public virtual int Count
+        {
+            get { return _dbSet.Count(); }
+        }
+
+        public virtual IEnumerable<T> GetAll()
+        {
+            return _dbSet.AsEnumerable();
+        }
+
+        public virtual T GetById(object id)
+        {
+            return _dbSet.Find(id);
+        }
+
+        public virtual T OneOrDefault(Expression<Func<T, bool>> filter, params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _dbSet;
+            if (includes.Any())
+            {
+                foreach (var includeProperty in includes)
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+            return query.FirstOrDefault(filter);
+        }
+
+        public virtual IEnumerable<T> Get(Expression<Func<T, bool>> filter = null, Func<IEnumerable<T>, IOrderedEnumerable<T>> orderBy = null, params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _dbSet;
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            if (includes.Any())
+            {
+                foreach (var includeProperty in includes)
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+
+            if (orderBy != null)
+            {
+                return orderBy(query);
+            }
+
+            return query.AsEnumerable();
+        }
+
+        public virtual IEnumerable<T> FilterWithPaging(Expression<Func<T, bool>> filter, out int total, int index = 0, int size = 50)
+        {
+            int skipCount = index * size;
+            var query = this.Get(filter);
+            query = skipCount == 0 ? query.Take(size) : query.Skip(skipCount).Take(size);
+            total = query.Count();
+            return query;
+        }
+
+        public virtual bool Contains(Expression<Func<T, bool>> predicate)
+        {
+            return _dbSet.Count(predicate) > 0;
+        }
+
+        public virtual void Add(T entity)
+        {
+            try
+            {
+                if (entity == null)
+                    throw new ArgumentNullException("entity");
+
+                DbEntityEntry dbEntityEntry = _dbContext.Entry<T>(entity);
+                if (dbEntityEntry.State != EntityState.Detached)
+                {
+                    dbEntityEntry.State = EntityState.Added;
+                }
+                else
+                {
+                    _dbSet.Add(entity);
+                }
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                LogEntityValidationException(dbEx);
+            }
+        }
+
+        // see: http://stackoverflow.com/questions/12585664/an-object-with-the-same-key-already-exists-in-the-objectstatemanager-the-object/12587752#12587752
+        public virtual void Update(T entity)
+        {
+            try
+            {
+                if (entity == null)
+                    throw new ArgumentNullException("entity");
+
+                DbEntityEntry dbEntityEntry = _dbContext.Entry<T>(entity);
+                if (dbEntityEntry.State == EntityState.Detached)
+                {
+                    _dbSet.Attach(entity);
+                }
+                dbEntityEntry.State = EntityState.Modified;
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                LogEntityValidationException(dbEx);
+            }
+        }
+
+        public virtual void Delete(T entity)
+        {
+            try
+            {
+                if (entity == null)
+                    throw new ArgumentNullException("entity");
+
+                DbEntityEntry dbEntityEntry = _dbContext.Entry<T>(entity);
+                if (dbEntityEntry.State != EntityState.Deleted)
+                {
+                    dbEntityEntry.State = EntityState.Deleted;
+                }
+                else
+                {
+                    _dbSet.Attach(entity);
+                    _dbSet.Remove(entity);
+                }
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                LogEntityValidationException(dbEx);
+            }
+        }
+
+        public virtual void Delete(object id)
+        {
+            var entity = GetById(id);
+            if (entity == null)
+                return;// not found; assume already deleted.
+
+            Delete(entity);
+        }
+
+        /// <summary>
+        /// Logs exceptions of type DbEntityValidationException.
+        /// </summary>
+        /// <param name="dbEx">The exception to log.</param>
+        protected virtual void LogEntityValidationException(DbEntityValidationException dbEx)
+        {
+            var msg = new StringBuilder();
+
+            foreach (var validationErrors in dbEx.EntityValidationErrors)
+            {
+                foreach (var validationError in validationErrors.ValidationErrors)
+                {
+                    msg.AppendFormat("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
+                    msg.AppendLine();
+                }
+            }
+
+            // ToDo: Errors should be logged.
+            var fail = new Exception(msg.ToString(), dbEx);
+            throw fail;
+        }
+
+        #endregion IRepository Methods
+
+        #region IDisposable
+
+        public virtual void Dispose()
+        {
+            if (_dbContext != null)
+                _dbContext.Dispose();
+        }
+
+        #endregion IDisposable
+    }
+}

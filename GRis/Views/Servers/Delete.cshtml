@@ -12,6 +12,12 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
+            @Html.DisplayNameFor(model => model.ServerId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ServerId)
+        </dd>
+        <dt>
             @Html.DisplayNameFor(model => model.FirstName)
         </dt>
 
@@ -41,6 +47,7 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
+            @Html.HiddenFor(model => model.Id)
             <input type="submit" value="Delete" class="btn btn-default" /> |
             @Html.ActionLink("Back to List", "Index")
         </div>

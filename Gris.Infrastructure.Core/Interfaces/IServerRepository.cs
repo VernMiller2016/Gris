@@ -1,20 +1,10 @@
-﻿
-using Gris.Domain.Core.Models;
-using System;
+﻿using Gris.Domain.Core.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gris.Infrastructure.Core.Interfaces
 {
-    public interface IServerRepository
+    public interface IServerRepository : IRepository<Server>
     {
-        IEnumerable<Server> GetServers();
-        Server GetServerById(int id);
-        Server AddServer(Server server);
-        Server UpdateServer(Server server);
         IEnumerable<Server> AddServers(IEnumerable<Server> servers);
-        void Remove(Server server);
     }
 }

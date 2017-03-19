@@ -1,20 +1,22 @@
-﻿
-using Gris.Domain.Core.Models;
-using System;
+﻿using Gris.Domain.Core.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gris.Application.Core.Interfaces
 {
     public interface IServerService
     {
         IEnumerable<Server> GetServers();
-        Server GetServerById(int id);
-        Server AddServer(Server server);
-        Server UpdateServer(Server server);
+
+        Server GetById(int id);
+
+        Server GetByServerId(int serverId);
+
+        void AddServer(Server server);
+
+        void UpdateServer(Server server);
+
         IEnumerable<Server> AddServers(IEnumerable<Server> servers);
+
         void Remove(Server server);
     }
 }

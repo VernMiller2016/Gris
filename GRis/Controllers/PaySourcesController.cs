@@ -6,7 +6,6 @@ using GRis.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -37,7 +36,7 @@ namespace GRis.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var paySource = _paySourceService.GetPaySourceById(id.Value);
+            var paySource = _paySourceService.GetById(id.Value);
             if (paySource == null)
             {
                 return HttpNotFound();
@@ -58,7 +57,7 @@ namespace GRis.Controllers
         }
 
         // POST: PaySources/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         //[HttpPost]
         //[ValidateAntiForgeryToken]
@@ -83,7 +82,6 @@ namespace GRis.Controllers
             {
                 _paySourceService.AddPaySource(paySource);
 
-                //db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
@@ -98,7 +96,7 @@ namespace GRis.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PaySource paySource = _paySourceService.GetPaySourceById(id.Value);
+            PaySource paySource = _paySourceService.GetById(id.Value);
             if (paySource == null)
             {
                 return HttpNotFound();
@@ -108,17 +106,25 @@ namespace GRis.Controllers
         }
 
         // POST: PaySources/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "PaySourceId,Description,Active,ProgramId")] PaySource paySource)
+        public ActionResult Edit([Bind(Include = "Id,PaySourceId,Description,Active,ProgramId")] PaySource paySource)
         {
             if (ModelState.IsValid)
             {
-                //db.Entry(paySource).State = EntityState.Modified;
-                //db.SaveChanges();
-                _paySourceService.UpdatePaySource(paySource);
+                PaySource existedPaySource = _paySourceService.GetById(paySource.Id);
+                if (existedPaySource == null)
+                {
+                    return HttpNotFound();
+                }
+                // ToDo: user automapper to automatically update model from viewmodel.
+                existedPaySource.Description = paySource.Description;
+                existedPaySource.Active = paySource.Active;
+                existedPaySource.ProgramId = paySource.ProgramId;
+
+                _paySourceService.UpdatePaySource(existedPaySource);
                 return RedirectToAction("Index");
             }
             //ViewBag.ProgramId = new SelectList(db.Programs, "ProgramId", "Description", paySource.ProgramId);
@@ -132,7 +138,7 @@ namespace GRis.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PaySource paySource = _paySourceService.GetPaySourceById(id.Value);
+            PaySource paySource = _paySourceService.GetById(id.Value);
             if (paySource == null)
             {
                 return HttpNotFound();
@@ -145,7 +151,7 @@ namespace GRis.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            PaySource paySource = _paySourceService.GetPaySourceById(id);
+            PaySource paySource = _paySourceService.GetById(id);
             if (paySource != null) _paySourceService.Remove(paySource);
             //db.SaveChanges();
             return RedirectToAction("Index");
@@ -180,18 +186,24 @@ namespace GRis.Controllers
                             // some columns does not have ',' separater.
                             Description = row["Description"].ToString(),
                             //ProgramId = row["Sort Name"].ToString().Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)[0],
-                            Active = row["active"].ToString() == "Y" ? true : false,
+                            //Active = row["active"].ToString() == "Y" ? true : false,
                         };
                         //check if server does not exist
                         if (!string.IsNullOrWhiteSpace(row["PaySourceId"].ToString()))
                         {
-                            if (_paySourceService.GetPaySourceById(paySource.PaySourceId) == null)
+                            var existedPaySource = _paySourceService.GetByPaySourceId(paySource.PaySourceId);
+                            if (existedPaySource == null)
                             {
                                 addedPaySources.Add(paySource);
                             }
                             else
                             {
-                                _paySourceService.UpdatePaySource(paySource);
+                                // ToDo: user automapper to automatically update model from viewmodel.
+                                existedPaySource.Description = paySource.Description;
+                                existedPaySource.Active = paySource.Active;
+                                existedPaySource.ProgramId = paySource.ProgramId;
+
+                                _paySourceService.UpdatePaySource(existedPaySource);
                             }
                         }
                     }
@@ -200,10 +212,12 @@ namespace GRis.Controllers
                         _paySourceService.AddPaySources(addedPaySources);
                     }
                 }
+                return RedirectToAction("Index");
             }
 
             return View(viewmodel);
         }
+
         //
 
         //protected override void Dispose(bool disposing)

@@ -6,7 +6,6 @@ using GRis.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -17,6 +16,7 @@ namespace GRis.Controllers
     public class ServersController : Controller
     {
         private IServerService _serverService;
+
         public ServersController(IServerService serverService)
         {
             _serverService = serverService;
@@ -36,7 +36,7 @@ namespace GRis.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Server server = _serverService.GetServerById(id.Value);
+            Server server = _serverService.GetById(id.Value);
             if (server == null)
             {
                 return HttpNotFound();
@@ -60,8 +60,6 @@ namespace GRis.Controllers
             if (ModelState.IsValid)
             {
                 _serverService.AddServer(server);
-
-                //db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
@@ -76,7 +74,7 @@ namespace GRis.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Server server = _serverService.GetServerById(id.Value);
+            Server server = _serverService.GetById(id.Value);
             if (server == null)
             {
                 return HttpNotFound();
@@ -89,12 +87,22 @@ namespace GRis.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ServerId,FirstName,LastName,Active")] Server server)
+        public ActionResult Edit([Bind(Include = "Id,ServerId,FirstName,LastName,Active")] Server server)
         {
             if (ModelState.IsValid)
             {
-               _serverService.UpdateServer(server);
-                //db.SaveChanges();
+                Server existedServer = _serverService.GetById(server.Id);
+                if (existedServer == null)
+                {
+                    return HttpNotFound();
+                }
+                // ToDo: user automapper to automatically update model from viewmodel.
+                existedServer.FirstName = server.FirstName;
+                existedServer.LastName = server.LastName;
+                existedServer.Active = server.Active;
+                existedServer.CategoryId = server.CategoryId;
+
+                _serverService.UpdateServer(existedServer);
                 return RedirectToAction("Index");
             }
             return View(server);
@@ -107,7 +115,7 @@ namespace GRis.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Server server = _serverService.GetServerById(id.Value);
+            Server server = _serverService.GetById(id.Value);
             if (server == null)
             {
                 return HttpNotFound();
@@ -120,9 +128,8 @@ namespace GRis.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Server server = _serverService.GetServerById(id);
+            Server server = _serverService.GetById(id);
             if (server != null) _serverService.Remove(server);
-            //db.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -158,15 +165,22 @@ namespace GRis.Controllers
                             CategoryId = CategoryConverter.ConvertFromCategoryNameToId(row["Category"].ToString())
                         };
                         //check if server does not exist
-                        if(server.ServerId != 0)
+                        if (server.ServerId != 0)
                         {
-                            if (_serverService.GetServerById(server.ServerId) == null)
+                            var existedServer = _serverService.GetByServerId(server.ServerId);
+                            if (existedServer == null)
                             {
                                 addedServers.Add(server);
                             }
                             else
                             {
-                                _serverService.UpdateServer(server);
+                                // ToDo: user automapper to automatically update model from viewmodel.
+                                existedServer.FirstName = server.FirstName;
+                                existedServer.LastName = server.LastName;
+                                existedServer.Active = server.Active;
+                                existedServer.CategoryId = server.CategoryId;
+
+                                _serverService.UpdateServer(existedServer);
                             }
                         }
                     }
@@ -175,6 +189,7 @@ namespace GRis.Controllers
                         _serverService.AddServers(addedServers);
                     }
                 }
+                return RedirectToAction("Index");
             }
 
             return View(viewmodel);

@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="DAL\ApplicationDbContext.cs" />
     <Compile Include="Interfaces\IPaySourceRepository.cs" />
+    <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Interfaces\IServerRepository.cs" />
     <Compile Include="Migrations\201703180956333_DatabaseCreation.cs" />
     <Compile Include="Migrations\201703180956333_DatabaseCreation.Designer.cs">
@@ -72,9 +73,13 @@
     <Compile Include="Migrations\201703181139522_AddCategoryTable.Designer.cs">
       <DependentUpon>201703181139522_AddCategoryTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703191001215_AddDbGeneratedKey.cs" />
+    <Compile Include="Migrations\201703191001215_AddDbGeneratedKey.Designer.cs">
+      <DependentUpon>201703191001215_AddDbGeneratedKey.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\BaseRepository.cs" />
+    <Compile Include="Repositories\EFRepository.cs" />
     <Compile Include="Repositories\PaySourceRepository.cs" />
     <Compile Include="Repositories\ServerRepository.cs" />
     <Compile Include="UnitOfWork.cs" />
@@ -99,6 +104,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703181139522_AddCategoryTable.resx">
       <DependentUpon>201703181139522_AddCategoryTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703191001215_AddDbGeneratedKey.resx">
+      <DependentUpon>201703191001215_AddDbGeneratedKey.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

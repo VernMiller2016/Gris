@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Gris.Domain.Core.Models
 {
@@ -8,7 +7,10 @@ namespace Gris.Domain.Core.Models
     {
         [Required]
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Display(Name = "Id")]
+        public int Id { get; set; }
+
+        [Required]
         [Display(Name = "Service Id")]
         public int ServiceId { get; set; }
 
@@ -19,6 +21,5 @@ namespace Gris.Domain.Core.Models
 
         [DefaultValue(true)]
         public bool Active { get; set; }
-
     }
 }

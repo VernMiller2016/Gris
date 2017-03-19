@@ -1,11 +1,7 @@
 ﻿using Gris.Application.Core.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Gris.Infrastructure.Core.Interfaces;
 using Gris.Domain.Core.Models;
+using Gris.Infrastructure.Core.Interfaces;
+using System.Collections.Generic;
 
 namespace Gris.Application.Core.Services
 {
@@ -13,14 +9,17 @@ namespace Gris.Application.Core.Services
     {
         private IServerRepository _serverRepoitory;
         private IUnitOfWork _unitOfWork;
-        public ServerService(IServerRepository serverRepository,IUnitOfWork unitOfWork)
+
+        public ServerService(IServerRepository serverRepository, IUnitOfWork unitOfWork)
         {
             _serverRepoitory = serverRepository;
             _unitOfWork = unitOfWork;
         }
-        public Server AddServer(Server server)
+
+        public void AddServer(Server server)
         {
-          return  _serverRepoitory.AddServer(server);
+            _serverRepoitory.Add(server);
+            _unitOfWork.Commit();
         }
 
         public IEnumerable<Server> AddServers(IEnumerable<Server> servers)
@@ -30,26 +29,31 @@ namespace Gris.Application.Core.Services
             return addedServers;
         }
 
-        public Server GetServerById(int id)
+        public Server GetById(int id)
         {
-            return _serverRepoitory.GetServerById(id);
+            return _serverRepoitory.GetById(id);
+        }
+
+        public Server GetByServerId(int serverId)
+        {
+            return _serverRepoitory.OneOrDefault(t => t.ServerId == serverId);
         }
 
         public IEnumerable<Server> GetServers()
         {
-            return _serverRepoitory.GetServers();
+            return _serverRepoitory.GetAll();
         }
 
         public void Remove(Server server)
         {
-            _serverRepoitory.Remove(server);
+            _serverRepoitory.Delete(server);
+            _unitOfWork.Commit();
         }
 
-        public Server UpdateServer(Server server)
+        public void UpdateServer(Server server)
         {
-            var updatedServer = _serverRepoitory.UpdateServer(server);
+            _serverRepoitory.Update(server);
             _unitOfWork.Commit();
-            return updatedServer;
         }
     }
 }
