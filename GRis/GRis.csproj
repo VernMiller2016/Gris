@@ -199,6 +199,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PaySourcesController.cs" />
     <Compile Include="Controllers\ProgramsController.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\ServersController.cs" />
     <Compile Include="Controllers\ServerTimeEntriesController.cs" />
     <Compile Include="Global.asax.cs">
@@ -215,6 +216,7 @@
     <Compile Include="Validations\AllowedFileExtensionAttribute.cs" />
     <Compile Include="ViewModels\Program\ProgramEditViewModel.cs" />
     <Compile Include="ViewModels\Program\ProgramAddViewModel.cs" />
+    <Compile Include="ViewModels\Reports\ProgramMonthlyTimeSheetViewModel.cs" />
     <Compile Include="ViewModels\ServerTimeEntry\ServerTimeEntryAddViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -313,6 +315,7 @@
     <Content Include="Views\PaySources\Upload.cshtml" />
     <Content Include="Views\ServerTimeEntries\Index.cshtml" />
     <Content Include="Views\ServerTimeEntries\Upload.cshtml" />
+    <Content Include="Views\Reports\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

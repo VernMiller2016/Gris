@@ -1,0 +1,50 @@
+﻿@model GRis.ViewModels.Reports.ProgramMonthlyTimeSheetViewModel
+@{
+    ViewBag.Title = "Index";
+}
+@using (Html.BeginForm("Search", "Reports", FormMethod.Post))
+{
+<div class="form-group">
+    @Html.LabelFor(model => model.Months)
+    @Html.DropDownListFor(model => model.SelectedMonthId, Model.Months, "Choose... ")
+    @Html.LabelFor(model => model.Years)
+    @Html.DropDownListFor(model => model.SelectedYearId, Model.Years, "Choose... ")
+    @*@Html.ActionLink("Search", "Search", new { year = Model.SelectedYearId, });*@
+    <div class="row-fluid span12">
+        <button class="btn btn-inverse" type="submit" title="Search"><span class="fa fa-search"> Search</span></button>
+    </div>
+</div>
+}
+@if (Model.ProgramsWithServersAndPaySourcesViewModel!=null && Model.ProgramsWithServersAndPaySourcesViewModel.Any())
+{
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProgramsWithServersAndPaySourcesViewModel[0].ProgramId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProgramsWithServersAndPaySourcesViewModel[0].ProgramName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    @foreach (var item in Model.ProgramsWithServersAndPaySourcesViewModel)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProgramId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProgramName)
+            </td>
+            @*<td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>*@
+        </tr>
+    }
+</table>
+}
+

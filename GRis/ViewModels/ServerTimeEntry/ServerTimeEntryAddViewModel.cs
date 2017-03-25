@@ -12,6 +12,8 @@ namespace GRis.ViewModels.ServerTimeEntry
 
         public int PaySourceVendorId { get; set; }
 
+        public string ServerName { get; set; }
+
         public TimeSpan Duration { get; set; }
 
         [Display(Name = "Begin Date")]        

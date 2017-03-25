@@ -29,5 +29,14 @@ namespace Gris.Application.Core.Services
         {
             return _serverTimeEntryRepoitory.Get(null, (list => list.OrderBy(t => t.Server.LastName)), t => t.Server, t => t.PaySource);
         }
+
+        public IEnumerable<ServerTimeEntry> GetServerTimeEntriesByMonthAndYear(DateTime time)
+        {
+            var result = _serverTimeEntryRepoitory.
+                        Get(t => t.BeginDate.Year == time.Year && t.BeginDate.Month == time.Month, null,
+                        st => st.PaySource, st => st.Server).
+                        Where(st => st.PaySource != null && st.PaySource.ProgramId.HasValue);
+            return result;
+        }
     }
 }
