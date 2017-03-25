@@ -5,7 +5,7 @@ namespace Gris.Application.Core.Interfaces
 {
     public interface IPaySourceService
     {
-        IEnumerable<PaySource> GetPaySources();
+        IEnumerable<PaySource> GetPaySources();        
 
         PaySource GetById(int id);
 

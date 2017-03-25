@@ -10,8 +10,13 @@ namespace Gris.Domain.Core.Models
     public class Program
     {
         [Required]
-        [Display(Name = "Program Id")]
-        public int ProgramId { get; set; }
+        [Key]
+        [Display(Name = "Id")]
+        public int Id { get; set; }
+        
+        [Required]
+        [StringLength(50)]
+        public string Name { get; set; }
 
         [Required]
         [StringLength(50)]
@@ -21,9 +26,9 @@ namespace Gris.Domain.Core.Models
         [StringLength(9)]
         public string GpProject { get; set; }
 
-        public List<PaySource> PaySources { get; set; }
-
         [DefaultValue(true)]
         public bool Active { get; set; }
+
+        public virtual ICollection<PaySource> PaySources { get; set; }
     }
 }

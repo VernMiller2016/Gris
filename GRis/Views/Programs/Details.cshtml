@@ -11,6 +11,14 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
             @Html.DisplayNameFor(model => model.Description)
         </dt>
 
@@ -33,10 +41,22 @@
         <dd>
             @Html.DisplayFor(model => model.Active)
         </dd>
+        <dt>
+            @*@Html.DisplayNameFor(model => model.PaySources)*@
+            Related PaySources
+        </dt>
+
+        <dd>
+            @foreach (var paysource in Model.PaySources)
+            {
+                <p>@paysource.PaySourceId</p>
+            }
+        </dd>
+
 
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ProgramId }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")
 </p>

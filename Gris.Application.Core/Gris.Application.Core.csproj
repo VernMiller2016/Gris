@@ -41,9 +41,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\IPaySourceService.cs" />
+    <Compile Include="Interfaces\IProgramService.cs" />
     <Compile Include="Interfaces\IServerService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\PaySourceService.cs" />
+    <Compile Include="Services\ProgramService.cs" />
     <Compile Include="Services\ServerService.cs" />
   </ItemGroup>
   <ItemGroup>

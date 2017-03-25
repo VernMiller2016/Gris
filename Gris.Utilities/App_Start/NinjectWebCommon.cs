@@ -10,7 +10,7 @@ namespace Gris.Utilities.App_Start
 
     using Ninject;
     using Ninject.Web.Common;
-    
+
     using Application.Core.Interfaces;
     using Infrastructure.Core;
     using Infrastructure.Core.Repositories;
@@ -19,6 +19,7 @@ namespace Gris.Utilities.App_Start
     using System.Collections.Generic;
     using System.Web.Http.Dependencies;
     using Infrastructure.Core.DAL;
+    using Domain.Core.Models;
 
     public static class NinjectWebCommon 
     {
@@ -78,6 +79,9 @@ namespace Gris.Utilities.App_Start
 
             kernel.Bind<IPaySourceRepository>().To<PaySourceRepository>();
             kernel.Bind<IPaySourceService>().To<PaySourceService>();
+
+            kernel.Bind<IProgramRepository>().To<ProgramRepository>();
+            kernel.Bind<IProgramService>().To<ProgramService>();
         }        
     }
 

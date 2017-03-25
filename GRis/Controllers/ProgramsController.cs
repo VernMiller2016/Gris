@@ -1,5 +1,9 @@
-﻿using GRis.Models;
-using System.Data.Entity;
+﻿using Gris.Application.Core.Interfaces;
+using Gris.Domain.Core.Models;
+using GRis.Core.Extensions;
+using GRis.ViewModels.Program;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
@@ -8,12 +12,20 @@ namespace GRis.Controllers
 {
     public class ProgramsController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private IProgramService _programService;
+        private IPaySourceService _paySourceService;
+
+        public ProgramsController(IProgramService programService, IPaySourceService paySourceService)
+        {
+            this._programService = programService;
+            this._paySourceService = paySourceService;
+        }
 
         // GET: Programs
         public ActionResult Index()
         {
-            return View(db.Programs.ToList());
+            var programs = _programService.GetPrograms();
+            return View(programs);
         }
 
         // GET: Programs/Details/5
@@ -23,7 +35,7 @@ namespace GRis.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Program program = db.Programs.Find(id);
+            Program program = _programService.GetById(id.Value);
             if (program == null)
             {
                 return HttpNotFound();
@@ -34,24 +46,57 @@ namespace GRis.Controllers
         // GET: Programs/Create
         public ActionResult Create()
         {
-            return View();
+            var viewmodel = new ProgramAddViewModel();
+            viewmodel.PaySources = _programService.GetAvailablePaySourcesNotRelatedToPrograms().Select(t => new SelectListItem()
+            {
+                Text = t.PaySourceId.ToString(),
+                Value = t.Id.ToString()
+            });
+            return View(viewmodel);
         }
 
         // POST: Programs/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProgramId,Description,GpProject,Active")] Program program)
+        public ActionResult Create(ProgramAddViewModel viewmodel)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Programs.Add(program);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    var selectedPaysourcesList = viewmodel.SelectedPaySources.Select(t => new PaySource() { Id = t }).ToList();
+                    var entity = new Program()
+                    {
+                        Description = viewmodel.Description,
+                        Name = viewmodel.Name,
+                        GpProject = viewmodel.GpProject,
+                        Active = viewmodel.Active,
+                        PaySources = new List<PaySource>()
+                    };
+                    foreach (var id in viewmodel.SelectedPaySources.AsNotNull())
+                    {
+                        var paysource = _paySourceService.GetById(id);
+                        entity.PaySources.Add(paysource);
+                    }
+                    _programService.AddProgram(entity);
+                    return RedirectToAction("Index");
+                }
+                viewmodel.PaySources = _programService.GetAvailablePaySourcesNotRelatedToPrograms().Select(t => new SelectListItem()
+                {
+                    Text = t.PaySourceId.ToString(),
+                    Value = t.Id.ToString()
+                });
+                return View(viewmodel);
             }
-
-            return View(program);
+            catch
+            {
+                viewmodel.PaySources = _programService.GetAvailablePaySourcesNotRelatedToPrograms().Select(t => new SelectListItem()
+                {
+                    Text = t.PaySourceId.ToString(),
+                    Value = t.Id.ToString()
+                });
+                return View(viewmodel);
+            }
         }
 
         // GET: Programs/Edit/5
@@ -61,28 +106,51 @@ namespace GRis.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Program program = db.Programs.Find(id);
+            Program program = _programService.GetById(id.Value);
             if (program == null)
             {
                 return HttpNotFound();
             }
-            return View(program);
+            var viewmodel = new ProgramEditViewModel()
+            {
+                Id = program.Id,
+                Name = program.Name,
+                Description = program.Description,
+                GpProject = program.GpProject,
+                Active = program.Active
+            };
+            return View(viewmodel);
         }
 
         // POST: Programs/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProgramId,Description,GpProject,Active")] Program program)
+        public ActionResult Edit(int id, ProgramEditViewModel viewmodel)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Entry(program).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    Program existedEntity = _programService.GetById(viewmodel.Id);
+                    if (existedEntity == null)
+                    {
+                        return HttpNotFound();
+                    }
+                    // ToDo: user automapper to automatically update model from viewmodel.
+                    existedEntity.Name = viewmodel.Name;
+                    existedEntity.Description = viewmodel.Description;
+                    existedEntity.GpProject = viewmodel.GpProject;
+                    existedEntity.Active = viewmodel.Active;
+
+                    _programService.UpdateProgram(existedEntity);
+                    return RedirectToAction("Index");
+                }
+                return View(viewmodel);
             }
-            return View(program);
+            catch
+            {
+                return View(viewmodel);
+            }
         }
 
         // GET: Programs/Delete/5
@@ -92,32 +160,34 @@ namespace GRis.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Program program = db.Programs.Find(id);
-            if (program == null)
+            Program entity = _programService.GetById(id.Value);
+            if (entity == null)
             {
                 return HttpNotFound();
             }
-            return View(program);
+            return View(entity);
         }
 
         // POST: Programs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult Delete(int id)
         {
-            Program program = db.Programs.Find(id);
-            if (program != null) db.Programs.Remove(program);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
+            try
             {
-                db.Dispose();
+                Program entity = _programService.GetById(id);
+                if (entity == null)
+                {
+                    return HttpNotFound();
+                }
+
+                _programService.Remove(entity);
+                return RedirectToAction("Index");
             }
-            base.Dispose(disposing);
+            catch
+            {
+                return View();
+            }
         }
     }
 }
