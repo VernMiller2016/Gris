@@ -34,9 +34,9 @@ namespace Gris.Application.Core.Services
             return _serverRepoitory.GetById(id);
         }
 
-        public Server GetByServerId(int serverId)
+        public Server GetByVendorId(int vendorId)
         {
-            return _serverRepoitory.OneOrDefault(t => t.ServerId == serverId);
+            return _serverRepoitory.OneOrDefault(t => t.VendorId == vendorId);
         }
 
         public IEnumerable<Server> GetServers()

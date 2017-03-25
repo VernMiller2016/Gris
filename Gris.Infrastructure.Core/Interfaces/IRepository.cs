@@ -68,6 +68,13 @@ namespace Gris.Infrastructure.Core.Interfaces
         void Add(T entity);
 
         /// <summary>
+        /// Add multiple entities once
+        /// </summary>
+        /// <param name="entity">Entities to add</param>
+        /// <returns></returns>
+        void Add(IEnumerable<T> entities);
+
+        /// <summary>
         /// Update entity
         /// </summary>
         /// <param name="entity">Entity to update</param>

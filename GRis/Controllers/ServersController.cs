@@ -157,7 +157,7 @@ namespace GRis.Controllers
                     {
                         var server = new Server()
                         {
-                            ServerId = int.Parse(row["Staff"].ToString()),
+                            VendorId = int.Parse(row["Staff"].ToString()),
                             // some columns does not have ',' separater.
                             FirstName = row["Sort Name"].ToString().Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)[1],
                             LastName = row["Sort Name"].ToString().Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)[0],
@@ -165,9 +165,9 @@ namespace GRis.Controllers
                             CategoryId = CategoryConverter.ConvertFromCategoryNameToId(row["Category"].ToString())
                         };
                         //check if server does not exist
-                        if (server.ServerId != 0)
+                        if (server.VendorId != 0)
                         {
-                            var existedServer = _serverService.GetByServerId(server.ServerId);
+                            var existedServer = _serverService.GetByVendorId(server.VendorId);
                             if (existedServer == null)
                             {
                                 addedServers.Add(server);

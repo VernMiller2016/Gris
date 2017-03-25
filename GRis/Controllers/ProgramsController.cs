@@ -49,7 +49,7 @@ namespace GRis.Controllers
             var viewmodel = new ProgramAddViewModel();
             viewmodel.PaySources = _programService.GetAvailablePaySourcesNotRelatedToPrograms().Select(t => new SelectListItem()
             {
-                Text = t.PaySourceId.ToString(),
+                Text = t.VendorId.ToString(),
                 Value = t.Id.ToString()
             });
             return View(viewmodel);
@@ -83,7 +83,7 @@ namespace GRis.Controllers
                 }
                 viewmodel.PaySources = _programService.GetAvailablePaySourcesNotRelatedToPrograms().Select(t => new SelectListItem()
                 {
-                    Text = t.PaySourceId.ToString(),
+                    Text = t.VendorId.ToString(),
                     Value = t.Id.ToString()
                 });
                 return View(viewmodel);
@@ -92,7 +92,7 @@ namespace GRis.Controllers
             {
                 viewmodel.PaySources = _programService.GetAvailablePaySourcesNotRelatedToPrograms().Select(t => new SelectListItem()
                 {
-                    Text = t.PaySourceId.ToString(),
+                    Text = t.VendorId.ToString(),
                     Value = t.Id.ToString()
                 });
                 return View(viewmodel);

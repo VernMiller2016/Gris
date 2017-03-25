@@ -182,7 +182,7 @@ namespace GRis.Controllers
                     {
                         var paySource = new PaySource()
                         {
-                            PaySourceId = int.Parse(row["PaySourceId"].ToString()),
+                            VendorId = int.Parse(row["PaySourceId"].ToString()),
                             // some columns does not have ',' separater.
                             Description = row["Description"].ToString(),
                             //ProgramId = row["Sort Name"].ToString().Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)[0],
@@ -191,7 +191,7 @@ namespace GRis.Controllers
                         //check if server does not exist
                         if (!string.IsNullOrWhiteSpace(row["PaySourceId"].ToString()))
                         {
-                            var existedPaySource = _paySourceService.GetByPaySourceId(paySource.PaySourceId);
+                            var existedPaySource = _paySourceService.GetByVendorId(paySource.VendorId);
                             if (existedPaySource == null)
                             {
                                 addedPaySources.Add(paySource);

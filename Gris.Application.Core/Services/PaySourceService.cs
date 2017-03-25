@@ -34,9 +34,9 @@ namespace Gris.Application.Core.Services
             return _paySourceRepoitory.GetById(id);
         }
 
-        public PaySource GetByPaySourceId(int paysourceId)
+        public PaySource GetByVendorId(int vendorId)
         {
-            return _paySourceRepoitory.OneOrDefault(t => t.PaySourceId == paysourceId);
+            return _paySourceRepoitory.OneOrDefault(t => t.VendorId== vendorId);
         }
 
         public IEnumerable<PaySource> GetPaySources()

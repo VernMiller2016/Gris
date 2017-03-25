@@ -77,6 +77,7 @@
     <Compile Include="Models\PlaceOfService.cs" />
     <Compile Include="Models\Program.cs" />
     <Compile Include="Models\Server.cs" />
+    <Compile Include="Models\ServerTimeEntry.cs" />
     <Compile Include="Models\Service.cs" />
     <Compile Include="Models\ServiceDetail.cs" />
     <Compile Include="Models\SubUnit.cs" />

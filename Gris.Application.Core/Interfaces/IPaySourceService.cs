@@ -9,7 +9,7 @@ namespace Gris.Application.Core.Interfaces
 
         PaySource GetById(int id);
 
-        PaySource GetByPaySourceId(int paysourceId);
+        PaySource GetByVendorId(int vendorId);
 
         void AddPaySource(PaySource paySource);
 

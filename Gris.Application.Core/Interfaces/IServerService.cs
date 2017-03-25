@@ -9,7 +9,7 @@ namespace Gris.Application.Core.Interfaces
 
         Server GetById(int id);
 
-        Server GetByServerId(int serverId);
+        Server GetByVendorId(int vendorId);
 
         void AddServer(Server server);
 

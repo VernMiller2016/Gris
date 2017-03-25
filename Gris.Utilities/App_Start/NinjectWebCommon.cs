@@ -21,20 +21,20 @@ namespace Gris.Utilities.App_Start
     using Infrastructure.Core.DAL;
     using Domain.Core.Models;
 
-    public static class NinjectWebCommon 
+    public static class NinjectWebCommon
     {
         private static readonly Bootstrapper bootstrapper = new Bootstrapper();
 
         /// <summary>
         /// Starts the application
         /// </summary>
-        public static void Start() 
+        public static void Start()
         {
             DynamicModuleUtility.RegisterModule(typeof(OnePerRequestHttpModule));
             DynamicModuleUtility.RegisterModule(typeof(NinjectHttpModule));
             bootstrapper.Initialize(CreateKernel);
         }
-        
+
         /// <summary>
         /// Stops the application.
         /// </summary>
@@ -42,7 +42,7 @@ namespace Gris.Utilities.App_Start
         {
             bootstrapper.ShutDown();
         }
-        
+
         /// <summary>
         /// Creates the kernel that will manage your application.
         /// </summary>
@@ -82,8 +82,11 @@ namespace Gris.Utilities.App_Start
 
             kernel.Bind<IProgramRepository>().To<ProgramRepository>();
             kernel.Bind<IProgramService>().To<ProgramService>();
-        }        
+
+            kernel.Bind<IRepository<ServerTimeEntry>>().To<EFRepository<ServerTimeEntry>>();
+            kernel.Bind<IServerTimeEntryService>().To<ServerTimeEntryService>();
+        }
     }
 
-  
+
 }

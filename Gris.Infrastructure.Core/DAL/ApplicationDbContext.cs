@@ -84,5 +84,7 @@ namespace Gris.Infrastructure.Core.DAL
         public System.Data.Entity.DbSet<Category> Categories { get; set; }
 
         public System.Data.Entity.DbSet<Service> Services { get; set; }
+
+        public System.Data.Entity.DbSet<ServerTimeEntry> ServerTimeEntries { get; set; }
     }
 }

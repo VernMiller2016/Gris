@@ -82,6 +82,18 @@
     <Compile Include="Migrations\201703250844207_AddIdColumnToProgram.Designer.cs">
       <DependentUpon>201703250844207_AddIdColumnToProgram.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703251302272_AddServerTimeEntryTable.cs" />
+    <Compile Include="Migrations\201703251302272_AddServerTimeEntryTable.Designer.cs">
+      <DependentUpon>201703251302272_AddServerTimeEntryTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703251341094_AddNameToProgram.cs" />
+    <Compile Include="Migrations\201703251341094_AddNameToProgram.Designer.cs">
+      <DependentUpon>201703251341094_AddNameToProgram.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703251423329_UpdateVendorKeyColumnName.cs" />
+    <Compile Include="Migrations\201703251423329_UpdateVendorKeyColumnName.Designer.cs">
+      <DependentUpon>201703251423329_UpdateVendorKeyColumnName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\EFRepository.cs" />
@@ -116,6 +128,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703250844207_AddIdColumnToProgram.resx">
       <DependentUpon>201703250844207_AddIdColumnToProgram.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703251302272_AddServerTimeEntryTable.resx">
+      <DependentUpon>201703251302272_AddServerTimeEntryTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703251341094_AddNameToProgram.resx">
+      <DependentUpon>201703251341094_AddNameToProgram.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703251423329_UpdateVendorKeyColumnName.resx">
+      <DependentUpon>201703251423329_UpdateVendorKeyColumnName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

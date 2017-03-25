@@ -11,7 +11,8 @@ namespace Gris.Domain.Core.Models
         public int Id { get; set; }
 
         [Required]
-        public int PlaceOfServiceId { get; set; }
+        [Display(Name = "Place of Service")]
+        public int VendorId { get; set; }
 
         [Required]
         [StringLength(50)]

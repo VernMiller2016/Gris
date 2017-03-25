@@ -12,7 +12,7 @@ namespace Gris.Domain.Core.Models
 
         [Required]
         [Display(Name = "Server Id")]
-        public int ServerId { get; set; }
+        public int VendorId { get; set; }
 
         [Required]
         [Display(Name = "First Name")]

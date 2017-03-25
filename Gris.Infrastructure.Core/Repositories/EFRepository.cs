@@ -121,6 +121,21 @@ namespace Gris.Infrastructure.Core.Repositories
             }
         }
 
+        public void Add(IEnumerable<T> entities)
+        {
+            try
+            {
+                if (entities == null)
+                    throw new ArgumentNullException("entities");
+
+                _dbSet.AddRange(entities);
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                LogEntityValidationException(dbEx);
+            }
+        }
+
         // see: http://stackoverflow.com/questions/12585664/an-object-with-the-same-key-already-exists-in-the-objectstatemanager-the-object/12587752#12587752
         public virtual void Update(T entity)
         {
