@@ -239,6 +239,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\ExcelTemplates\ServerTimeEntriesMonthlyReportTemplate.xlsx" />
     <None Include="Properties\PublishProfiles\Local.pubxml" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\app.js" />
@@ -330,7 +331,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\ExcelTemplates\" />
     <Folder Include="Uploads\PaySources\" />
     <Folder Include="Uploads\Servers\" />
     <Folder Include="Uploads\ServerTimeEntries\" />

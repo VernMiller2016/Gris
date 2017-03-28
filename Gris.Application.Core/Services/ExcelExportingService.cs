@@ -1,11 +1,13 @@
 ﻿using Gris.Application.Core.Contracts.Reports;
 using Gris.Application.Core.Enums;
 using Gris.Application.Core.Interfaces;
+using GRis.Core.Extensions;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace Gris.Application.Core.Services
 {
@@ -34,9 +36,58 @@ namespace Gris.Application.Core.Services
 
         private void GenerateServerTimeEntriesMonthlyReportExcel(ExcelPackage excelPackage, IEnumerable<ServerTimeEntriesMonthlyReportEntity> reportData, DateTime time)
         {
-            var dataSheet = excelPackage.Workbook.Worksheets[1]; // main sheet that contains all records.
+            // 1- create sheets per program which should be copy of the first sheet.
+            var index = 2; // starting index of each sheet.
+            var groupByProgram = reportData.GroupBy(t => new { t.ProgramId, t.ProgramName });
+            groupByProgram.ForEachWithIndex((programGroup, programIndex) =>
+            {
+                var programSheet = excelPackage.Workbook.Worksheets.Add(
+                    programGroup.Key.ProgramName + " - " + string.Join<int>(",", programGroup.Select(t => t.PaysourceVendorId).Distinct())
+                    , excelPackage.Workbook.Worksheets[1]);
+                index = 2;
+                var groupByServer = programGroup.GroupBy(t => new { t.ServerVendorId, t.ServerName });
 
-            var index = 3;
+                groupByServer.ForEachWithIndex((serverGroup, serverIndex) =>
+                {
+                    var currentServerGroupStartIndex = index;
+                    foreach (var item in serverGroup)
+                    {
+                        programSheet.Cells["A" + index].Value = item.ServerVendorId;
+                        programSheet.Cells["B" + index].Value = item.ServerName;
+                        programSheet.Cells["C" + index].Value = item.BeginDate.ToString(Constants.ShortDateFormat);
+                        //programSheet.Cells["D" + index].Value = DateTime.Today.Add(item.Duration).ToString("hh:mm:ss tt");
+                        programSheet.Cells["D" + index].Style.Numberformat.Format = "[h]:mm:ss";
+                        programSheet.Cells["D" + index].Value = item.Duration;
+                        programSheet.Cells["E" + index].Value = item.PaysourceVendorId;
+                        programSheet.Row(index).OutlineLevel = (2);
+                        programSheet.Row(index).Collapsed = true;
+                        index++;
+                    }
+                    var currentServerGroupEndIndex = index - 1;
+
+                    programSheet.Cells["B" + index].Value = serverGroup.Key.ServerName + " Total";
+                    programSheet.Cells["B" + index].Style.Font.Bold = true;
+                    programSheet.Cells["D" + index].Style.Numberformat.Format = "[h]:mm:ss";
+                    programSheet.Cells["D" + index].Formula = $"=SUBTOTAL(9,D{currentServerGroupStartIndex}:D{currentServerGroupEndIndex})";
+                    programSheet.Row(index).OutlineLevel = (1);
+                    programSheet.Row(index).Collapsed = false;
+                    index++;
+                });
+
+                programSheet.Cells["B" + index].Value = "Grand Total";
+                programSheet.Cells["B" + index].Style.Font.Bold = true;
+                programSheet.Cells["D" + index].Style.Numberformat.Format = "[h]:mm:ss";
+                programSheet.Cells["D" + index].Formula = $"=SUBTOTAL(9,D{2}:D{index - 1})";
+                //programSheet.Row(index).OutlineLevel = (1);
+                //programSheet.Row(index).Collapsed = false;
+
+                programSheet.Cells.AutoFitColumns();
+            });
+
+
+            // 2- create the first sheet that contains all data.
+            var dataSheet = excelPackage.Workbook.Worksheets[1]; // main sheet that contains all records.            
+            index = 2;
             foreach (var item in reportData)
             {
                 dataSheet.Cells["A" + index].Value = item.ServerVendorId;
