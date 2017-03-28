@@ -1,0 +1,6 @@
+﻿@model DateTime?
+
+<div class="input-group date">
+    @Html.TextBoxFor(model => model, htmlAttributes: new { @class = "form-control monthyear-datepicker", @readonly = "readonly" })
+    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+</div>

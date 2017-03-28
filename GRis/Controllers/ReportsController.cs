@@ -1,71 +1,57 @@
-﻿using Gris.Application.Core.Interfaces;
+﻿using Gris.Application.Core;
+using Gris.Application.Core.Interfaces;
 using GRis.ViewModels.Reports;
-using System;
-using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace GRis.Controllers
 {
     public class ReportsController : Controller
     {
-        IProgramService _programService;
-        IServerTimeEntryService _serverTimeEntryService;
-        IPaySourceService _paySourceService;
-        public ReportsController(IProgramService programService, IServerTimeEntryService serverTimeEntryService,IPaySourceService paySourceService)
+        private IProgramService _programService;
+        private IServerTimeEntryService _serverTimeEntryService;
+        private IPaySourceService _paySourceService;
+        private IExportingService _exportingService;
+
+        public ReportsController(IProgramService programService, IServerTimeEntryService serverTimeEntryService, IPaySourceService paySourceService, IExportingService exportingService)
         {
             _programService = programService;
             _serverTimeEntryService = serverTimeEntryService;
             _paySourceService = paySourceService;
+            _exportingService = exportingService;
         }
 
         // GET: Reports
         public ActionResult Index()
         {
-            var model = new ProgramMonthlyTimeSheetViewModel
-            {   
-            };
-            return View(model);
+            var viewmodel = new ReportFiltersViewModel() { };
+            return View(viewmodel);
         }
 
         [HttpPost]
-        public ActionResult Search(ProgramMonthlyTimeSheetViewModel model)
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(ReportFiltersViewModel viewmodel)
         {
-            if (model == null)
+            if (ModelState.IsValid)
             {
-                return View("Index");
+                ViewBag.ReportData = _serverTimeEntryService.GetServerTimeEntriesMonthlyReport(viewmodel.SelectedDate.Value).ToList();
             }
-            else
-            {
-                DateTime selectedMonthAndYear = new DateTime(model.SelectedYearId, model.SelectedMonthId, 1);
-                var serverTimeEntries = _serverTimeEntryService.GetServerTimeEntriesByMonthAndYear(selectedMonthAndYear);
-                if (model.ProgramsWithServersAndPaySourcesViewModel == null)
-                {
-                    model.ProgramsWithServersAndPaySourcesViewModel = new List<ProgramWithServersAndPaySourcesViewModel>();
-                }
-                if(model.ProgramsWithServersAndPaySourcesViewModel == null)
-                {
-                    model.ProgramsWithServersAndPaySourcesViewModel = new List<ProgramWithServersAndPaySourcesViewModel>();
-                }
-                foreach (var serverTime in serverTimeEntries.GroupBy(key => key.PaySource.ProgramId))
-                {
-                    var program = _programService.GetById(serverTime.Key.Value);
-                    var programWithServersAndPaySource = new ProgramWithServersAndPaySourcesViewModel
-                    {
-                        ProgramId = serverTime.Key.Value,
-                        ProgramName = program.Name,
-                    };
-                    programWithServersAndPaySource.ServerTimeEntry = new List<Gris.Domain.Core.Models.ServerTimeEntry>();
-                    foreach (var item in serverTime)
-                    {
-                        programWithServersAndPaySource.ServerTimeEntry.Add(item);
-                    }
-                    model.ProgramsWithServersAndPaySourcesViewModel.Add(programWithServersAndPaySource);
+            return View("Index", viewmodel);
+        }
 
-                }
-                return View("Index",model);
-            }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public FileResult ExportServerTimeEntriesMonthlyReportToExcel(ReportFiltersViewModel viewmodel)
+        {
+            var report = _exportingService.GetServerTimeEntriesMonthlyReportExcel(viewmodel.SelectedDate.Value);
+            MemoryStream stream = _exportingService.GetServerTimeEntriesMonthlyReportExcel(viewmodel.SelectedDate.Value);
+
+            return File(stream, Constants.ExcelFilesMimeType,
+                string.Format(Constants.ServerTimeEntriesMonthlyReportExcelFileName
+                , CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(viewmodel.SelectedDate.Value.Month)
+                , viewmodel.SelectedDate.Value.Year));
         }
     }
 }

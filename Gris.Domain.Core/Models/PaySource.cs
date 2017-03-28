@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Gris.Domain.Core.Models
@@ -23,5 +24,7 @@ namespace Gris.Domain.Core.Models
         public int? ProgramId { get; set; }
 
         public Program Program { get; set; }
+
+        public virtual ICollection<ServerTimeEntry> ServerTimeEntries { get; set; }
     }
 }

@@ -74,6 +74,8 @@ namespace Gris.Utilities.App_Start
             kernel.Bind<ApplicationDbContext>().ToSelf().InRequestScope();
             kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
 
+            kernel.Bind<IExportingService>().To<ExcelExportingService>();
+
             kernel.Bind<IServerRepository>().To<ServerRepository>();
             kernel.Bind<IServerService>().To<ServerService>();
 

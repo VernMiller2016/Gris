@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Gris.Application.Core.Contracts.Reports.ServerTimeEntriesMonthlyReportEntity>
+
+<table class="table table-striped">
+    <tr>
+        <th>
+            Server Id
+        </th>
+        <th>
+            Server Name
+        </th>
+        <th>
+            Begin Date
+        </th>
+        <th>
+            Duration
+        </th>
+        <th>
+            Current Pay Source
+        </th>
+        <th>
+            Program Name
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ServerVendorId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ServerName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BeginDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Duration)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaysourceVendorId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProgramName)
+            </td>
+        </tr>
+    }
+</table>

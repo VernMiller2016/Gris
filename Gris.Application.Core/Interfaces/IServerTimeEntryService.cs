@@ -1,4 +1,5 @@
-﻿using Gris.Domain.Core.Models;
+﻿using Gris.Application.Core.Contracts.Reports;
+using Gris.Domain.Core.Models;
 using System;
 using System.Collections.Generic;
 
@@ -8,8 +9,8 @@ namespace Gris.Application.Core.Interfaces
     {
         IEnumerable<ServerTimeEntry> GetServerTimeEntries();
 
-        IEnumerable<ServerTimeEntry> GetServerTimeEntriesByMonthAndYear(DateTime time);
-
         IEnumerable<ServerTimeEntry> AddServerTimeEntries(IEnumerable<ServerTimeEntry> entities);
+
+        IEnumerable<ServerTimeEntriesMonthlyReportEntity> GetServerTimeEntriesMonthlyReport(DateTime time);
     }
 }
