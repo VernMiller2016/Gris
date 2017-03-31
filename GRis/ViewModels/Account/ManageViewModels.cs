@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 
-namespace Gris.Domain.Core.Models
+namespace GRis.ViewModels.Account
 {
     public class IndexViewModel
     {

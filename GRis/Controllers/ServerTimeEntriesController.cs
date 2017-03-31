@@ -2,7 +2,7 @@
 using Gris.Domain.Core.Models;
 using GRis.Core.Extensions;
 using GRis.Core.Utils;
-using GRis.Models;
+using GRis.ViewModels.General;
 using GRis.ViewModels.ServerTimeEntry;
 using System;
 using System.Collections.Generic;

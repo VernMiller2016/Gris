@@ -1,4 +1,5 @@
 ﻿using Gris.Utilities.App_Start;
+using GRis.App_Start;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace GRis
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            AutoMapperConfig.Configure();
             //DependencyResolver.SetResolver(new NinjectDependencyResolver());
             // NinjectWebCommon.Start();
         }

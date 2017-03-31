@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Gris.Domain.Core.Models
+namespace GRis.ViewModels.Account
 {
     public class ExternalLoginConfirmationViewModel
     {

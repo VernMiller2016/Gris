@@ -11,7 +11,6 @@ namespace Gris.Domain.Core.Models
     {
         [Required]
         [Key]
-        [Display(Name = "Id")]
         public int Id { get; set; }
         
         [Required]
@@ -22,7 +21,6 @@ namespace Gris.Domain.Core.Models
         [StringLength(50)]
         public string Description { get; set; }
 
-        [Display(Name = "GP Project")]
         [StringLength(9)]
         public string GpProject { get; set; }
 

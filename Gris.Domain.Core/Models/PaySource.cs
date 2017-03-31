@@ -8,7 +8,6 @@ namespace Gris.Domain.Core.Models
     {
         [Required]
         [Key]
-        [Display(Name = "Id")]
         public int Id { get; set; }
 
         [Required]

@@ -45,7 +45,6 @@ namespace GRis.Controllers
         [ValidateAntiForgeryToken]
         public FileResult ExportServerTimeEntriesMonthlyReportToExcel(ReportFiltersViewModel viewmodel)
         {
-            var report = _exportingService.GetServerTimeEntriesMonthlyReportExcel(viewmodel.SelectedDate.Value);
             MemoryStream stream = _exportingService.GetServerTimeEntriesMonthlyReportExcel(viewmodel.SelectedDate.Value);
 
             return File(stream, Constants.ExcelFilesMimeType,

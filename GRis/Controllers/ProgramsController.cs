@@ -1,8 +1,8 @@
-﻿using Gris.Application.Core.Interfaces;
+﻿using AutoMapper;
+using Gris.Application.Core.Interfaces;
 using Gris.Domain.Core.Models;
 using GRis.Core.Extensions;
 using GRis.ViewModels.Program;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -24,8 +24,8 @@ namespace GRis.Controllers
         // GET: Programs
         public ActionResult Index()
         {
-            var programs = _programService.GetPrograms();
-            return View(programs);
+            var viewmodel = Mapper.Map<IEnumerable<Program>, IEnumerable<ProgramDetailsViewModel>>(_programService.GetPrograms().ToList());
+            return View(viewmodel);
         }
 
         // GET: Programs/Details/5
@@ -35,12 +35,13 @@ namespace GRis.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Program program = _programService.GetById(id.Value);
-            if (program == null)
+            Program entity = _programService.GetById(id.Value);
+            if (entity == null)
             {
                 return HttpNotFound();
             }
-            return View(program);
+            var viewmodel = Mapper.Map<Program, ProgramDetailsViewModel>(entity);
+            return View(viewmodel);
         }
 
         // GET: Programs/Create
@@ -64,15 +65,8 @@ namespace GRis.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    var entity = Mapper.Map<ProgramAddViewModel, Program>(viewmodel);
                     var selectedPaysourcesList = viewmodel.SelectedPaySources.Select(t => new PaySource() { Id = t }).ToList();
-                    var entity = new Program()
-                    {
-                        Description = viewmodel.Description,
-                        Name = viewmodel.Name,
-                        GpProject = viewmodel.GpProject,
-                        Active = viewmodel.Active,
-                        PaySources = new List<PaySource>()
-                    };
                     foreach (var id in viewmodel.SelectedPaySources.AsNotNull())
                     {
                         var paysource = _paySourceService.GetById(id);
@@ -106,19 +100,12 @@ namespace GRis.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Program program = _programService.GetById(id.Value);
-            if (program == null)
+            Program entity = _programService.GetById(id.Value);
+            if (entity == null)
             {
                 return HttpNotFound();
             }
-            var viewmodel = new ProgramEditViewModel()
-            {
-                Id = program.Id,
-                Name = program.Name,
-                Description = program.Description,
-                GpProject = program.GpProject,
-                Active = program.Active
-            };
+            var viewmodel = Mapper.Map<Program, ProgramEditViewModel>(entity);
             return View(viewmodel);
         }
 
@@ -131,18 +118,14 @@ namespace GRis.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    Program existedEntity = _programService.GetById(viewmodel.Id);
-                    if (existedEntity == null)
+                    Program entity = _programService.GetById(viewmodel.Id);
+                    if (entity == null)
                     {
                         return HttpNotFound();
                     }
-                    // ToDo: user automapper to automatically update model from viewmodel.
-                    existedEntity.Name = viewmodel.Name;
-                    existedEntity.Description = viewmodel.Description;
-                    existedEntity.GpProject = viewmodel.GpProject;
-                    existedEntity.Active = viewmodel.Active;
+                    Mapper.Map(viewmodel, entity);
 
-                    _programService.UpdateProgram(existedEntity);
+                    _programService.UpdateProgram(entity);
                     return RedirectToAction("Index");
                 }
                 return View(viewmodel);

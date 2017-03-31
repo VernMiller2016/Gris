@@ -15,7 +15,6 @@ namespace Gris.Domain.Core.Models
 
         public TimeSpan Duration { get; set; }
 
-        [Display(Name = "Begin Date")]
         [DataType(DataType.Date)]
         [Column(TypeName = "Date")]
         public DateTime BeginDate { get; set; }

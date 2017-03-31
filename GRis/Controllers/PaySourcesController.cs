@@ -1,8 +1,10 @@
-﻿using Gris.Application.Core.Interfaces;
+﻿using AutoMapper;
+using Gris.Application.Core.Interfaces;
 using Gris.Domain.Core.Models;
 using GRis.Core.Extensions;
 using GRis.Core.Utils;
-using GRis.Models;
+using GRis.ViewModels.General;
+using GRis.ViewModels.PaySource;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -25,8 +27,8 @@ namespace GRis.Controllers
         // GET: PaySources
         public ActionResult Index()
         {
-            var paySources = _paySourceService.GetPaySources();
-            return View(paySources.ToList());
+            var viewmodel = Mapper.Map<IEnumerable<PaySource>, IEnumerable<PaySourceDetailsViewModel>>(_paySourceService.GetPaySources().ToList());
+            return View(viewmodel);
         }
 
         // GET: PaySources/Details/5
@@ -36,57 +38,34 @@ namespace GRis.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var paySource = _paySourceService.GetById(id.Value);
-            if (paySource == null)
+            var entity = _paySourceService.GetById(id.Value);
+            if (entity == null)
             {
                 return HttpNotFound();
             }
-            return View(paySource);
+            var viewmodel = Mapper.Map<PaySource, PaySourceDetailsViewModel>(entity);
+            return View(viewmodel);
         }
-
-        // GET: PaySources/Create
-        //public ActionResult Create()
-        //{
-        //    ViewBag.ProgramId = new SelectList(db.Programs, "ProgramId", "Description");
-        //    return View();
-        //}
 
         public ActionResult Create()
         {
-            return View();
+            var viewmodel = new PaySourceAddViewModel();
+            return View(viewmodel);
         }
-
-        // POST: PaySources/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Create([Bind(Include = "PaySourceId,Description,Active,ProgramId")] PaySource paySource)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.PaySources.Add(paySource);
-        //        db.SaveChanges();
-        //        return RedirectToAction("Index");
-        //    }
-
-        //    ViewBag.ProgramId = new SelectList(db.Programs, "ProgramId", "Description", paySource.ProgramId);
-        //    return View(paySource);
-        //}
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "PaySourceId,Description,Active,ProgramId")] PaySource paySource)
+        public ActionResult Create(PaySourceAddViewModel viewmodel)
         {
             if (ModelState.IsValid)
             {
-                _paySourceService.AddPaySource(paySource);
+                var entity = Mapper.Map<PaySourceAddViewModel, PaySource>(viewmodel);
+                _paySourceService.AddPaySource(entity);
 
                 return RedirectToAction("Index");
             }
 
-            //ViewBag.ProgramId = new SelectList(db.Programs, "ProgramId", "Description", paySource.ProgramId);
-            return View(paySource);
+            return View(viewmodel);
         }
 
         // GET: PaySources/Edit/5
@@ -96,13 +75,14 @@ namespace GRis.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PaySource paySource = _paySourceService.GetById(id.Value);
-            if (paySource == null)
+            PaySource entity = _paySourceService.GetById(id.Value);
+            if (entity == null)
             {
                 return HttpNotFound();
             }
-            //ViewBag.ProgramId = new SelectList(db.Programs, "ProgramId", "Description", paySource.ProgramId);
-            return View(paySource);
+
+            var viewmodel = Mapper.Map<PaySource, PaySourceEditViewModel>(entity);
+            return View(viewmodel);
         }
 
         // POST: PaySources/Edit/5
@@ -110,25 +90,21 @@ namespace GRis.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,PaySourceId,Description,Active,ProgramId")] PaySource paySource)
+        public ActionResult Edit(PaySourceEditViewModel viewmodel)
         {
             if (ModelState.IsValid)
             {
-                PaySource existedPaySource = _paySourceService.GetById(paySource.Id);
-                if (existedPaySource == null)
+                PaySource entity = _paySourceService.GetById(viewmodel.Id);
+                if (entity == null)
                 {
                     return HttpNotFound();
                 }
-                // ToDo: user automapper to automatically update model from viewmodel.
-                existedPaySource.Description = paySource.Description;
-                existedPaySource.Active = paySource.Active;
-                existedPaySource.ProgramId = paySource.ProgramId;
+                Mapper.Map(viewmodel, entity);
 
-                _paySourceService.UpdatePaySource(existedPaySource);
+                _paySourceService.UpdatePaySource(entity);
                 return RedirectToAction("Index");
             }
-            //ViewBag.ProgramId = new SelectList(db.Programs, "ProgramId", "Description", paySource.ProgramId);
-            return View(paySource);
+            return View(viewmodel);
         }
 
         // GET: PaySources/Delete/5
@@ -138,12 +114,12 @@ namespace GRis.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PaySource paySource = _paySourceService.GetById(id.Value);
-            if (paySource == null)
+            PaySource entity = _paySourceService.GetById(id.Value);
+            if (entity == null)
             {
                 return HttpNotFound();
             }
-            return View(paySource);
+            return View(entity);
         }
 
         // POST: PaySources/Delete/5
@@ -153,7 +129,6 @@ namespace GRis.Controllers
         {
             PaySource paySource = _paySourceService.GetById(id);
             if (paySource != null) _paySourceService.Remove(paySource);
-            //db.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -180,30 +155,26 @@ namespace GRis.Controllers
                     var dtServers = ImportUtils.ImportXlsxToDataTable(viewmodel.ExcelFile.InputStream, true);
                     foreach (var row in dtServers.AsEnumerable().ToList())
                     {
-                        var paySource = new PaySource()
+                        var entityViewModel = new PaySourceAddViewModel()
                         {
                             VendorId = int.Parse(row["PaySourceId"].ToString()),
                             // some columns does not have ',' separater.
                             Description = row["Description"].ToString(),
-                            //ProgramId = row["Sort Name"].ToString().Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)[0],
                             //Active = row["active"].ToString() == "Y" ? true : false,
                         };
-                        //check if server does not exist
+                        //check if paysource does not exist
                         if (!string.IsNullOrWhiteSpace(row["PaySourceId"].ToString()))
                         {
-                            var existedPaySource = _paySourceService.GetByVendorId(paySource.VendorId);
-                            if (existedPaySource == null)
+                            var existedEntity = _paySourceService.GetByVendorId(entityViewModel.VendorId);
+                            if (existedEntity == null)
                             {
-                                addedPaySources.Add(paySource);
+                                var entity = Mapper.Map<PaySourceAddViewModel, PaySource>(entityViewModel);
+                                addedPaySources.Add(entity);
                             }
                             else
                             {
-                                // ToDo: user automapper to automatically update model from viewmodel.
-                                existedPaySource.Description = paySource.Description;
-                                existedPaySource.Active = paySource.Active;
-                                existedPaySource.ProgramId = paySource.ProgramId;
-
-                                _paySourceService.UpdatePaySource(existedPaySource);
+                                Mapper.Map(entityViewModel, existedEntity);
+                                _paySourceService.UpdatePaySource(existedEntity);
                             }
                         }
                     }
@@ -217,16 +188,5 @@ namespace GRis.Controllers
 
             return View(viewmodel);
         }
-
-        //
-
-        //protected override void Dispose(bool disposing)
-        //{
-        //    if (disposing)
-        //    {
-        //        db.Dispose();
-        //    }
-        //    base.Dispose(disposing);
-        //}
     }
 }

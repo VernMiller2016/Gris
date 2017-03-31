@@ -1,8 +1,10 @@
-﻿using Gris.Application.Core.Interfaces;
+﻿using AutoMapper;
+using Gris.Application.Core.Interfaces;
 using Gris.Domain.Core.Models;
 using GRis.Core.Extensions;
 using GRis.Core.Utils;
-using GRis.Models;
+using GRis.ViewModels.General;
+using GRis.ViewModels.Server;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -25,8 +27,8 @@ namespace GRis.Controllers
         // GET: Servers
         public ActionResult Index()
         {
-            var servers = _serverService.GetServers();
-            return View(servers.ToList());
+            var viewmodel = Mapper.Map<IEnumerable<Server>, IEnumerable<ServerDetailsViewModel>>(_serverService.GetServers().ToList());
+            return View(viewmodel);
         }
 
         // GET: Servers/Details/5
@@ -36,18 +38,20 @@ namespace GRis.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Server server = _serverService.GetById(id.Value);
-            if (server == null)
+            var entity = _serverService.GetById(id.Value);
+            if (entity == null)
             {
                 return HttpNotFound();
             }
-            return View(server);
+            var viewmodel = Mapper.Map<Server, ServerDetailsViewModel>(entity);
+            return View(viewmodel);
         }
 
         // GET: Servers/Create
         public ActionResult Create()
         {
-            return View();
+            var viewmodel = new ServerAddViewModel();
+            return View(viewmodel);
         }
 
         // POST: Servers/Create
@@ -55,15 +59,16 @@ namespace GRis.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ServerId,FirstName,LastName,Active")] Server server)
+        public ActionResult Create(ServerAddViewModel viewmodel)
         {
             if (ModelState.IsValid)
             {
-                _serverService.AddServer(server);
+                var entity = Mapper.Map<ServerAddViewModel, Server>(viewmodel);
+                _serverService.AddServer(entity);
                 return RedirectToAction("Index");
             }
 
-            return View(server);
+            return View(viewmodel);
         }
 
         // GET: Servers/Edit/5
@@ -74,12 +79,13 @@ namespace GRis.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Server server = _serverService.GetById(id.Value);
-            if (server == null)
+            Server entity = _serverService.GetById(id.Value);
+            if (entity == null)
             {
                 return HttpNotFound();
             }
-            return View(server);
+            var viewmodel = Mapper.Map<Server, ServerEditViewModel>(entity);
+            return View(viewmodel);
         }
 
         // POST: Servers/Edit/5
@@ -87,25 +93,21 @@ namespace GRis.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,ServerId,FirstName,LastName,Active")] Server server)
+        public ActionResult Edit(ServerEditViewModel viewmodel)
         {
             if (ModelState.IsValid)
             {
-                Server existedServer = _serverService.GetById(server.Id);
-                if (existedServer == null)
+                Server entity = _serverService.GetById(viewmodel.Id);
+                if (entity == null)
                 {
                     return HttpNotFound();
                 }
-                // ToDo: user automapper to automatically update model from viewmodel.
-                existedServer.FirstName = server.FirstName;
-                existedServer.LastName = server.LastName;
-                existedServer.Active = server.Active;
-                existedServer.CategoryId = server.CategoryId;
+                Mapper.Map(viewmodel, entity);
 
-                _serverService.UpdateServer(existedServer);
+                _serverService.UpdateServer(entity);
                 return RedirectToAction("Index");
             }
-            return View(server);
+            return View(viewmodel);
         }
 
         // GET: Servers/Delete/5
@@ -155,7 +157,7 @@ namespace GRis.Controllers
                     var dtServers = ImportUtils.ImportXlsxToDataTable(viewmodel.ExcelFile.InputStream, true);
                     foreach (var row in dtServers.AsEnumerable().ToList())
                     {
-                        var server = new Server()
+                        var entityViewModel = new ServerAddViewModel()
                         {
                             VendorId = int.Parse(row["Staff"].ToString()),
                             // some columns does not have ',' separater.
@@ -165,22 +167,18 @@ namespace GRis.Controllers
                             CategoryId = CategoryConverter.ConvertFromCategoryNameToId(row["Category"].ToString())
                         };
                         //check if server does not exist
-                        if (server.VendorId != 0)
+                        if (entityViewModel.VendorId != 0)
                         {
-                            var existedServer = _serverService.GetByVendorId(server.VendorId);
-                            if (existedServer == null)
+                            var existedEntity = _serverService.GetByVendorId(entityViewModel.VendorId);
+                            if (existedEntity == null)
                             {
-                                addedServers.Add(server);
+                                var entity = Mapper.Map<ServerAddViewModel, Server>(entityViewModel);
+                                addedServers.Add(entity);
                             }
                             else
                             {
-                                // ToDo: user automapper to automatically update model from viewmodel.
-                                existedServer.FirstName = server.FirstName;
-                                existedServer.LastName = server.LastName;
-                                existedServer.Active = server.Active;
-                                existedServer.CategoryId = server.CategoryId;
-
-                                _serverService.UpdateServer(existedServer);
+                                Mapper.Map(entityViewModel, existedEntity);
+                                _serverService.UpdateServer(existedEntity);
                             }
                         }
                     }
@@ -194,14 +192,5 @@ namespace GRis.Controllers
 
             return View(viewmodel);
         }
-
-        //protected override void Dispose(bool disposing)
-        //{
-        //    if (disposing)
-        //    {
-        //        db.Dispose();
-        //    }
-        //    base.Dispose(disposing);
-        //}
     }
 }

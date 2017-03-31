@@ -1,4 +1,4 @@
-﻿@model Gris.Domain.Core.Models.PaySource
+﻿@model GRis.ViewModels.PaySource.PaySourceDetailsViewModel
 
 @{
     ViewBag.Title = "Details";
@@ -11,11 +11,11 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Program.Description)
+            @Html.DisplayNameFor(model => model.VendorId)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Program.Description)
+            @Html.DisplayFor(model => model.VendorId)
         </dd>
 
         <dt>

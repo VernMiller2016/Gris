@@ -82,6 +82,7 @@ namespace Gris.Application.Core.Services
                 //programSheet.Row(index).Collapsed = false;
 
                 programSheet.Cells.AutoFitColumns();
+                programSheet.View.TabSelected = false;
             });
 
 
@@ -98,7 +99,7 @@ namespace Gris.Application.Core.Services
                 index++;
             }
             dataSheet.Name = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(time.Month) + " - " + time.Year;
-            dataSheet.Cells.AutoFitColumns();
+            dataSheet.Cells.AutoFitColumns();            
         }
 
         #endregion ServerTimeEntriesMonthlyReport

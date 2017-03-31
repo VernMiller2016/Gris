@@ -8,20 +8,16 @@ namespace Gris.Domain.Core.Models
     {
         [Required]
         [Key]
-        [Display(Name = "Id")]
         public int Id { get; set; }
 
         [Required]
-        [Display(Name = "Server Id")]
         public int VendorId { get; set; }
 
         [Required]
-        [Display(Name = "First Name")]
         [StringLength(50)]
         public string FirstName { get; set; }
 
         [Required]
-        [Display(Name = "Last Name")]
         [StringLength(50)]
         public string LastName { get; set; }
 
@@ -32,7 +28,6 @@ namespace Gris.Domain.Core.Models
 
         public Category Category { get; set; }
 
-        [Display(Name = "Full Name")]
         public string FullName => LastName + ", " + FirstName;
 
         public virtual ICollection<ServerTimeEntry> ServerTimeEntries { get; set; }

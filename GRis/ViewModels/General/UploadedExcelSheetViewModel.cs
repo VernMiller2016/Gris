@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Web;
 
-namespace GRis.Models
+namespace GRis.ViewModels.General
 {
     public class UploadedExcelSheetViewModel
     {

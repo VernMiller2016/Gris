@@ -1,4 +1,5 @@
-﻿using Gris.Application.Core.Contracts.Reports;
+﻿using AutoMapper;
+using Gris.Application.Core.Contracts.Reports;
 using Gris.Application.Core.Interfaces;
 using Gris.Domain.Core.Models;
 using Gris.Infrastructure.Core.Interfaces;
@@ -33,23 +34,12 @@ namespace Gris.Application.Core.Services
 
         public IEnumerable<ServerTimeEntriesMonthlyReportEntity> GetServerTimeEntriesMonthlyReport(DateTime time)
         {
-            // ToDo: use automapper
             var result = _serverTimeEntryRepoitory.
                         Get(t => t.BeginDate.Year == time.Year && t.BeginDate.Month == time.Month
                         , (list => list.OrderBy(st => st.Server.LastName))
                         , st => st.PaySource, st => st.PaySource.Program, st => st.Server)
-                        .Where(st => st.PaySource != null && st.PaySource.ProgramId.HasValue)
-                        .Select(st => new ServerTimeEntriesMonthlyReportEntity()
-                        {
-                            ServerName = st.Server.FullName,
-                            ServerVendorId = st.Server.VendorId,
-                            BeginDate = st.BeginDate.Date,
-                            Duration = st.Duration,
-                            PaysourceVendorId = st.PaySource.VendorId,
-                            ProgramId = st.PaySource.Program.Id,
-                            ProgramName = st.PaySource.Program.Name
-                        });
-            return result;
+                        .Where(st => st.PaySource != null && st.PaySource.ProgramId.HasValue);
+            return Mapper.Map<IEnumerable<ServerTimeEntriesMonthlyReportEntity>>(result);
         }
     }
 }
