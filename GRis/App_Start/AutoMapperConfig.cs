@@ -46,6 +46,7 @@ namespace GRis.App_Start
 
                 cfg.CreateMap<Server, ServerEditViewModel>()
                 .ReverseMap()
+                .ForMember(dest => dest.VendorId, opt => opt.Ignore())
                 ;
 
                 #endregion Server
@@ -60,6 +61,7 @@ namespace GRis.App_Start
 
                 cfg.CreateMap<PaySource, PaySourceEditViewModel>()
                 .ReverseMap()
+                .ForMember(dest => dest.VendorId, opt => opt.Ignore())
                 ;
 
                 #endregion PaySource
