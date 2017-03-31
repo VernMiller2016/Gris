@@ -205,8 +205,10 @@
     <Compile Include="Controllers\PaySourcesController.cs" />
     <Compile Include="Controllers\ProgramsController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="Controllers\RolesAdminController.cs" />
     <Compile Include="Controllers\ServersController.cs" />
     <Compile Include="Controllers\ServerTimeEntriesController.cs" />
+    <Compile Include="Controllers\UserAdminController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -217,6 +219,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ViewModels\Account\AccountViewModels.cs" />
     <Compile Include="ViewModels\Account\ManageViewModels.cs" />
+    <Compile Include="ViewModels\Admin\AdminViewModel.cs" />
     <Compile Include="ViewModels\General\UploadedExcelSheetViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -349,6 +352,8 @@
     <Folder Include="Uploads\PaySources\" />
     <Folder Include="Uploads\Servers\" />
     <Folder Include="Uploads\ServerTimeEntries\" />
+    <Folder Include="Views\RolesAdmin\" />
+    <Folder Include="Views\UserAdmin\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
