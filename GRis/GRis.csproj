@@ -229,6 +229,8 @@
     <Compile Include="ViewModels\Program\ProgramAddViewModel.cs" />
     <Compile Include="ViewModels\Reports\ReportFiltersViewModel.cs" />
     <Compile Include="ViewModels\ServerTimeEntry\ServerTimeEntryAddViewModel.cs" />
+    <Compile Include="ViewModels\ServerTimeEntry\ServerTimeEntryFilterViewModel.cs" />
+    <Compile Include="ViewModels\ServerTimeEntry\ServerTimeEntryListViewModel.cs" />
     <Compile Include="ViewModels\Server\ServerDetailsViewModel.cs" />
     <Compile Include="ViewModels\Server\ServerAddViewModel.cs" />
     <Compile Include="ViewModels\Server\ServerEditViewModel.cs" />

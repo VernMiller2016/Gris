@@ -27,13 +27,17 @@ namespace GRis.Controllers
         }
 
         // GET: ServerTimeEntries
-        public ActionResult Index(int? page)
+        public ActionResult Index(ServerTimeEntryListViewModel viewmodel)
         {
             //var pageNumber = page ?? 1; // if no page was specified in the querystring, default to the first page (1)
-            var timeEntries = _serverTimeEntryService.GetServerTimeEntries();
+            viewmodel.TimeEntries = _serverTimeEntryService.GetServerTimeEntries();
+
+            if (viewmodel.Filters.SelectedDate.HasValue)
+                viewmodel.TimeEntries = viewmodel.TimeEntries.Where(t => t.BeginDate.Year == viewmodel.Filters.SelectedDate.Value.Year
+                    && t.BeginDate.Month == viewmodel.Filters.SelectedDate.Value.Month);
 
             //var pageData = timeEntries.ToPagedList(pageNumber, 25);
-            return View(timeEntries);
+            return View(viewmodel);
         }
 
         public ActionResult Upload()
