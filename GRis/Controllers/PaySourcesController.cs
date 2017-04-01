@@ -15,6 +15,7 @@ using System.Web.Mvc;
 
 namespace GRis.Controllers
 {
+    [Authorize]
     public class PaySourcesController : Controller
     {
         private IPaySourceService _paySourceService;

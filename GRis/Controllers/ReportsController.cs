@@ -8,6 +8,7 @@ using System.Web.Mvc;
 
 namespace GRis.Controllers
 {
+    [Authorize]
     public class ReportsController : Controller
     {
         private IProgramService _programService;

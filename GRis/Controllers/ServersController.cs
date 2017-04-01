@@ -15,6 +15,7 @@ using System.Web.Mvc;
 
 namespace GRis.Controllers
 {
+    [Authorize]
     public class ServersController : Controller
     {
         private IServerService _serverService;
