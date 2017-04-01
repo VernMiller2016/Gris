@@ -13,6 +13,7 @@ using System.Web.Mvc;
 
 namespace GRis.Controllers
 {
+    [Authorize]
     public class ServerTimeEntriesController : Controller
     {
         private IServerTimeEntryService _serverTimeEntryService;

@@ -10,6 +10,7 @@ using System.Web.Mvc;
 
 namespace GRis.Controllers
 {
+    [Authorize]
     public class ProgramsController : Controller
     {
         private IProgramService _programService;
