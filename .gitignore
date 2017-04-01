@@ -243,3 +243,6 @@ ModelManifest.xml
 
 # Uploads Folder
 GRis/Uploads/**
+
+# ConnectionStrings
+ConnectionStrings.config
