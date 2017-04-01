@@ -38,8 +38,8 @@
                 </td>
 
                 <td>
-                    <a href="@Url.Action("Edit", "UsersAdmin", new { item.Id })" class="btn btn-info"> <span class="glyphicon glyphicon-edit"></span><span class="hidden-xs"> تعديل </span></a>
-                    <a href="@Url.Action("Details", "UsersAdmin", new { item.Id })" class="btn btn-info"> <span class="fa fa-clipboard"></span><span class="hidden-xs"> تفاصيل </span> </a>
+                    <a href="@Url.Action("Edit", "UserAdmin", new { item.Id })" class="btn btn-info"> <span class="glyphicon glyphicon-edit"></span><span class="hidden-xs"> Edit </span></a>
+                    <a href="@Url.Action("Details", "UserAdmin", new { item.Id })" class="btn btn-info"> <span class="fa fa-clipboard"></span><span class="hidden-xs"> Details </span> </a>
                 </td>
             </tr>
         }
@@ -47,7 +47,7 @@
     </table>
 
     <div>
-        صفحة @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) from @Model.PageCount
+        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) from @Model.PageCount
         @Html.PagedListPager(Model, page => Url.Action("GetUsers", new { page, searchVal = ViewBag.searchVal }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { UpdateTargetId = "userList" }))
         <input type="hidden" name="currentPage" id="currentPage" value="@Model.PageNumber" />
     </div>
