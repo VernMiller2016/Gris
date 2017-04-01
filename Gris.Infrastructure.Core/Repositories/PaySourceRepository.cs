@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Gris.Infrastructure.Core.Repositories
 {
-    public class PaySourceRepository : EFRepository<PaySource>, IPaySourceRepository
+    public class PaySourceRepository : SoftDeleteEFRepository<PaySource>, IPaySourceRepository
     {
         public PaySourceRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
@@ -15,12 +15,6 @@ namespace Gris.Infrastructure.Core.Repositories
         {
             var addedpaySources = _dbContext.PaySources.AddRange(paySources);
             return addedpaySources;
-        }
-
-        public override void Delete(PaySource entity)
-        {
-            entity.Active = false;
-            this.Update(entity);
         }
     }
 }

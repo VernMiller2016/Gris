@@ -106,6 +106,7 @@
     <Compile Include="Repositories\PaySourceRepository.cs" />
     <Compile Include="Repositories\ProgramRepository.cs" />
     <Compile Include="Repositories\ServerRepository.cs" />
+    <Compile Include="Repositories\SoftDeleteEFRepository.cs" />
     <Compile Include="UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>

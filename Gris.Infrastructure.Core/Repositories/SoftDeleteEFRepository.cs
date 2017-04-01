@@ -2,6 +2,7 @@
 using Gris.Infrastructure.Core.DAL;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Linq.Expressions;
@@ -37,11 +38,15 @@ namespace Gris.Infrastructure.Core.Repositories
 
         public override T OneOrDefault(Expression<Func<T, bool>> filter, params Expression<Func<T, object>>[] includes)
         {
-            Func<T, bool> isActiveFunc = (t) => t.Active;
-            Expression<Func<T, bool>> filterWithActive = Expression.Lambda<Func<T, bool>>(
-                Expression.And(filter.Body, Expression.Call(isActiveFunc.Method)));
-
-            return base.OneOrDefault(filterWithActive, includes);
+            IQueryable<T> query = _dbSet.Where(t => t.Active);
+            if (includes.Any())
+            {
+                foreach (var includeProperty in includes)
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+            return query.FirstOrDefault(filter);
         }
 
         public override IEnumerable<T> Get(Expression<Func<T, bool>> filter = null, Func<IEnumerable<T>, IOrderedEnumerable<T>> orderBy = null, params Expression<Func<T, object>>[] includes)
@@ -49,18 +54,9 @@ namespace Gris.Infrastructure.Core.Repositories
             return base.Get(filter, orderBy, includes).Where(t => t.Active);
         }
 
-        public override IEnumerable<T> FilterWithPaging(Expression<Func<T, bool>> filter, out int total, int index = 0, int size = 50)
-        {
-            return base.FilterWithPaging(filter, out total, index, size).Where(t => t.Active);
-        }
-
         public override bool Contains(Expression<Func<T, bool>> predicate)
         {
-            Func<T, bool> isActiveFunc = (t) => t.Active;
-            Expression<Func<T, bool>> filterWithActive = Expression.Lambda<Func<T, bool>>(
-                Expression.And(predicate.Body, Expression.Call(isActiveFunc.Method)));
-
-            return base.Contains(filterWithActive);
+            return _dbSet.Where(t => t.Active).Count(predicate) > 0;
         }
 
         public override void Delete(T entity)

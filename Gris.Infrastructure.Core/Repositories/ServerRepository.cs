@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Gris.Infrastructure.Core.Repositories
 {
-    public class ServerRepository : EFRepository<Server>, IServerRepository
+    public class ServerRepository : SoftDeleteEFRepository<Server>, IServerRepository
     {
         public ServerRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
@@ -15,12 +15,6 @@ namespace Gris.Infrastructure.Core.Repositories
         {
             var addedServers = _dbContext.Servers.AddRange(servers);
             return addedServers;
-        }
-
-        public override void Delete(Server entity)
-        {
-            entity.Active = false;
-            this.Update(entity);
-        }
+        }        
     }
 }
