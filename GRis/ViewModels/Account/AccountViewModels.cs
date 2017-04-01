@@ -15,13 +15,13 @@ namespace GRis.ViewModels.Account
         public string ReturnUrl { get; set; }
     }
 
-    //public class SendCodeViewModel
-    //{
-    //    public string SelectedProvider { get; set; }
-    //    public ICollection<System.Web.Mvc.SelectListItem> Providers { get; set; }
-    //    public string ReturnUrl { get; set; }
-    //    public bool RememberMe { get; set; }
-    //}
+    public class SendCodeViewModel
+    {
+        public string SelectedProvider { get; set; }
+        public ICollection<System.Web.Mvc.SelectListItem> Providers { get; set; }
+        public string ReturnUrl { get; set; }
+        public bool RememberMe { get; set; }
+    }
 
     public class VerifyCodeViewModel
     {
@@ -49,9 +49,8 @@ namespace GRis.ViewModels.Account
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Email")]
-        [EmailAddress]
-        public string Email { get; set; }
+        [Display(Name = "User name")]
+        public string UserName { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
@@ -79,6 +78,27 @@ namespace GRis.ViewModels.Account
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        /// <summary>
+        /// user name must be unique
+        /// </summary>
+        [Required]
+        [Display(Name = "User name")]
+        public string UserName { get; set; }
+
+        /// <summary>
+        /// user full name
+        /// </summary>
+        [Required]
+        [Display(Name = "Full name")]
+        public string FullName { get; set; }
+
+        /// <summary>
+        /// phone number
+        /// </summary>
+        [Required]
+        [Display(Name = "mobile number")]
+        public string PhoneNumber { get; set; }
     }
 
     public class ResetPasswordViewModel
@@ -108,5 +128,21 @@ namespace GRis.ViewModels.Account
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
+    }
+
+    /// <summary>
+    /// acctive account information
+    /// </summary>
+    public class AcctiveAccountModel
+    {
+        /// <summary>
+        /// user name
+        /// </summary>
+        public string UserName { get; set; }
+        /// <summary>
+        /// activation code
+        /// </summary>
+        public string Code { get; set; }
+
     }
 }
