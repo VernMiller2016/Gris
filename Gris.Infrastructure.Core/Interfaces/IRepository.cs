@@ -52,7 +52,7 @@ namespace Gris.Infrastructure.Core.Interfaces
         /// <param name="total"> Specified the total records count. </param>
         /// <param name="index"> Specified the page index. </param>
         /// <param name="size"> Specified the page size </param>
-        IEnumerable<T> FilterWithPaging(Expression<Func<T, bool>> filter, out int total, int index = 0, int size = 50);
+        IEnumerable<T> FilterWithPaging(Expression<Func<T, bool>> filter, out int total, int index = 0, int size = 50, Func<IEnumerable<T>, IOrderedEnumerable<T>> orderBy = null, params Expression<Func<T, object>>[] includes);
 
         /// <summary>
         ///   Check if there any entities with the specified filtering criteria.

@@ -22,11 +22,10 @@ namespace Gris.Application.Core.Services
             _unitOfWork.Commit();
         }
 
-        public IEnumerable<PaySource> AddPaySources(IEnumerable<PaySource> paySources)
+        public void AddPaySources(IEnumerable<PaySource> paySources)
         {
-            var addedPaysources = _paySourceRepoitory.AddPaySources(paySources);
+            _paySourceRepoitory.Add(paySources);
             _unitOfWork.Commit();
-            return addedPaysources;
         }
 
         public PaySource GetById(int id)

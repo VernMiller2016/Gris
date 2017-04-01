@@ -84,10 +84,10 @@ namespace Gris.Infrastructure.Core.Repositories
             return query.AsEnumerable();
         }
 
-        public virtual IEnumerable<T> FilterWithPaging(Expression<Func<T, bool>> filter, out int total, int index = 0, int size = 50)
+        public virtual IEnumerable<T> FilterWithPaging(Expression<Func<T, bool>> filter, out int total, int index = 0, int size = 50, Func<IEnumerable<T>, IOrderedEnumerable<T>> orderBy = null, params Expression<Func<T, object>>[] includes)
         {
             int skipCount = index * size;
-            var query = this.Get(filter);
+            var query = this.Get(filter, orderBy, includes);
             query = skipCount == 0 ? query.Take(size) : query.Skip(skipCount).Take(size);
             total = query.Count();
             return query;

@@ -15,7 +15,7 @@ namespace Gris.Application.Core.Interfaces
 
         void UpdatePaySource(PaySource paySource);
 
-        IEnumerable<PaySource> AddPaySources(IEnumerable<PaySource> paySources);
+        void AddPaySources(IEnumerable<PaySource> paySources);
 
         void Remove(PaySource paySource);
     }

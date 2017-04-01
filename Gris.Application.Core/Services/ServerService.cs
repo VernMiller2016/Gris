@@ -22,11 +22,10 @@ namespace Gris.Application.Core.Services
             _unitOfWork.Commit();
         }
 
-        public IEnumerable<Server> AddServers(IEnumerable<Server> servers)
+        public void AddServers(IEnumerable<Server> servers)
         {
-            var addedServers = _serverRepoitory.AddServers(servers);
+            _serverRepoitory.Add(servers);
             _unitOfWork.Commit();
-            return addedServers;
         }
 
         public Server GetById(int id)

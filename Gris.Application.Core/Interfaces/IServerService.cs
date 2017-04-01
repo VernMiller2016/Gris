@@ -15,7 +15,7 @@ namespace Gris.Application.Core.Interfaces
 
         void UpdateServer(Server server);
 
-        IEnumerable<Server> AddServers(IEnumerable<Server> servers);
+        void AddServers(IEnumerable<Server> servers);
 
         void Remove(Server server);
     }
