@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Gris.Domain.Core.Models
 {
-    public class Service
+    public class Service:SoftDeleteEntity
     {
         [Required]
         [Key]
@@ -18,8 +18,5 @@ namespace Gris.Domain.Core.Models
         [Display(Name = "Service Description")]
         [StringLength(50)]
         public string ServiceDescription { get; set; }
-
-        [DefaultValue(true)]
-        public bool Active { get; set; }
     }
 }

@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Gris.Domain.Core.Models
 {
-    public class PaySource
+    public class PaySource : SoftDeleteEntity
     {
         [Required]
         [Key]
@@ -16,9 +15,6 @@ namespace Gris.Domain.Core.Models
         [Required]
         [StringLength(50)]
         public string Description { get; set; }
-
-        [DefaultValue(true)]
-        public bool Active { get; set; }
 
         public int? ProgramId { get; set; }
 

@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Gris.Domain.Core.Models
 {
-    public class Server
+    public class Server : SoftDeleteEntity
     {
         [Required]
         [Key]
@@ -20,9 +19,6 @@ namespace Gris.Domain.Core.Models
         [Required]
         [StringLength(50)]
         public string LastName { get; set; }
-
-        [DefaultValue(true)]
-        public bool Active { get; set; }
 
         public int? CategoryId { get; set; }
 

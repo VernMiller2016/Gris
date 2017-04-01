@@ -1,9 +1,8 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Gris.Domain.Core.Models
 {
-    public class PlaceOfService
+    public class PlaceOfService : SoftDeleteEntity
     {
         [Required]
         [Key]
@@ -17,8 +16,5 @@ namespace Gris.Domain.Core.Models
         [Required]
         [StringLength(50)]
         public string Description { get; set; }
-
-        [DefaultValue(true)]
-        public bool Active { get; set; }
     }
 }
