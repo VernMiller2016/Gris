@@ -70,19 +70,21 @@ namespace Gris.Application.Core.Services
             {
                 result = _serverTimeEntryRepoitory.
                             Get(t => t.BeginDate.Year == selectedDate.Year && t.BeginDate.Month == selectedDate.Month
+                            && t.PaySource != null && t.PaySource.ProgramId.HasValue
                             , (list => list.OrderBy(st => st.Server.LastName))
                             , st => st.PaySource, st => st.PaySource.Program, st => st.Server)
-                            .Where(st => st.PaySource != null && st.PaySource.ProgramId.HasValue);
+                            ;
             }
             else
             {
                 int total = 0;
                 result = _serverTimeEntryRepoitory.
                             FilterWithPaging(t => t.BeginDate.Year == selectedDate.Year && t.BeginDate.Month == selectedDate.Month
+                            && t.PaySource != null && t.PaySource.ProgramId.HasValue
                             , (list => list.OrderBy(st => st.Server.LastName))
                             , out total, pagingInfo.PageIndex, AppSettings.PageSize
                             , st => st.PaySource, st => st.PaySource.Program, st => st.Server)
-                            .Where(st => st.PaySource != null && st.PaySource.ProgramId.HasValue);
+                            ;
                 pagingInfo.Total = total;
             }
             return Mapper.Map<IEnumerable<ServerTimeEntriesMonthlyReportEntity>>(result);
