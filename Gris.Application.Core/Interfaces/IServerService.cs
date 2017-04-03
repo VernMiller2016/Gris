@@ -1,11 +1,12 @@
-﻿using Gris.Domain.Core.Models;
+﻿using Gris.Application.Core.Contracts.Paging;
+using Gris.Domain.Core.Models;
 using System.Collections.Generic;
 
 namespace Gris.Application.Core.Interfaces
 {
     public interface IServerService
     {
-        IEnumerable<Server> GetServers();
+        IEnumerable<Server> GetServers(PagingInfo pagingInfo = null);
 
         Server GetById(int id);
 

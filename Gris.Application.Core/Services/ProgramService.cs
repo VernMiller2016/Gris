@@ -1,7 +1,9 @@
-﻿using Gris.Application.Core.Interfaces;
+﻿using Gris.Application.Core.Contracts.Paging;
+using Gris.Application.Core.Interfaces;
 using Gris.Domain.Core.Models;
 using Gris.Infrastructure.Core.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Gris.Application.Core.Services
 {
@@ -29,9 +31,18 @@ namespace Gris.Application.Core.Services
             return _programRepository.OneOrDefault(t => t.Id == id, t => t.PaySources);
         }
 
-        public IEnumerable<Program> GetPrograms()
+        public IEnumerable<Program> GetPrograms(PagingInfo pagingInfo = null)
         {
-            return _programRepository.Get(null, null, t => t.PaySources);
+            if (pagingInfo == null)
+                return _programRepository.Get(null, null, t => t.PaySources);
+            else
+            {
+                int total = 0;
+                var result = _programRepository.FilterWithPaging(null, (list => list.OrderBy(p => p.Name))
+                    , out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.PaySources);
+                pagingInfo.Total = total;
+                return result;
+            }
         }
 
         public void Remove(Program Program)

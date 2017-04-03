@@ -1,7 +1,9 @@
-﻿using Gris.Application.Core.Interfaces;
+﻿using Gris.Application.Core.Contracts.Paging;
+using Gris.Application.Core.Interfaces;
 using Gris.Domain.Core.Models;
 using Gris.Infrastructure.Core.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Gris.Application.Core.Services
 {
@@ -35,12 +37,20 @@ namespace Gris.Application.Core.Services
 
         public PaySource GetByVendorId(int vendorId)
         {
-            return _paySourceRepoitory.OneOrDefault(t => t.VendorId== vendorId);
+            return _paySourceRepoitory.OneOrDefault(t => t.VendorId == vendorId);
         }
 
-        public IEnumerable<PaySource> GetPaySources()
+        public IEnumerable<PaySource> GetPaySources(PagingInfo pagingInfo)
         {
-            return _paySourceRepoitory.GetAll();
+            if (pagingInfo == null)
+                return _paySourceRepoitory.Get(null, (list => list.OrderBy(p => p.VendorId)));
+            else
+            {
+                int total = 0;
+                var result = _paySourceRepoitory.FilterWithPaging(null, (list => list.OrderBy(p => p.VendorId)), out total, pagingInfo.PageIndex, AppSettings.PageSize);
+                pagingInfo.Total = total;
+                return result;
+            }
         }
 
         public void Remove(PaySource paySource)

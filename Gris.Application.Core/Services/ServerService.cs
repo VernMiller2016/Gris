@@ -1,7 +1,9 @@
-﻿using Gris.Application.Core.Interfaces;
+﻿using Gris.Application.Core.Contracts.Paging;
+using Gris.Application.Core.Interfaces;
 using Gris.Domain.Core.Models;
 using Gris.Infrastructure.Core.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Gris.Application.Core.Services
 {
@@ -38,9 +40,18 @@ namespace Gris.Application.Core.Services
             return _serverRepoitory.OneOrDefault(t => t.VendorId == vendorId);
         }
 
-        public IEnumerable<Server> GetServers()
+        public IEnumerable<Server> GetServers(PagingInfo pagingInfo = null)
         {
-            return _serverRepoitory.GetAll();
+            if (pagingInfo == null)
+                return _serverRepoitory.Get(null, (list => list.OrderBy(s => s.LastName)));
+            else
+            {
+                int total = 0;
+                var result = _serverRepoitory.FilterWithPaging(null, (list => list.OrderBy(s => s.LastName))
+                    , out total, pagingInfo.PageIndex, AppSettings.PageSize);
+                pagingInfo.Total = total;
+                return result;
+            }
         }
 
         public void Remove(Server server)

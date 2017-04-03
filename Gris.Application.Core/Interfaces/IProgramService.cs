@@ -1,11 +1,12 @@
-﻿using Gris.Domain.Core.Models;
+﻿using Gris.Application.Core.Contracts.Paging;
+using Gris.Domain.Core.Models;
 using System.Collections.Generic;
 
 namespace Gris.Application.Core.Interfaces
 {
     public interface IProgramService
     {
-        IEnumerable<Program> GetPrograms();
+        IEnumerable<Program> GetPrograms(PagingInfo pagingInfo = null);
 
         Program GetById(int id);
 
