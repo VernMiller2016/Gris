@@ -1,4 +1,6 @@
-﻿@model IEnumerable<GRis.ViewModels.PaySource.PaySourceDetailsViewModel>
+﻿@using X.PagedList.Mvc;
+@using X.PagedList;
+@model IEnumerable<GRis.ViewModels.PaySource.PaySourceDetailsViewModel>
 
 @{
     ViewBag.Title = "Index";
@@ -44,3 +46,5 @@
     }
 
 </table>
+
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }))

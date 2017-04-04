@@ -7,6 +7,11 @@ namespace GRis.ViewModels.ServerTimeEntry
     {
         [UIHint("YearMonthDatePicker")]
         [Display(Name = "Filter by Date")]
-        public DateTime? SelectedDate { get; set; } = null;
+        public DateTime? Date { get; set; } = null;
+
+        public string DateAsMonthYear
+        {
+            get { return Date.HasValue ? Date.Value.ToString("MM/yyyy") : ""; }
+        }
     }
 }

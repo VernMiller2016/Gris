@@ -1,10 +1,15 @@
 ﻿using Gris.Application.Core;
+using Gris.Application.Core.Contracts.Paging;
+using Gris.Application.Core.Contracts.Reports;
 using Gris.Application.Core.Interfaces;
+using Gris.Domain.Core.Models;
+using GRis.Extensions;
 using GRis.ViewModels.Reports;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
+using X.PagedList;
 
 namespace GRis.Controllers
 {
@@ -24,34 +29,37 @@ namespace GRis.Controllers
             _exportingService = exportingService;
         }
 
-        // GET: Reports
-        public ActionResult Index()
+        // GET: Reports        
+        public ActionResult Index(ReportFilterViewModel filter, int page = 1)
         {
-            var viewmodel = new ReportFiltersViewModel() { };
+
+            var pagingInfo = new PagingInfo() { PageNumber = page };
+            var entities = Enumerable.Empty<ServerTimeEntriesMonthlyReportEntity>();
+            if (TryValidateModel(filter))
+            {
+                entities = _serverTimeEntryService.GetServerTimeEntriesMonthlyReport(filter.Date.Value, pagingInfo);
+                ViewBag.DisplayResults = true;
+            }
+            else
+            {
+                ViewBag.DisplayResults = false;
+            }
+            ViewBag.FilterViewModel = filter;
+
+            var viewmodel = entities.ToManualPagedList(pagingInfo);
             return View(viewmodel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Index(ReportFiltersViewModel viewmodel)
+        public FileResult ExportServerTimeEntriesMonthlyReportToExcel(ReportFilterViewModel viewmodel)
         {
-            if (ModelState.IsValid)
-            {
-                ViewBag.ReportData = _serverTimeEntryService.GetServerTimeEntriesMonthlyReport(viewmodel.SelectedDate.Value).ToList();
-            }
-            return View("Index", viewmodel);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public FileResult ExportServerTimeEntriesMonthlyReportToExcel(ReportFiltersViewModel viewmodel)
-        {
-            MemoryStream stream = _exportingService.GetServerTimeEntriesMonthlyReportExcel(viewmodel.SelectedDate.Value);
+            MemoryStream stream = _exportingService.GetServerTimeEntriesMonthlyReportExcel(viewmodel.Date.Value);
 
             return File(stream, Constants.ExcelFilesMimeType,
                 string.Format(Constants.ServerTimeEntriesMonthlyReportExcelFileName
-                , CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(viewmodel.SelectedDate.Value.Month)
-                , viewmodel.SelectedDate.Value.Year));
+                , CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(viewmodel.Date.Value.Month)
+                , viewmodel.Date.Value.Year));
         }
     }
 }

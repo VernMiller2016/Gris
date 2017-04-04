@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Gris.Application.Core.Contracts.Paging;
 using Gris.Application.Core.Interfaces;
 using Gris.Domain.Core.Models;
 using GRis.Core.Extensions;
+using GRis.Extensions;
 using GRis.ViewModels.Program;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,9 +25,11 @@ namespace GRis.Controllers
         }
 
         // GET: Programs
-        public ActionResult Index()
+        public ActionResult Index(int page = 1)
         {
-            var viewmodel = Mapper.Map<IEnumerable<Program>, IEnumerable<ProgramDetailsViewModel>>(_programService.GetPrograms().ToList());
+            var pagingInfo = new PagingInfo() { PageNumber = page };
+            var entites = _programService.GetPrograms(pagingInfo);
+            var viewmodel = entites.ToMappedPagedList<Program, ProgramDetailsViewModel>(pagingInfo);
             return View(viewmodel);
         }
 

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Gris.Application.Core.Contracts.Paging;
 using Gris.Application.Core.Interfaces;
 using Gris.Domain.Core.Models;
 using GRis.Core.Extensions;
 using GRis.Core.Utils;
+using GRis.Extensions;
 using GRis.ViewModels.General;
 using GRis.ViewModels.Server;
 using System;
@@ -26,9 +28,11 @@ namespace GRis.Controllers
         }
 
         // GET: Servers
-        public ActionResult Index()
+        public ActionResult Index(int page = 1)
         {
-            var viewmodel = Mapper.Map<IEnumerable<Server>, IEnumerable<ServerDetailsViewModel>>(_serverService.GetServers().ToList());
+            var pagingInfo = new PagingInfo() { PageNumber = page };
+            var entites = _serverService.GetServers(pagingInfo);
+            var viewmodel = entites.ToMappedPagedList<Server, ServerDetailsViewModel>(pagingInfo);
             return View(viewmodel);
         }
 

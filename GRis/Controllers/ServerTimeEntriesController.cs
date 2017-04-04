@@ -1,7 +1,9 @@
-﻿using Gris.Application.Core.Interfaces;
+﻿using Gris.Application.Core.Contracts.Paging;
+using Gris.Application.Core.Interfaces;
 using Gris.Domain.Core.Models;
 using GRis.Core.Extensions;
 using GRis.Core.Utils;
+using GRis.Extensions;
 using GRis.ViewModels.General;
 using GRis.ViewModels.ServerTimeEntry;
 using System;
@@ -28,16 +30,22 @@ namespace GRis.Controllers
         }
 
         // GET: ServerTimeEntries
-        public ActionResult Index(ServerTimeEntryListViewModel viewmodel)
+        public ActionResult Index(ServerTimeEntryFilterViewModel filter, int page = 1)
         {
-            //var pageNumber = page ?? 1; // if no page was specified in the querystring, default to the first page (1)
-            viewmodel.TimeEntries = _serverTimeEntryService.GetServerTimeEntries();
+            var pagingInfo = new PagingInfo() { PageNumber = page };
+            var entities = Enumerable.Empty<ServerTimeEntry>();
+            if (filter.Date.HasValue)
+            {
+                entities = _serverTimeEntryService.GetServerTimeEntries(filter.Date.Value, pagingInfo);
+            }
+            else
+            {
+                entities = _serverTimeEntryService.GetServerTimeEntries(pagingInfo);
+            }
 
-            if (viewmodel.Filters.SelectedDate.HasValue)
-                viewmodel.TimeEntries = viewmodel.TimeEntries.Where(t => t.BeginDate.Year == viewmodel.Filters.SelectedDate.Value.Year
-                    && t.BeginDate.Month == viewmodel.Filters.SelectedDate.Value.Month);
+            ViewBag.FilterViewModel = filter;
 
-            //var pageData = timeEntries.ToPagedList(pageNumber, 25);
+            var viewmodel = entities.ToMappedPagedList<ServerTimeEntry, ServerTimeEntryDetailsViewModel>(pagingInfo);
             return View(viewmodel);
         }
 

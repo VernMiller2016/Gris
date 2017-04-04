@@ -1,4 +1,6 @@
-﻿@model IEnumerable<GRis.ViewModels.Server.ServerDetailsViewModel>
+﻿@using X.PagedList;
+@using X.PagedList.Mvc;
+@model IEnumerable<GRis.ViewModels.Server.ServerDetailsViewModel>
 
 @{
     ViewBag.Title = "Index";
@@ -56,3 +58,5 @@
         </tr>
     }
 </table>
+@*Page @(((IPagedList)Model).PageCount < ((IPagedList)Model).PageNumber ? 0 : ((IPagedList)Model).PageNumber) from @((Model as IPagedList).PageCount)*@
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }))

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Gris.Application.Core.Contracts.Paging;
 using Gris.Application.Core.Interfaces;
 using Gris.Domain.Core.Models;
 using GRis.Core.Extensions;
 using GRis.Core.Utils;
+using GRis.Extensions;
 using GRis.ViewModels.General;
 using GRis.ViewModels.PaySource;
 using System;
@@ -26,9 +28,11 @@ namespace GRis.Controllers
         }
 
         // GET: PaySources
-        public ActionResult Index()
+        public ActionResult Index(int page = 1)
         {
-            var viewmodel = Mapper.Map<IEnumerable<PaySource>, IEnumerable<PaySourceDetailsViewModel>>(_paySourceService.GetPaySources().ToList());
+            var pagingInfo = new PagingInfo() { PageNumber = page };
+            var entites = _paySourceService.GetPaySources(pagingInfo);
+            var viewmodel = entites.ToMappedPagedList<PaySource, PaySourceDetailsViewModel>(pagingInfo);
             return View(viewmodel);
         }
 

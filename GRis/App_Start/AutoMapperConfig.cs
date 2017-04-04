@@ -4,6 +4,7 @@ using Gris.Domain.Core.Models;
 using GRis.ViewModels.PaySource;
 using GRis.ViewModels.Program;
 using GRis.ViewModels.Server;
+using GRis.ViewModels.ServerTimeEntry;
 
 namespace GRis.App_Start
 {
@@ -62,6 +63,13 @@ namespace GRis.App_Start
                 cfg.CreateMap<PaySource, PaySourceEditViewModel>()
                 .ReverseMap()
                 .ForMember(dest => dest.VendorId, opt => opt.Ignore())
+                ;
+
+                #endregion PaySource
+
+                #region PaySource
+
+                cfg.CreateMap<ServerTimeEntry, ServerTimeEntryDetailsViewModel>()
                 ;
 
                 #endregion PaySource

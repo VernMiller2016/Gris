@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using X.PagedList;
 
 namespace GRis.ViewModels.ServerTimeEntry
 {
@@ -7,11 +8,11 @@ namespace GRis.ViewModels.ServerTimeEntry
         public ServerTimeEntryListViewModel()
         {
             Filters = new ServerTimeEntryFilterViewModel();
-            TimeEntries = new List<Gris.Domain.Core.Models.ServerTimeEntry>();
+            TimeEntries = Enumerable.Empty<ServerTimeEntryDetailsViewModel>() as IPagedList<ServerTimeEntryDetailsViewModel>; //new IEnumerable<Gris.Domain.Core.Models.ServerTimeEntry>();
         }
 
         public ServerTimeEntryFilterViewModel Filters { get; set; }
 
-        public IEnumerable<Gris.Domain.Core.Models.ServerTimeEntry> TimeEntries { get; set; }
+        public IPagedList<ServerTimeEntryDetailsViewModel> TimeEntries { get; set; }
     }
 }

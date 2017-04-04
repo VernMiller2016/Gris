@@ -1,9 +1,11 @@
 ﻿@using GRis.ViewModels.ServerTimeEntry
-@model ServerTimeEntryListViewModel
+@using X.PagedList
+@using X.PagedList.Mvc
+@model IEnumerable<ServerTimeEntryDetailsViewModel>
 
 @{
     ViewBag.Title = "Index";
-    var results = Model.TimeEntries;
+    var filterViewModel = ViewBag.FilterViewModel as ServerTimeEntryFilterViewModel;
 }
 
 <h2>Index</h2>
@@ -19,9 +21,9 @@
             <hr />
 
             <div class="form-group">
-                @Html.LabelFor(model => model.Filters.SelectedDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => filterViewModel.Date, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.Filters.SelectedDate)
+                    @Html.EditorFor(model => filterViewModel.Date, new { fieldName = "date" })
                 </div>
             </div>
 
@@ -36,30 +38,30 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.TimeEntries.First().ServerId)
+            @Html.DisplayNameFor(model => model.ServerVendorId)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.TimeEntries.First().PaySourceId)
+            @Html.DisplayNameFor(model => model.PaySourceVendorId)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.TimeEntries.First().Duration)
+            @Html.DisplayNameFor(model => model.Duration)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.TimeEntries.First().BeginDate)
+            @Html.DisplayNameFor(model => model.BeginDate)
         </th>
         @*<th></th>*@
     </tr>
 
-    @if (results.Any())
+    @if (Model.Any())
     {
-        foreach (var item in results)
+        foreach (var item in Model)
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Server.VendorId)
+                    @Html.DisplayFor(modelItem => item.ServerVendorId)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.PaySource.VendorId)
+                    @Html.DisplayFor(modelItem => item.PaySourceVendorId)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Duration)
@@ -86,6 +88,8 @@
         </tr>
     }
 </table>
+
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page, date = filterViewModel.DateAsMonthYear }))
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
