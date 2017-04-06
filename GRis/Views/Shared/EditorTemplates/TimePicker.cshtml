@@ -1,4 +1,4 @@
-﻿@model DateTime?
+﻿@model TimeSpan?
 
 @{
     var fieldName = ViewData.TemplateInfo.HtmlFieldPrefix;
@@ -14,10 +14,10 @@
         }
     }
 
-    var initialValue = Model.HasValue ? Model.Value.ToString("MM/yyyy") : "";
+    var initialValue = Model.HasValue ? Model.Value.ToString() : "";
 }
 
 <div class="input-group date">
-    @Html.TextBoxFor(model => model, new { @class = "form-control monthyear-datepicker", Name = fieldName, @Value = @initialValue, @readonly = "readonly" })
-    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+    @Html.TextBoxFor(model => model, new { @class = "form-control time-datepicker", Name = fieldName, @Value = @initialValue, @readonly = "readonly" })
+    <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
 </div>

@@ -9,10 +9,18 @@
         format: 'MM/YYYY',
         showTodayButton: true,
         ignoreReadonly: true,
-        //format: "dd-mm-yyyy",
-        //startView: 1,
-        //minViewMode: 1,
-        //autoclose: true,
-        //todayHighlight: true
+    });
+
+    $('.time-datepicker').parent('.input-group.date').datetimepicker({
+        format: 'hh:mm:ss',
+        useCurrent: false,
+        ignoreReadonly: true,
+    });
+
+    $('.date-datepicker').parent('.input-group.date').datetimepicker({
+        format: 'MM/DD/YYYY',
+        showTodayButton: true,
+        ignoreReadonly: true,
+        useCurrent: false,
     });
 });
