@@ -21,11 +21,21 @@ namespace Gris.Application.Core.Services
             _unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<ServerTimeEntry> AddServerTimeEntries(IEnumerable<ServerTimeEntry> entities)
+        public ServerTimeEntry GetById(int id)
+        {
+            return _serverTimeEntryRepoitory.OneOrDefault(t => t.Id == id && t.Server.Active && t.PaySource.Active, t => t.Server, t => t.PaySource);
+        }
+
+        public void AddServerTimeEntry(ServerTimeEntry entity)
+        {
+            _serverTimeEntryRepoitory.Add(entity);
+            _unitOfWork.Commit();
+        }
+
+        public void AddServerTimeEntries(IEnumerable<ServerTimeEntry> entities)
         {
             _serverTimeEntryRepoitory.Add(entities);
             _unitOfWork.Commit();
-            return entities;
         }
 
         public IEnumerable<ServerTimeEntry> GetServerTimeEntries(PagingInfo pagingInfo = null)
@@ -88,6 +98,18 @@ namespace Gris.Application.Core.Services
                 pagingInfo.Total = total;
             }
             return Mapper.Map<IEnumerable<ServerTimeEntriesMonthlyReportEntity>>(result);
+        }
+
+        public void UpdateServerTimeEntry(ServerTimeEntry entity)
+        {
+            _serverTimeEntryRepoitory.Update(entity);
+            _unitOfWork.Commit();
+        }
+
+        public void Remove(ServerTimeEntry entity)
+        {
+            _serverTimeEntryRepoitory.Delete(entity);
+            _unitOfWork.Commit();
         }
     }
 }

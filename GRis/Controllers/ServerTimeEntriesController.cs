@@ -1,4 +1,5 @@
-﻿using Gris.Application.Core.Contracts.Paging;
+﻿using AutoMapper;
+using Gris.Application.Core.Contracts.Paging;
 using Gris.Application.Core.Interfaces;
 using Gris.Domain.Core.Models;
 using GRis.Core.Extensions;
@@ -11,6 +12,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Web.Mvc;
 
 namespace GRis.Controllers
@@ -47,6 +49,142 @@ namespace GRis.Controllers
 
             var viewmodel = entities.ToMappedPagedList<ServerTimeEntry, ServerTimeEntryDetailsViewModel>(pagingInfo);
             return View(viewmodel);
+        }
+
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var entity = _serverTimeEntryService.GetById(id.Value);
+            if (entity == null)
+            {
+                return HttpNotFound();
+            }
+            var viewmodel = Mapper.Map<ServerTimeEntry, ServerTimeEntryDetailsViewModel>(entity);
+            return View(viewmodel);
+        }
+
+        public ActionResult Create()
+        {
+            var viewmodel = new ServerTimeEntryAddViewModel();
+            viewmodel.SelectedServers = _serverService.GetServers().Select(t => new SelectListItem()
+            {
+                Text = t.FullName.ToString(),
+                Value = t.Id.ToString()
+            });
+            viewmodel.SelectedPaySources = _paySourceService.GetPaySources().Select(t => new SelectListItem()
+            {
+                Text = t.VendorId.ToString(),
+                Value = t.Id.ToString()
+            });
+            return View(viewmodel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(ServerTimeEntryAddViewModel viewmodel)
+        {
+            if (ModelState.IsValid)
+            {
+                var entity = Mapper.Map<ServerTimeEntryAddViewModel, ServerTimeEntry>(viewmodel);
+                _serverTimeEntryService.AddServerTimeEntry(entity);
+                return RedirectToAction("Index");
+            }
+
+            viewmodel.SelectedServers = _serverService.GetServers().Select(t => new SelectListItem()
+            {
+                Text = t.FullName.ToString(),
+                Value = t.Id.ToString()
+            });
+            viewmodel.SelectedPaySources = _paySourceService.GetPaySources().Select(t => new SelectListItem()
+            {
+                Text = t.VendorId.ToString(),
+                Value = t.Id.ToString()
+            });
+            return View(viewmodel);
+        }
+
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            ServerTimeEntry entity = _serverTimeEntryService.GetById(id.Value);
+            if (entity == null)
+            {
+                return HttpNotFound();
+            }
+
+            var viewmodel = Mapper.Map<ServerTimeEntry, ServerTimeEntryEditViewModel>(entity);
+            viewmodel.SelectedServers = _serverService.GetServers().Select(t => new SelectListItem()
+            {
+                Text = t.FullName.ToString(),
+                Value = t.Id.ToString()
+            });
+            viewmodel.SelectedPaySources = _paySourceService.GetPaySources().Select(t => new SelectListItem()
+            {
+                Text = t.VendorId.ToString(),
+                Value = t.Id.ToString()
+            });
+            return View(viewmodel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(ServerTimeEntryEditViewModel viewmodel)
+        {
+            if (ModelState.IsValid)
+            {
+                ServerTimeEntry entity = _serverTimeEntryService.GetById(viewmodel.Id);
+                if (entity == null)
+                {
+                    return HttpNotFound();
+                }
+                Mapper.Map(viewmodel, entity);
+
+                _serverTimeEntryService.UpdateServerTimeEntry(entity);
+                return RedirectToAction("Index");
+            }
+            viewmodel.SelectedServers = _serverService.GetServers().Select(t => new SelectListItem()
+            {
+                Text = t.FullName.ToString(),
+                Value = t.Id.ToString()
+            });
+            viewmodel.SelectedPaySources = _paySourceService.GetPaySources().Select(t => new SelectListItem()
+            {
+                Text = t.VendorId.ToString(),
+                Value = t.Id.ToString()
+            });
+            return View(viewmodel);
+        }
+
+        public ActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ServerTimeEntry entity = _serverTimeEntryService.GetById(id.Value);
+            if (entity == null)
+            {
+                return HttpNotFound();
+            }
+            var viewmodel = Mapper.Map<ServerTimeEntry, ServerTimeEntryDetailsViewModel>(entity);
+            return View(viewmodel);
+        }
+
+        // POST: Servers/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            ServerTimeEntry entity = _serverTimeEntryService.GetById(id);
+            if (entity != null) _serverTimeEntryService.Remove(entity);
+            return RedirectToAction("Index");
         }
 
         public ActionResult Upload()
@@ -93,8 +231,8 @@ namespace GRis.Controllers
                         {
                             Server = existedServer,
                             PaySource = existedPaySource,
-                            BeginDate = timeEntryViewModel.BeginDate,
-                            Duration = timeEntryViewModel.Duration
+                            BeginDate = timeEntryViewModel.BeginDate.Value,
+                            Duration = timeEntryViewModel.Duration.Value
                         });
                     }
                     if (ModelState.Keys.Any())

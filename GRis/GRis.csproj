@@ -233,8 +233,9 @@
     <Compile Include="ViewModels\Program\ProgramEditViewModel.cs" />
     <Compile Include="ViewModels\Program\ProgramAddViewModel.cs" />
     <Compile Include="ViewModels\Reports\ReportFilterViewModel.cs" />
-    <Compile Include="ViewModels\ServerTimeEntry\ServerTimeEntryDetailsViewModel.cs" />
     <Compile Include="ViewModels\ServerTimeEntry\ServerTimeEntryAddViewModel.cs" />
+    <Compile Include="ViewModels\ServerTimeEntry\ServerTimeEntryDetailsViewModel.cs" />
+    <Compile Include="ViewModels\ServerTimeEntry\ServerTimeEntryEditViewModel.cs" />
     <Compile Include="ViewModels\ServerTimeEntry\ServerTimeEntryFilterViewModel.cs" />
     <Compile Include="ViewModels\ServerTimeEntry\ServerTimeEntryListViewModel.cs" />
     <Compile Include="ViewModels\Server\ServerDetailsViewModel.cs" />
@@ -360,6 +361,12 @@
     <Content Include="Views\UserAdmin\Edit.cshtml" />
     <Content Include="Views\UserAdmin\GetUsers.cshtml" />
     <Content Include="Views\UserAdmin\Index.cshtml" />
+    <Content Include="Views\ServerTimeEntries\Create.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DatePicker.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TimePicker.cshtml" />
+    <Content Include="Views\ServerTimeEntries\Edit.cshtml" />
+    <Content Include="Views\ServerTimeEntries\Details.cshtml" />
+    <Content Include="Views\ServerTimeEntries\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

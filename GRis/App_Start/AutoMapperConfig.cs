@@ -67,12 +67,26 @@ namespace GRis.App_Start
 
                 #endregion PaySource
 
-                #region PaySource
+                #region ServerTimeEntry
 
                 cfg.CreateMap<ServerTimeEntry, ServerTimeEntryDetailsViewModel>()
+                .ForMember(dest => dest.ServerName, opt => opt.MapFrom(src => src.Server.FullName))
                 ;
 
-                #endregion PaySource
+                cfg.CreateMap<ServerTimeEntryAddViewModel, ServerTimeEntry>()
+                .ForMember(dest => dest.ServerId, opt => opt.MapFrom(src => src.ServerVendorId))
+                .ForMember(dest => dest.PaySourceId, opt => opt.MapFrom(src => src.PaySourceVendorId))
+                ;
+
+                cfg.CreateMap<ServerTimeEntry, ServerTimeEntryEditViewModel>()
+                .ForMember(dest => dest.ServerVendorId, opt => opt.MapFrom(src => src.ServerId))
+                .ForMember(dest => dest.PaySourceVendorId, opt => opt.MapFrom(src => src.PaySourceId))
+                .ReverseMap()
+                .ForMember(dest => dest.ServerId, opt => opt.MapFrom(src => src.ServerVendorId))
+                .ForMember(dest => dest.PaySourceId, opt => opt.MapFrom(src => src.PaySourceVendorId))
+                ;
+
+                #endregion ServerTimeEntry
             });
         }
     }

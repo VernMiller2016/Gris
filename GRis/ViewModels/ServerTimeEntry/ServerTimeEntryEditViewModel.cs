@@ -5,8 +5,10 @@ using System.Web.Mvc;
 
 namespace GRis.ViewModels.ServerTimeEntry
 {
-    public class ServerTimeEntryAddViewModel
+    public class ServerTimeEntryEditViewModel
     {
+        public int Id { get; set; }
+
         [Required]
         [Display(Name = "Server Id")]
         public int ServerVendorId { get; set; }
