@@ -95,7 +95,7 @@ namespace Gris.Utilities.App_Start
             kernel.Bind<IProgramRepository>().To<ProgramRepository>();
             kernel.Bind<IProgramService>().To<ProgramService>();
 
-            kernel.Bind<IRepository<ServerTimeEntry>>().To<EFRepository<ServerTimeEntry>>();
+            kernel.Bind<IServerTimeEntryRepository>().To<ServerTimeEntryRepository>();
             kernel.Bind<IServerTimeEntryService>().To<ServerTimeEntryService>();
         }
     }

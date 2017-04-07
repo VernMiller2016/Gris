@@ -227,13 +227,12 @@ namespace GRis.Controllers
                             ModelState.AddModelError("", $"Invalid PaySource Id with value ={timeEntryViewModel.PaySourceVendorId}");
                         }
 
-                        timeEntries.Add(new ServerTimeEntry()
-                        {
-                            Server = existedServer,
-                            PaySource = existedPaySource,
-                            BeginDate = timeEntryViewModel.BeginDate.Value,
-                            Duration = timeEntryViewModel.Duration.Value
-                        });
+                        // check if entity already exists.
+                        var entity = Mapper.Map<ServerTimeEntryAddViewModel, ServerTimeEntry>(timeEntryViewModel);
+                        entity.ServerId = existedServer.Id;
+                        entity.PaySourceId = existedPaySource.Id;
+                        if (!_serverTimeEntryService.TimeEntryExists(entity))
+                            timeEntries.Add(entity);
                     }
                     if (ModelState.Keys.Any())
                     {

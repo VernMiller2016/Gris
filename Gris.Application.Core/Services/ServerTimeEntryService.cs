@@ -12,10 +12,10 @@ namespace Gris.Application.Core.Services
 {
     public class ServerTimeEntryService : IServerTimeEntryService
     {
-        private IRepository<ServerTimeEntry> _serverTimeEntryRepoitory;
+        private IServerTimeEntryRepository _serverTimeEntryRepoitory;
         private IUnitOfWork _unitOfWork;
 
-        public ServerTimeEntryService(IRepository<ServerTimeEntry> serverTimeEntryRepoitory, IUnitOfWork unitOfWork)
+        public ServerTimeEntryService(IServerTimeEntryRepository serverTimeEntryRepoitory, IUnitOfWork unitOfWork)
         {
             _serverTimeEntryRepoitory = serverTimeEntryRepoitory;
             _unitOfWork = unitOfWork;
@@ -24,6 +24,11 @@ namespace Gris.Application.Core.Services
         public ServerTimeEntry GetById(int id)
         {
             return _serverTimeEntryRepoitory.OneOrDefault(t => t.Id == id, t => t.Server, t => t.PaySource);
+        }
+
+        public bool TimeEntryExists(ServerTimeEntry entity)
+        {            
+            return _serverTimeEntryRepoitory.TimeEntryExists(entity);
         }
 
         public void AddServerTimeEntry(ServerTimeEntry entity)

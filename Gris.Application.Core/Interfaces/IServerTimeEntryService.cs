@@ -10,6 +10,8 @@ namespace Gris.Application.Core.Interfaces
     {
         ServerTimeEntry GetById(int id);
 
+        bool TimeEntryExists(ServerTimeEntry entity);
+
         void AddServerTimeEntry(ServerTimeEntry entity);
 
         void AddServerTimeEntries(IEnumerable<ServerTimeEntry> entities);
