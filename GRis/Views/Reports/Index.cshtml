@@ -48,7 +48,7 @@
     {
         using (Html.BeginForm("ExportServerTimeEntriesMonthlyReportToExcel", "Reports"))
         {
-            @Html.HiddenFor(model => filterViewModel.Date)
+            @Html.HiddenFor(model => filterViewModel.Date, new { Name = "date" })
             @Html.AntiForgeryToken()
 
             <button type="submit" class="btn btn-labeled btn-success pull-right">

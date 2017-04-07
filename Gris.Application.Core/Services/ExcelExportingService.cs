@@ -58,7 +58,7 @@ namespace Gris.Application.Core.Services
                         //programSheet.Cells["D" + index].Value = DateTime.Today.Add(item.Duration).ToString("hh:mm:ss tt");
                         programSheet.Cells["D" + index].Style.Numberformat.Format = "[h]:mm:ss";
                         programSheet.Cells["D" + index].Value = item.Duration;
-                        programSheet.Cells["E" + index].Value = item.PaysourceVendorId;
+                        programSheet.Cells["E" + index].Value = item.PaysourceDescription;
                         programSheet.Row(index).OutlineLevel = (2);
                         programSheet.Row(index).Collapsed = true;
                         index++;
@@ -95,7 +95,7 @@ namespace Gris.Application.Core.Services
                 dataSheet.Cells["B" + index].Value = item.ServerName;
                 dataSheet.Cells["C" + index].Value = item.BeginDate.ToString(Constants.ShortDateFormat);
                 dataSheet.Cells["D" + index].Value = item.Duration.ToString();
-                dataSheet.Cells["E" + index].Value = item.PaysourceVendorId;
+                dataSheet.Cells["E" + index].Value = item.PaysourceDescription;
                 index++;
             }
             dataSheet.Name = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(time.Month) + " - " + time.Year;

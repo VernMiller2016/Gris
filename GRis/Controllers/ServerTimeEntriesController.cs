@@ -76,7 +76,7 @@ namespace GRis.Controllers
             });
             viewmodel.SelectedPaySources = _paySourceService.GetPaySources().Select(t => new SelectListItem()
             {
-                Text = t.VendorId.ToString(),
+                Text = t.Description.ToString(),
                 Value = t.Id.ToString()
             });
             return View(viewmodel);
@@ -100,7 +100,7 @@ namespace GRis.Controllers
             });
             viewmodel.SelectedPaySources = _paySourceService.GetPaySources().Select(t => new SelectListItem()
             {
-                Text = t.VendorId.ToString(),
+                Text = t.Description.ToString(),
                 Value = t.Id.ToString()
             });
             return View(viewmodel);
@@ -127,7 +127,7 @@ namespace GRis.Controllers
             });
             viewmodel.SelectedPaySources = _paySourceService.GetPaySources().Select(t => new SelectListItem()
             {
-                Text = t.VendorId.ToString(),
+                Text = t.Description.ToString(),
                 Value = t.Id.ToString()
             });
             return View(viewmodel);
@@ -156,7 +156,7 @@ namespace GRis.Controllers
             });
             viewmodel.SelectedPaySources = _paySourceService.GetPaySources().Select(t => new SelectListItem()
             {
-                Text = t.VendorId.ToString(),
+                Text = t.Description.ToString(),
                 Value = t.Id.ToString()
             });
             return View(viewmodel);

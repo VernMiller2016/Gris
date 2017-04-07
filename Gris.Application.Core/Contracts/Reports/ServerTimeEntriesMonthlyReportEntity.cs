@@ -14,6 +14,8 @@ namespace Gris.Application.Core.Contracts.Reports
 
         public int PaysourceVendorId { get; set; }
 
+        public string PaysourceDescription { get; set; }
+
         public string ProgramName { get; set; }
 
         public int ProgramId { get; set; }

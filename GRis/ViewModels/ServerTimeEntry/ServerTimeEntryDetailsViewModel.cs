@@ -13,6 +13,9 @@ namespace GRis.ViewModels.ServerTimeEntry
         [Display(Name = "PaySource Id")]
         public int PaySourceVendorId { get; set; }
 
+        [Display(Name = "PaySource")]
+        public string PaySourceDescription { get; set; }
+
         [Display(Name = "Server Name")]
         public string ServerName { get; set; }
 
