@@ -23,7 +23,7 @@ namespace Gris.Application.Core.Services
 
         public ServerTimeEntry GetById(int id)
         {
-            return _serverTimeEntryRepoitory.OneOrDefault(t => t.Id == id && t.Server.Active && t.PaySource.Active, t => t.Server, t => t.PaySource);
+            return _serverTimeEntryRepoitory.OneOrDefault(t => t.Id == id, t => t.Server, t => t.PaySource);
         }
 
         public void AddServerTimeEntry(ServerTimeEntry entity)
