@@ -67,6 +67,7 @@
     <Compile Include="Interfaces\IPaySourceRepository.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Interfaces\IProgramRepository.cs" />
+    <Compile Include="Interfaces\IServerTimeEntryRepository.cs" />
     <Compile Include="Interfaces\IServerRepository.cs" />
     <Compile Include="Migrations\201703180956333_DatabaseCreation.cs" />
     <Compile Include="Migrations\201703180956333_DatabaseCreation.Designer.cs">
@@ -105,6 +106,7 @@
     <Compile Include="Repositories\EFRepository.cs" />
     <Compile Include="Repositories\PaySourceRepository.cs" />
     <Compile Include="Repositories\ProgramRepository.cs" />
+    <Compile Include="Repositories\ServerTimeEntryRepository.cs" />
     <Compile Include="Repositories\ServerRepository.cs" />
     <Compile Include="Repositories\SoftDeleteEFRepository.cs" />
     <Compile Include="UnitOfWork.cs" />

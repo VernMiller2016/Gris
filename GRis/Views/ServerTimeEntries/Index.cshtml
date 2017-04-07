@@ -11,7 +11,7 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Upload excel sheet", "Upload")
+    @Html.ActionLink("Create New", "Create") | @Html.ActionLink("Upload excel sheet", "Upload")
 </p>
 
 <div>
@@ -38,10 +38,10 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.ServerVendorId)
+            @Html.DisplayNameFor(model => model.ServerName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.PaySourceVendorId)
+            @Html.DisplayNameFor(model => model.PaySourceDescription)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Duration)
@@ -49,7 +49,7 @@
         <th>
             @Html.DisplayNameFor(model => model.BeginDate)
         </th>
-        @*<th></th>*@
+        <th></th>
     </tr>
 
     @if (Model.Any())
@@ -58,10 +58,10 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ServerVendorId)
+                    @Html.DisplayFor(modelItem => item.ServerName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.PaySourceVendorId)
+                    @Html.DisplayFor(modelItem => item.PaySourceDescription)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Duration)
@@ -69,11 +69,11 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.BeginDate)
                 </td>
-                @*<td>
+                <td>
                         @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
                         @Html.ActionLink("Details", "Details", new { id=item.Id }) |
                         @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-                    </td>*@
+                    </td>
             </tr>
         }
     }

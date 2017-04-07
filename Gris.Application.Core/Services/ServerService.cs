@@ -43,11 +43,11 @@ namespace Gris.Application.Core.Services
         public IEnumerable<Server> GetServers(PagingInfo pagingInfo = null)
         {
             if (pagingInfo == null)
-                return _serverRepoitory.Get(null, (list => list.OrderBy(s => s.LastName)));
+                return _serverRepoitory.Get(null, (list => list.OrderBy(s => s.FullName)));
             else
             {
                 int total = 0;
-                var result = _serverRepoitory.FilterWithPaging(null, (list => list.OrderBy(s => s.LastName))
+                var result = _serverRepoitory.FilterWithPaging(null, (list => list.OrderBy(s => s.FullName))
                     , out total, pagingInfo.PageIndex, AppSettings.PageSize);
                 pagingInfo.Total = total;
                 return result;

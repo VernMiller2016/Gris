@@ -1,0 +1,50 @@
+﻿@model GRis.ViewModels.ServerTimeEntry.ServerTimeEntryDetailsViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.ServerName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ServerName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PaySourceDescription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PaySourceDescription)
+        </dd>        
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Duration)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Duration)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BeginDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BeginDate)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

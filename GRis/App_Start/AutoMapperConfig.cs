@@ -18,6 +18,7 @@ namespace GRis.App_Start
                 .ForMember(dest => dest.ServerName, opt => opt.MapFrom(src => src.Server.FullName))
                 .ForMember(dest => dest.ServerVendorId, opt => opt.MapFrom(src => src.Server.VendorId))
                 .ForMember(dest => dest.PaysourceVendorId, opt => opt.MapFrom(src => src.PaySource.VendorId))
+                .ForMember(dest => dest.PaysourceDescription, opt => opt.MapFrom(src => src.PaySource.Description))
                 .ForMember(dest => dest.ProgramId, opt => opt.MapFrom(src => src.PaySource.Program.Id))
                 .ForMember(dest => dest.ProgramName, opt => opt.MapFrom(src => src.PaySource.Program.Name))
                 ;
@@ -67,12 +68,29 @@ namespace GRis.App_Start
 
                 #endregion PaySource
 
-                #region PaySource
+                #region ServerTimeEntry
 
                 cfg.CreateMap<ServerTimeEntry, ServerTimeEntryDetailsViewModel>()
+                .ForMember(dest => dest.ServerName, opt => opt.MapFrom(src => src.Server.FullName))
+                .ForMember(dest => dest.ServerVendorId, opt => opt.MapFrom(src => src.ServerId))
+                .ForMember(dest => dest.PaySourceVendorId, opt => opt.MapFrom(src => src.PaySourceId))
+                .ForMember(dest => dest.PaySourceDescription, opt => opt.MapFrom(src => src.PaySource.Description))
                 ;
 
-                #endregion PaySource
+                cfg.CreateMap<ServerTimeEntryAddViewModel, ServerTimeEntry>()
+                .ForMember(dest => dest.ServerId, opt => opt.MapFrom(src => src.ServerVendorId))
+                .ForMember(dest => dest.PaySourceId, opt => opt.MapFrom(src => src.PaySourceVendorId))
+                ;
+
+                cfg.CreateMap<ServerTimeEntry, ServerTimeEntryEditViewModel>()
+                .ForMember(dest => dest.ServerVendorId, opt => opt.MapFrom(src => src.ServerId))
+                .ForMember(dest => dest.PaySourceVendorId, opt => opt.MapFrom(src => src.PaySourceId))
+                .ReverseMap()
+                .ForMember(dest => dest.ServerId, opt => opt.MapFrom(src => src.ServerVendorId))
+                .ForMember(dest => dest.PaySourceId, opt => opt.MapFrom(src => src.PaySourceVendorId))
+                ;
+
+                #endregion ServerTimeEntry
             });
         }
     }

@@ -4,10 +4,16 @@ using Gris.Infrastructure.Core.Interfaces;
 
 namespace Gris.Infrastructure.Core.Repositories
 {
-    public class PaySourceRepository : SoftDeleteEFRepository<PaySource>, IPaySourceRepository
+    public class PaySourceRepository : EFRepository<PaySource>, IPaySourceRepository
     {
         public PaySourceRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
+        }
+
+        public override void Delete(PaySource entity)
+        {
+            entity.Active = false;
+            this.Update(entity);
         }
     }
 }
