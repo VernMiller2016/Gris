@@ -89,14 +89,12 @@ namespace GRis.ViewModels.Account
         /// <summary>
         /// user full name
         /// </summary>
-        [Required]
         [Display(Name = "Full name")]
         public string FullName { get; set; }
 
         /// <summary>
         /// phone number
         /// </summary>
-        [Required]
         [Display(Name = "mobile number")]
         public string PhoneNumber { get; set; }
     }
