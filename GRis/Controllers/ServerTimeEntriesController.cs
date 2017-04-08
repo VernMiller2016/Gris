@@ -5,7 +5,7 @@ using Gris.Domain.Core.Models;
 using GRis.Core.Extensions;
 using GRis.Core.Utils;
 using GRis.Extensions;
-using GRis.ViewModels.General;
+using GRis.ViewModels.Common;
 using GRis.ViewModels.ServerTimeEntry;
 using System;
 using System.Collections.Generic;
@@ -91,7 +91,7 @@ namespace GRis.Controllers
                 var entity = Mapper.Map<ServerTimeEntryAddViewModel, ServerTimeEntry>(viewmodel);
                 _serverTimeEntryService.AddServerTimeEntry(entity);
 
-                Success($"<b>Time Entry</b> was successfully added.");
+                Success($"<strong>Time Entry</strong> was successfully added.");
                 return RedirectToAction("Index");
             }
 
@@ -149,7 +149,7 @@ namespace GRis.Controllers
                 Mapper.Map(viewmodel, entity);
                 _serverTimeEntryService.UpdateServerTimeEntry(entity);
 
-                Success($"<b>Time Entry</b> was successfully updated.");
+                Success($"<strong>Time Entry</strong> was successfully updated.");
                 return RedirectToAction("Index");
             }
             viewmodel.SelectedServers = _serverService.GetServers().Select(t => new SelectListItem()
@@ -187,7 +187,7 @@ namespace GRis.Controllers
         {
             ServerTimeEntry entity = _serverTimeEntryService.GetById(id);
             if (entity != null) _serverTimeEntryService.Remove(entity);
-            Success($"<b>Time Entry</b> was successfully deleted.");
+            Success($"<strong>Time Entry</strong> was successfully deleted.");
             return RedirectToAction("Index");
         }
 
@@ -246,8 +246,8 @@ namespace GRis.Controllers
                     {
                         _serverTimeEntryService.AddServerTimeEntries(timeEntries);
                     }
-                    Success($"<b>{timeEntries.Count}</b> Time Entries have been successfully added. <br\\>"
-                        + $"<b>{dtServers.Rows.Count - timeEntries.Count}</b> Time Entries are duplicated and have been skipped.");
+                    Success($"<strong>{timeEntries.Count}</strong> Time Entries have been successfully added. <br\\>"
+                        + $"<strong>{dtServers.Rows.Count - timeEntries.Count}</strong> Time Entries are duplicated and have been skipped.");
                 }
                 return RedirectToAction("Index");
             }

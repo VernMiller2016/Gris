@@ -5,7 +5,7 @@ using Gris.Domain.Core.Models;
 using GRis.Core.Extensions;
 using GRis.Core.Utils;
 using GRis.Extensions;
-using GRis.ViewModels.General;
+using GRis.ViewModels.Common;
 using GRis.ViewModels.PaySource;
 using System;
 using System.Collections.Generic;
@@ -64,11 +64,19 @@ namespace GRis.Controllers
         {
             if (ModelState.IsValid)
             {
-                var entity = Mapper.Map<PaySourceAddViewModel, PaySource>(viewmodel);
-                _paySourceService.AddPaySource(entity);
+                // check if vendor id already exists.
+                if (_paySourceService.GetByVendorId(viewmodel.VendorId) == null)
+                {
+                    var entity = Mapper.Map<PaySourceAddViewModel, PaySource>(viewmodel);
+                    _paySourceService.AddPaySource(entity);
 
-                Success($"<b>{entity.Description}</b> was successfully added.");
-                return RedirectToAction("Index");
+                    Success($"<strong>{entity.Description}</strong> was successfully added.");
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    Danger($"A Paysource with same Id <strong>{viewmodel.VendorId}</strong> already exists.");
+                }
             }
 
             return View(viewmodel);
@@ -109,7 +117,7 @@ namespace GRis.Controllers
 
                 _paySourceService.UpdatePaySource(entity);
 
-                Success($"<b>{entity.Description}</b> was successfully updated.");
+                Success($"<strong>{entity.Description}</strong> was successfully updated.");
                 return RedirectToAction("Index");
             }
             return View(viewmodel);
@@ -138,7 +146,7 @@ namespace GRis.Controllers
             PaySource entity = _paySourceService.GetById(id);
             if (entity != null) _paySourceService.Remove(entity);
 
-            Success($"<b>{entity.Description}</b> was successfully deleted.");
+            Success($"<strong>{entity.Description}</strong> was successfully deleted.");
             return RedirectToAction("Index");
         }
 
@@ -194,8 +202,8 @@ namespace GRis.Controllers
                     {
                         _paySourceService.AddPaySources(addedPaySources);
                     }
-                    Success($"<b>{addedPaySources.Count}</b> PaySources have been successfully added. <br\\>"
-                        + $"<b>{numOfPaySourcesUpdated}</b> PaySources have been successfully updated.");
+                    Success($"<strong>{addedPaySources.Count}</strong> PaySources have been successfully added. <br\\>"
+                        + $"<strong>{numOfPaySourcesUpdated}</strong> PaySources have been successfully updated.");
                 }
                 return RedirectToAction("Index");
             }

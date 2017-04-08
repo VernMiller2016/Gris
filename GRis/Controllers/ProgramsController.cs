@@ -79,7 +79,7 @@ namespace GRis.Controllers
                     }
                     _programService.AddProgram(entity);
 
-                    Success($"<b>{entity.Name}</b> was successfully added.");
+                    Success($"<strong>{entity.Name}</strong> was successfully added.");
                     return RedirectToAction("Index");
                 }
                 viewmodel.PaySources = _programService.GetAvailablePaySourcesNotRelatedToPrograms().Select(t => new SelectListItem()
@@ -133,7 +133,7 @@ namespace GRis.Controllers
                     Mapper.Map(viewmodel, entity);
                     _programService.UpdateProgram(entity);
 
-                    Success($"<b>{entity.Name}</b> was successfully updated.");
+                    Success($"<strong>{entity.Name}</strong> was successfully updated.");
                     return RedirectToAction("Index");
                 }
                 return View(viewmodel);
@@ -175,7 +175,7 @@ namespace GRis.Controllers
 
                 _programService.Remove(entity);
 
-                Success($"<b>{entity.Name}</b> was successfully deleted.");
+                Success($"<strong>{entity.Name}</strong> was successfully deleted.");
                 return RedirectToAction("Index");
             }
             catch
