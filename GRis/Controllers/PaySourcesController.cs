@@ -18,7 +18,7 @@ using System.Web.Mvc;
 namespace GRis.Controllers
 {
     [Authorize]
-    public class PaySourcesController : Controller
+    public class PaySourcesController : BaseController
     {
         private IPaySourceService _paySourceService;
 
@@ -67,6 +67,7 @@ namespace GRis.Controllers
                 var entity = Mapper.Map<PaySourceAddViewModel, PaySource>(viewmodel);
                 _paySourceService.AddPaySource(entity);
 
+                Success($"<b>{entity.Description}</b> was successfully added.");
                 return RedirectToAction("Index");
             }
 
@@ -107,6 +108,8 @@ namespace GRis.Controllers
                 Mapper.Map(viewmodel, entity);
 
                 _paySourceService.UpdatePaySource(entity);
+
+                Success($"<b>{entity.Description}</b> was successfully updated.");
                 return RedirectToAction("Index");
             }
             return View(viewmodel);
@@ -132,8 +135,10 @@ namespace GRis.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            PaySource paySource = _paySourceService.GetById(id);
-            if (paySource != null) _paySourceService.Remove(paySource);
+            PaySource entity = _paySourceService.GetById(id);
+            if (entity != null) _paySourceService.Remove(entity);
+
+            Success($"<b>{entity.Description}</b> was successfully deleted.");
             return RedirectToAction("Index");
         }
 
@@ -158,6 +163,7 @@ namespace GRis.Controllers
                     viewmodel.ExcelFile.SaveAs(path); // save a copy of the uploaded file.
                     // convert the uploaded file into datatable, then add/update db entities.
                     var dtServers = ImportUtils.ImportXlsxToDataTable(viewmodel.ExcelFile.InputStream, true);
+                    int numOfPaySourcesUpdated = 0;
                     foreach (var row in dtServers.AsEnumerable().ToList())
                     {
                         var entityViewModel = new PaySourceAddViewModel()
@@ -180,6 +186,7 @@ namespace GRis.Controllers
                             {
                                 Mapper.Map(entityViewModel, existedEntity);
                                 _paySourceService.UpdatePaySource(existedEntity);
+                                numOfPaySourcesUpdated++;
                             }
                         }
                     }
@@ -187,6 +194,8 @@ namespace GRis.Controllers
                     {
                         _paySourceService.AddPaySources(addedPaySources);
                     }
+                    Success($"<b>{addedPaySources.Count}</b> PaySources have been successfully added. <br\\>"
+                        + $"<b>{numOfPaySourcesUpdated}</b> PaySources have been successfully updated.");
                 }
                 return RedirectToAction("Index");
             }

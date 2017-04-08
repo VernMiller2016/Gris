@@ -18,7 +18,7 @@ using System.Web.Mvc;
 namespace GRis.Controllers
 {
     [Authorize]
-    public class ServersController : Controller
+    public class ServersController : BaseController
     {
         private IServerService _serverService;
 
@@ -70,6 +70,8 @@ namespace GRis.Controllers
             {
                 var entity = Mapper.Map<ServerAddViewModel, Server>(viewmodel);
                 _serverService.AddServer(entity);
+
+                Success($"<b>{entity.FullName}</b> was successfully added.");
                 return RedirectToAction("Index");
             }
 
@@ -110,6 +112,7 @@ namespace GRis.Controllers
                 Mapper.Map(viewmodel, entity);
 
                 _serverService.UpdateServer(entity);
+                Success($"<b>{entity.FullName}</b> was successfully updated.");
                 return RedirectToAction("Index");
             }
             return View(viewmodel);
@@ -135,8 +138,9 @@ namespace GRis.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Server server = _serverService.GetById(id);
-            if (server != null) _serverService.Remove(server);
+            Server entity = _serverService.GetById(id);
+            if (entity != null) _serverService.Remove(entity);
+            Success($"<b>{entity.FullName}</b> was successfully deleted.");
             return RedirectToAction("Index");
         }
 
@@ -160,6 +164,7 @@ namespace GRis.Controllers
                     viewmodel.ExcelFile.SaveAs(path); // save a copy of the uploaded file.
                     // convert the uploaded file into datatable, then add/update db entities.
                     var dtServers = ImportUtils.ImportXlsxToDataTable(viewmodel.ExcelFile.InputStream, true);
+                    int numOfServersUpdated = 0;
                     foreach (var row in dtServers.AsEnumerable().ToList())
                     {
                         var entityViewModel = new ServerAddViewModel()
@@ -184,6 +189,7 @@ namespace GRis.Controllers
                             {
                                 Mapper.Map(entityViewModel, existedEntity);
                                 _serverService.UpdateServer(existedEntity);
+                                numOfServersUpdated++;
                             }
                         }
                     }
@@ -191,6 +197,8 @@ namespace GRis.Controllers
                     {
                         _serverService.AddServers(addedServers);
                     }
+                    Success($"<b>{addedServers.Count}</b> servers have been successfully added. <br\\>"
+                        + $"<b>{numOfServersUpdated}</b> servers have been successfully updated.");
                 }
                 return RedirectToAction("Index");
             }

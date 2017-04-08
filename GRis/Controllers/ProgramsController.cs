@@ -13,7 +13,7 @@ using System.Web.Mvc;
 namespace GRis.Controllers
 {
     [Authorize]
-    public class ProgramsController : Controller
+    public class ProgramsController : BaseController
     {
         private IProgramService _programService;
         private IPaySourceService _paySourceService;
@@ -78,6 +78,8 @@ namespace GRis.Controllers
                         entity.PaySources.Add(paysource);
                     }
                     _programService.AddProgram(entity);
+
+                    Success($"<b>{entity.Name}</b> was successfully added.");
                     return RedirectToAction("Index");
                 }
                 viewmodel.PaySources = _programService.GetAvailablePaySourcesNotRelatedToPrograms().Select(t => new SelectListItem()
@@ -129,8 +131,9 @@ namespace GRis.Controllers
                         return HttpNotFound();
                     }
                     Mapper.Map(viewmodel, entity);
-
                     _programService.UpdateProgram(entity);
+
+                    Success($"<b>{entity.Name}</b> was successfully updated.");
                     return RedirectToAction("Index");
                 }
                 return View(viewmodel);
@@ -171,6 +174,8 @@ namespace GRis.Controllers
                 }
 
                 _programService.Remove(entity);
+
+                Success($"<b>{entity.Name}</b> was successfully deleted.");
                 return RedirectToAction("Index");
             }
             catch
