@@ -27,7 +27,7 @@ namespace Gris.Application.Core.Services
         }
 
         public bool TimeEntryExists(ServerTimeEntry entity)
-        {            
+        {
             return _serverTimeEntryRepoitory.TimeEntryExists(entity);
         }
 

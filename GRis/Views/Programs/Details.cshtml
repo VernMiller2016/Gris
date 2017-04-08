@@ -42,18 +42,17 @@
             @Html.DisplayFor(model => model.Active)
         </dd>
         <dt>
-            @*@Html.DisplayNameFor(model => model.PaySources)*@
-            Related PaySources
+            @Html.DisplayNameFor(model => model.PaySources)
         </dt>
 
         <dd>
             @foreach (var paysource in Model.PaySources)
             {
-                <p>@paysource.VendorId</p>
+                <p>
+                    @paysource.Description
+                </p>
             }
         </dd>
-
-
     </dl>
 </div>
 <p>

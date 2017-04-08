@@ -153,7 +153,8 @@ namespace GRis.Controllers
             {
                 return HttpNotFound();
             }
-            return View(entity);
+            var viewmodel = Mapper.Map<Program, ProgramDetailsViewModel>(entity);
+            return View(viewmodel);
         }
 
         // POST: Programs/Delete/5

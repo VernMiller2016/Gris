@@ -21,6 +21,7 @@ namespace GRis.ViewModels.Program
         [Display(Name = "Is Active")]
         public bool Active { get; set; }
 
+        [Display(Name = "Related PaySources")]
         public List<PaySourceDetailsViewModel> PaySources { get; set; }
     }
 }

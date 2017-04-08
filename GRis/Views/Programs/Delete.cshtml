@@ -1,4 +1,4 @@
-﻿@model Gris.Domain.Core.Models.Program
+﻿@model GRis.ViewModels.Program.ProgramDetailsViewModel
 
 @{
     ViewBag.Title = "Delete";
@@ -41,6 +41,18 @@
 
         <dd>
             @Html.DisplayFor(model => model.Active)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PaySources)
+        </dt>
+
+        <dd>
+            @foreach (var paysource in Model.PaySources)
+            {
+                <p>
+                    @paysource.Description
+                </p>
+            }
         </dd>
 
     </dl>

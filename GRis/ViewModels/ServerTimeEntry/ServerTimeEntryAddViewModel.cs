@@ -8,11 +8,11 @@ namespace GRis.ViewModels.ServerTimeEntry
     public class ServerTimeEntryAddViewModel
     {
         [Required]
-        [Display(Name = "Server Id")]
+        [Display(Name = "Server")]
         public int ServerVendorId { get; set; }
 
         [Required]
-        [Display(Name = "PaySource Id")]
+        [Display(Name = "PaySource")]
         public int PaySourceVendorId { get; set; }
 
         [Required]

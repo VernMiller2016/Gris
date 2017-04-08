@@ -23,7 +23,7 @@ namespace GRis.ViewModels.Program
         [Display(Name = "Is Active")]
         public bool Active { get; set; } = true; // syntax sugar to set default value here, instead of inside the constructor.
 
-        [Display(Name = "PaySources")]
+        [Display(Name = "Related PaySources")]
         [Required(ErrorMessage = "Please select paysource")]
         public int[] SelectedPaySources { get; set; }
 
