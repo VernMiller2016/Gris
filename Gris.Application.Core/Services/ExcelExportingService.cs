@@ -137,6 +137,7 @@ namespace Gris.Application.Core.Services
                 index++;
             });
 
+            dataSheet.Name = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(time.Month) + " - " + time.Year;
             dataSheet.Cells.AutoFitColumns();
         }
 
