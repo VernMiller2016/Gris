@@ -6,6 +6,8 @@ namespace Gris.Application.Core.Contracts.Reports
     {
         public string ServerName { get; set; }
 
+        public int ServerId { get; set; }
+
         public int ServerVendorId { get; set; }
 
         public DateTime BeginDate { get; set; }

@@ -42,9 +42,11 @@ namespace Gris.Utilities.App_Start
         {
             bootstrapper.ShutDown();
         }
-        public static object CurrentDbContext { get
+        public static object CurrentDbContext
+        {
+            get
             {
-                if(currentKernal == null)
+                if (currentKernal == null)
                 {
                     return null;
                 }
@@ -97,6 +99,9 @@ namespace Gris.Utilities.App_Start
 
             kernel.Bind<IServerTimeEntryRepository>().To<ServerTimeEntryRepository>();
             kernel.Bind<IServerTimeEntryService>().To<ServerTimeEntryService>();
+
+            kernel.Bind<IRepository<ServerAvailableHour>>().To<EFRepository<ServerAvailableHour>>();
+            kernel.Bind<IServerAvailableHourService>().To<ServerAvailableHourService>();
         }
     }
 

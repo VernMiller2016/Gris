@@ -34,7 +34,8 @@
                 @Html.DisplayFor(modelItem => item.ServerName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.BeginDate)
+                @*@Html.DisplayFor(modelItem => item.BeginDate)*@
+                @item.BeginDate.ToString("MM/dd/yyyy")
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Duration)

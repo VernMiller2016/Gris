@@ -22,3 +22,8 @@ select,
 textarea {
     _max-width: 280px;
 }
+
+/* Utils */
+.bold{
+    font-weight:bold;
+}

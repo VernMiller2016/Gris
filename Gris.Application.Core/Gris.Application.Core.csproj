@@ -58,6 +58,7 @@
     <Compile Include="Enums\ReportType.cs" />
     <Compile Include="Interfaces\IExportingService.cs" />
     <Compile Include="Interfaces\IPaySourceService.cs" />
+    <Compile Include="Interfaces\IServerAvailableHourService.cs" />
     <Compile Include="Interfaces\IServerTimeEntryService.cs" />
     <Compile Include="Interfaces\IProgramService.cs" />
     <Compile Include="Interfaces\IServerService.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="Services\ExcelExportingService.cs" />
     <Compile Include="Services\PaySourceService.cs" />
     <Compile Include="Services\ProgramService.cs" />
+    <Compile Include="Services\ServerAvailableHourService.cs" />
     <Compile Include="Services\ServerTimeEntryService.cs" />
     <Compile Include="Services\ServerService.cs" />
   </ItemGroup>

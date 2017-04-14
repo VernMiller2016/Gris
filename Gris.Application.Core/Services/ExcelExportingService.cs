@@ -14,10 +14,12 @@ namespace Gris.Application.Core.Services
     public class ExcelExportingService : IExportingService
     {
         private IServerTimeEntryService _serverTimeEntryService;
+        private IServerAvailableHourService _serverAvailableHourService;
 
-        public ExcelExportingService(IServerTimeEntryService serverTimeEntryService)
+        public ExcelExportingService(IServerTimeEntryService serverTimeEntryService, IServerAvailableHourService serverAvailableHourService)
         {
             _serverTimeEntryService = serverTimeEntryService;
+            _serverAvailableHourService = serverAvailableHourService;
         }
 
         public MemoryStream GetServerTimeEntriesMonthlyReportExcel(DateTime time)
@@ -27,6 +29,18 @@ namespace Gris.Application.Core.Services
             ExcelPackage package = new ExcelPackage(templateFile, true);
 
             GenerateServerTimeEntriesMonthlyReportExcel(package, _serverTimeEntryService.GetServerTimeEntriesMonthlyReport(time), time);
+
+            var stream = new MemoryStream(package.GetAsByteArray());
+            return stream;
+        }
+
+        public MemoryStream GetServerAvailableHoursTemplate(DateTime time)
+        {
+            string excelTemplate = GetExcelTemplate(ReportType.ServerAvailableHoursTemplate);
+            var templateFile = new FileInfo(excelTemplate);
+            ExcelPackage package = new ExcelPackage(templateFile, true);
+
+            GenerateServerAvailableHoursTemplate(package, _serverTimeEntryService.GetServerTimeEntriesMonthlyReport(time), time);
 
             var stream = new MemoryStream(package.GetAsByteArray());
             return stream;
@@ -85,9 +99,8 @@ namespace Gris.Application.Core.Services
                 programSheet.View.TabSelected = false;
             });
 
-
             // 2- create the first sheet that contains all data.
-            var dataSheet = excelPackage.Workbook.Worksheets[1]; // main sheet that contains all records.            
+            var dataSheet = excelPackage.Workbook.Worksheets[1]; // main sheet that contains all records.
             index = 2;
             foreach (var item in reportData)
             {
@@ -99,10 +112,35 @@ namespace Gris.Application.Core.Services
                 index++;
             }
             dataSheet.Name = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(time.Month) + " - " + time.Year;
-            dataSheet.Cells.AutoFitColumns();            
+            dataSheet.Cells.AutoFitColumns();
         }
 
         #endregion ServerTimeEntriesMonthlyReport
+
+        #region ServerAvailableHoursTemplate
+
+        private void GenerateServerAvailableHoursTemplate(ExcelPackage excelPackage, IEnumerable<ServerTimeEntriesMonthlyReportEntity> reportData, DateTime time)
+        {
+            var dataSheet = excelPackage.Workbook.Worksheets[1];
+            var index = 2; // starting index.
+
+            var availableHours = _serverAvailableHourService.GetByDate(time);
+            var groupByServer = reportData.GroupBy(t => new { t.ServerVendorId, t.ServerName, t.ServerId });
+            groupByServer.ForEachWithIndex((item, serverIndex) =>
+            {
+                dataSheet.Cells["A" + index].Value = item.Key.ServerVendorId;
+                dataSheet.Cells["B" + index].Value = item.Key.ServerName;
+                dataSheet.Cells["C" + index].Value = time.ToMonthYear();
+                var existedAvailableHour = availableHours.FirstOrDefault(t => t.ServerId == item.Key.ServerId);
+                if (existedAvailableHour != null)
+                    dataSheet.Cells["D" + index].Value = existedAvailableHour.AvailableHours;
+                index++;
+            });
+
+            dataSheet.Cells.AutoFitColumns();
+        }
+
+        #endregion ServerAvailableHoursTemplate
 
         #region Private Methods
 
@@ -115,6 +153,10 @@ namespace Gris.Application.Core.Services
             {
                 case ReportType.ServerTimeEntriesMonthly:
                     templatePath = System.AppDomain.CurrentDomain.BaseDirectory + "Content\\ExcelTemplates\\ServerTimeEntriesMonthlyReportTemplate.xlsx";
+                    break;
+
+                case ReportType.ServerAvailableHoursTemplate:
+                    templatePath = System.AppDomain.CurrentDomain.BaseDirectory + "Content\\ExcelTemplates\\ServerAvailableHoursTemplate.xlsx";
                     break;
 
                 default:

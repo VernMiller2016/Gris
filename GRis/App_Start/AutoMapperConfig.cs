@@ -4,6 +4,7 @@ using Gris.Domain.Core.Models;
 using GRis.ViewModels.PaySource;
 using GRis.ViewModels.Program;
 using GRis.ViewModels.Server;
+using GRis.ViewModels.ServerAvailableHourModels;
 using GRis.ViewModels.ServerTimeEntry;
 
 namespace GRis.App_Start
@@ -86,11 +87,23 @@ namespace GRis.App_Start
                 .ForMember(dest => dest.ServerVendorId, opt => opt.MapFrom(src => src.ServerId))
                 .ForMember(dest => dest.PaySourceVendorId, opt => opt.MapFrom(src => src.PaySourceId))
                 .ReverseMap()
-                .ForMember(dest => dest.ServerId, opt => opt.MapFrom(src => src.ServerVendorId))
-                .ForMember(dest => dest.PaySourceId, opt => opt.MapFrom(src => src.PaySourceVendorId))
+                .ForMember(dest => dest.ServerId, opt => opt.Ignore())
+                .ForMember(dest => dest.PaySourceId, opt => opt.Ignore())
                 ;
 
                 #endregion ServerTimeEntry
+
+                #region ServerAvailableHour
+
+                cfg.CreateMap<ServerAvailableHour, ServerAvailableHourDetailsViewModel>()
+                .ForMember(dest => dest.ServerName, opt => opt.MapFrom(src => src.Server.FullName))
+                ;
+
+                cfg.CreateMap<ServerAvailableHourAddViewModel, ServerAvailableHour>()
+                .ForMember(dest => dest.ServerId, opt => opt.Ignore())
+                ;
+
+                #endregion ServerAvailableHour
             });
         }
     }

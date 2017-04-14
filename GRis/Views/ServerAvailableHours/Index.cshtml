@@ -1,0 +1,87 @@
+﻿@using X.PagedList.Mvc;
+@using X.PagedList;
+@using GRis.ViewModels.ServerAvailableHourModels;
+@model ServerAvailableHourListViewModel
+
+@{
+    ViewBag.Title = "Index";
+    var pagedList = (IPagedList)Model.Data;
+    var displayResults = (bool)ViewBag.DisplayResults;
+}
+
+<h2>Index</h2>
+
+<div class="row">
+    <div class="col-sm-6 col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading bold">Data:</div>
+            <div class="panel-body">
+                @using (Html.BeginForm("Index", "ServerAvailableHours", FormMethod.Get))
+                {
+                    <div class="form-horizontal">
+                        <br />
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Filters.Date, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.Filters.Date, new { fieldName = "date" })
+                                @Html.ValidationMessageFor(model => model.Filters.Date, "", new { @class = "text-danger", data_valmsg_for = "date" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Filter" class="btn btn-default" />
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading bold">Upload Available Hours:</div>
+            <div class="panel-body">
+                @using (Html.BeginForm("Upload", "ServerAvailableHours", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <p class="text-warning">
+                        @Html.ActionLink("Click here", "ExportServerAvailableHoursTemplate", "ServerAvailableHours")
+                        to download "available hours" template sheet for servers <strong>who have time entries for this month</strong>
+                    </p>
+                    <div class="form-horizontal">
+                        <br />
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="form-group">
+                            @Html.EditorFor(model => model.UploadViewModel.ExcelFile, new { fieldName = "ExcelFile" })
+                            @Html.ValidationMessageFor(model => model.UploadViewModel.ExcelFile, "", new { @class = "text-danger", data_valmsg_for= "ExcelFile" })
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Upload" class="btn btn-default" />
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (displayResults)
+{
+    Html.RenderPartial("_ServerAvailableHourList", Model.Data);
+    <div>
+        @Html.PagedListPager(pagedList, page => Url.Action("Index", new { page, date = Model.Filters.DateAsMonthYear }));
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/plugins")
+    @Scripts.Render("~/bundles/app")
+}

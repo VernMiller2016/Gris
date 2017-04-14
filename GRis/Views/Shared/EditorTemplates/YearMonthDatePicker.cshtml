@@ -6,13 +6,6 @@
     {
         fieldName = ViewData["fieldName"].ToString();
     }
-    if (fieldName.Contains("."))
-    {
-        foreach (var part in fieldName.Split('.'))
-        {
-            fieldName = fieldName.Replace(part, part.ToLower());
-        }
-    }
 
     var initialValue = Model.HasValue ? Model.Value.ToString("MM/yyyy") : "";
 }
