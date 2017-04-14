@@ -12,7 +12,7 @@
     });
 
     $('.time-datepicker').parent('.input-group.date').datetimepicker({
-        format: 'hh:mm:ss',
+        format: 'HH:mm:ss',
         useCurrent: false,
         ignoreReadonly: true,
     });
