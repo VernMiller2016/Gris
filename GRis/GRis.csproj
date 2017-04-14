@@ -240,6 +240,7 @@
     <Compile Include="ViewModels\ServerAvailableHourModels\ServerAvailableHourDetailsViewModel.cs" />
     <Compile Include="ViewModels\ServerAvailableHourModels\ServerAvailableHourListViewModel.cs" />
     <Compile Include="ViewModels\ServerAvailableHourModels\ServerAvailableHourFilterViewModel.cs" />
+    <Compile Include="ViewModels\ServerAvailableHourModels\ServerAvailableHourUploadViewModel.cs" />
     <Compile Include="ViewModels\ServerTimeEntry\ServerTimeEntryAddViewModel.cs" />
     <Compile Include="ViewModels\ServerTimeEntry\ServerTimeEntryDetailsViewModel.cs" />
     <Compile Include="ViewModels\ServerTimeEntry\ServerTimeEntryEditViewModel.cs" />
@@ -271,6 +272,7 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\ExcelTemplates\ServerTimeEntriesMonthlyReportTemplate.xlsx" />
     <Content Include="ConnectionStrings.config" />
+    <Content Include="Content\ExcelTemplates\ServerAvailableHoursTemplate.xlsx" />
     <None Include="Properties\PublishProfiles\Local.pubxml" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\app.js" />
