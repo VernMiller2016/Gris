@@ -8,5 +8,10 @@ namespace GRis.Core.Extensions
         {
             return value.ToString("yyyyMMddHHmmssfff");
         }
+
+        public static string ToMonthYear(this DateTime value, string format = "MM/yyyy")
+        {
+            return value.ToString(format);
+        }
     }
 }
