@@ -24,7 +24,7 @@ namespace GRis
         {
             MailMessage msg = new MailMessage();
             msg.To.Add(new MailAddress(message.Destination, message.Subject));
-            msg.From = new MailAddress("gris-support@gmail.com", "reset password for gris");
+            msg.From = new MailAddress(ConfigurationManager.AppSettings["supportEmail"], ConfigurationManager.AppSettings["supportEmailpassword"]);
             msg.Subject = "Reset password request";
             msg.Body = message.Body;
             msg.IsBodyHtml = true;
@@ -35,8 +35,8 @@ namespace GRis
             client.EnableSsl = true;
             //client.Timeout = 10000;
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
-            //client.UseDefaultCredentials = false;
-            //client.Credentials = new NetworkCredential("user name entered here", "password entered here");
+            client.UseDefaultCredentials = false;
+            client.Credentials = new NetworkCredential(ConfigurationManager.AppSettings["supportEmail"], ConfigurationManager.AppSettings["supportEmailpassword"]);
             return client.SendMailAsync(msg);
             //return Task.FromResult(0);
         }

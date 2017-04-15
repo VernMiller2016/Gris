@@ -247,7 +247,7 @@ namespace Gris.Application.Core.Services
                 currentColIndex++;
 
                 dataSheet.Cells[rowIndex, currentColIndex].Style.Numberformat.Format = "[h]:mm:ss";
-                dataSheet.Cells[rowIndex, currentColIndex].Value = TimeSpan.FromHours(availableHours.FirstOrDefault(t => t.ServerId == serverGroup.Key.ServerId).AvailableHours);
+                dataSheet.Cells[rowIndex, currentColIndex].Value = TimeSpan.FromHours(availableHours == null ? 0 : availableHours.FirstOrDefault(t => t.ServerId == serverGroup.Key.ServerId).AvailableHours);
                 rowIndex++;
             });
 
