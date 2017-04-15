@@ -8,5 +8,7 @@ namespace Gris.Application.Core.Interfaces
         MemoryStream GetServerTimeEntriesMonthlyReportExcel(DateTime time);
 
         MemoryStream GetServerAvailableHoursTemplate(DateTime time);
+
+        MemoryStream GetStaffPercentagesMonthlyReportExcel(DateTime time);
     }
 }

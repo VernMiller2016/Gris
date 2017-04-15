@@ -6,7 +6,6 @@ using Gris.Domain.Core.Models;
 using GRis.Core.Extensions;
 using GRis.Core.Utils;
 using GRis.Extensions;
-using GRis.ViewModels.Common;
 using GRis.ViewModels.ServerAvailableHourModels;
 using System;
 using System.Collections.Generic;
@@ -54,9 +53,9 @@ namespace GRis.Controllers
         }
 
         [HttpGet]
-        public FileResult ExportServerAvailableHoursTemplate()
+        public FileResult ExportServerAvailableHoursTemplate(ServerAvailableHourUploadViewModel viewmodel)
         {
-            DateTime dateForAvailableHours = DateTime.Now;
+            DateTime dateForAvailableHours = viewmodel.Date.HasValue ? viewmodel.Date.Value : DateTime.Now;
             MemoryStream stream = _exportingService.GetServerAvailableHoursTemplate(dateForAvailableHours);
 
             return File(stream, Constants.ExcelFilesMimeType,
@@ -67,7 +66,7 @@ namespace GRis.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Upload(UploadedExcelSheetViewModel viewmodel)
+        public ActionResult Upload(ServerAvailableHourUploadViewModel viewmodel)
         {
             if (ModelState.IsValid) // validate file exist
             {

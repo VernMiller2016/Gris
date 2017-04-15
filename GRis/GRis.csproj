@@ -243,6 +243,7 @@
     <Compile Include="ViewModels\ServerAvailableHourModels\ServerAvailableHourDetailsViewModel.cs" />
     <Compile Include="ViewModels\ServerAvailableHourModels\ServerAvailableHourListViewModel.cs" />
     <Compile Include="ViewModels\ServerAvailableHourModels\ServerAvailableHourFilterViewModel.cs" />
+    <Compile Include="ViewModels\ServerAvailableHourModels\ServerAvailableHourUploadViewModel.cs" />
     <Compile Include="ViewModels\ServerTimeEntry\ServerTimeEntryAddViewModel.cs" />
     <Compile Include="ViewModels\ServerTimeEntry\ServerTimeEntryDetailsViewModel.cs" />
     <Compile Include="ViewModels\ServerTimeEntry\ServerTimeEntryEditViewModel.cs" />
@@ -274,6 +275,7 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\ExcelTemplates\ServerTimeEntriesMonthlyReportTemplate.xlsx" />
     <Content Include="ConnectionStrings.config" />
+    <Content Include="Content\ExcelTemplates\ServerAvailableHoursTemplate.xlsx" />
     <None Include="Properties\PublishProfiles\Local.pubxml" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\app.js" />
@@ -360,9 +362,9 @@
     <Content Include="Views\PaySources\Upload.cshtml" />
     <Content Include="Views\ServerTimeEntries\Index.cshtml" />
     <Content Include="Views\ServerTimeEntries\Upload.cshtml" />
-    <Content Include="Views\Reports\Index.cshtml" />
+    <Content Include="Views\Reports\ServerTimeEntriesMonthlyReport.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\YearMonthDatePicker.cshtml" />
-    <Content Include="Views\Reports\_ServerTimeEntriesMonthlyReport.cshtml" />
+    <Content Include="Views\Reports\_ServerTimeEntriesMonthlyReportListing.cshtml" />
     <Content Include="Views\Account\AcctiveAccountConfirmation.cshtml" />
     <Content Include="Views\Account\ActivateAccount.cshtml" />
     <Content Include="Views\UserAdmin\Create.cshtml" />
@@ -380,6 +382,7 @@
     <Content Include="Views\Shared\_Alerts.cshtml" />
     <Content Include="Views\ServerAvailableHours\Index.cshtml" />
     <Content Include="Views\ServerAvailableHours\_ServerAvailableHourList.cshtml" />
+    <Content Include="Views\Reports\StaffPercentagesMonthlyReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

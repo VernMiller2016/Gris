@@ -4,5 +4,6 @@
     {
         ServerTimeEntriesMonthly = 1,
         ServerAvailableHoursTemplate = 2,
+        StaffPercentagesMonthly = 3,
     }
 }
