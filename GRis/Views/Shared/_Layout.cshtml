@@ -28,7 +28,13 @@
                         <li>@Html.ActionLink("Pay Sources", "Index", "PaySources")</li>
                         <li>@Html.ActionLink("Servers", "Index", "Servers")</li>
                         <li>@Html.ActionLink("Time Entries", "Index", "ServerTimeEntries")</li>
-                        <li>@Html.ActionLink("Reports", "Index", "Reports")</li>
+                        <li>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("Service Details Monthly", "ServerTimeEntriesMonthlyReport", "Reports")</li>
+                                <li>@Html.ActionLink("Staff Percentages", "StaffPercentagesMonthlyReport", "Reports")</li>
+                            </ul>
+                        </li>
                         <li>
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configurations<b class="caret"></b></a>
                             <ul class="dropdown-menu">

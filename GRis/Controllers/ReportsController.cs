@@ -2,14 +2,12 @@
 using Gris.Application.Core.Contracts.Paging;
 using Gris.Application.Core.Contracts.Reports;
 using Gris.Application.Core.Interfaces;
-using Gris.Domain.Core.Models;
 using GRis.Extensions;
 using GRis.ViewModels.Reports;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
-using X.PagedList;
 
 namespace GRis.Controllers
 {
@@ -29,10 +27,8 @@ namespace GRis.Controllers
             _exportingService = exportingService;
         }
 
-        // GET: Reports        
-        public ActionResult Index(ReportFilterViewModel filter, int page = 1)
+        public ActionResult ServerTimeEntriesMonthlyReport(ReportFilterViewModel filter, int page = 1)
         {
-
             var pagingInfo = new PagingInfo() { PageNumber = page };
             var entities = Enumerable.Empty<ServerTimeEntriesMonthlyReportEntity>();
             if (TryValidateModel(filter))
@@ -48,6 +44,28 @@ namespace GRis.Controllers
 
             var viewmodel = entities.ToManualPagedList(pagingInfo);
             return View(viewmodel);
+        }
+
+        public ActionResult StaffPercentagesMonthlyReport()
+        {
+            ReportFilterViewModel viewmodel = new ReportFilterViewModel();
+            return View(viewmodel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ExportStaffPercentagesMonthlyReportToExcel(ReportFilterViewModel viewmodel)
+        {
+            if (ModelState.IsValid)
+            {
+                MemoryStream stream = _exportingService.GetStaffPercentagesMonthlyReportExcel(viewmodel.Date.Value);
+
+                return File(stream, Constants.ExcelFilesMimeType,
+                    string.Format(Constants.StaffPercentagesMonthlyReportExcelFileName
+                    , CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(viewmodel.Date.Value.Month)
+                    , viewmodel.Date.Value.Year));
+            }
+            return View("StaffPercentagesMonthlyReport", viewmodel);
         }
 
         [HttpPost]
