@@ -1,4 +1,5 @@
-﻿using GRis.Validations;
+﻿using Gris.Application.Core;
+using GRis.Validations;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Web;
@@ -17,6 +18,10 @@ namespace GRis.ViewModels.ServerAvailableHourModels
         [Display(Name = "Filter by Date")]
         [Required]
         public DateTime? Date { get; set; } = DateTime.Now;
+
+        [Display(Name = "Default Available Hours")]
+        [Required]
+        public int DefaultAvailableHours { get; set; } = AppSettings.DefaultAvailableHours;
 
         public string DateAsMonthYear
         {

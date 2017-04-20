@@ -47,21 +47,29 @@
                 <div id="step-1">
                     <h4>Step 1:</h4>
                     <p class="help-block">
-                        Select month and year then click <strong><i>"export to excel"</i></strong> button
+                        Enter default value for available hours, select month and year then click <strong><i>"export to excel"</i></strong> button
                     </p>
-                    <div class="row">
-                        @using (Html.BeginForm("ExportServerAvailableHoursTemplate", "ServerAvailableHours", FormMethod.Get))
-                        {
-                            <div class="col-xs-8">
-                                @Html.EditorFor(model => model.UploadViewModel.Date, new { fieldName = "date" })
+
+                    @using (Html.BeginForm("ExportServerAvailableHoursTemplate", "ServerAvailableHours", FormMethod.Get))
+                    {
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.UploadViewModel.DefaultAvailableHours, htmlAttributes: new { @class = "control-label" })
+                            <div class="">
+                                @Html.EditorFor(model => model.UploadViewModel.DefaultAvailableHours, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.UploadViewModel.DefaultAvailableHours, "", new { @class = "text-danger" })
                             </div>
-                            <div class="col-xs-4">
-                                <button type="submit" class="btn btn-labeled btn-success pull-right">
-                                    <span><i class="glyphicon glyphicon-download-alt"></i></span> Export To Excel
-                                </button>
+                        </div>
+                            <div class="row">
+                                <div class="col-xs-8">
+                                    @Html.EditorFor(model => model.UploadViewModel.Date, new { fieldName = "date" })
+                                </div>
+                                <div class="col-xs-4">
+                                    <button type="submit" class="btn btn-labeled btn-success pull-right">
+                                        <span><i class="glyphicon glyphicon-download-alt"></i></span> Export To Excel
+                                    </button>
+                                </div>
                             </div>
-                        }
-                    </div>
+                    }
                     <hr />
                 </div>
                 <div id="step-2">

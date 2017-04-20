@@ -56,7 +56,7 @@ namespace GRis.Controllers
         public FileResult ExportServerAvailableHoursTemplate(ServerAvailableHourUploadViewModel viewmodel)
         {
             DateTime dateForAvailableHours = viewmodel.Date.HasValue ? viewmodel.Date.Value : DateTime.Now;
-            MemoryStream stream = _exportingService.GetServerAvailableHoursTemplate(dateForAvailableHours);
+            MemoryStream stream = _exportingService.GetServerAvailableHoursTemplate(viewmodel.DefaultAvailableHours, dateForAvailableHours);
 
             return File(stream, Constants.ExcelFilesMimeType,
                 string.Format(Constants.ServerAvailableHoursTemplateExcelFileName

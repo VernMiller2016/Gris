@@ -34,13 +34,13 @@ namespace Gris.Application.Core.Services
             return stream;
         }
 
-        public MemoryStream GetServerAvailableHoursTemplate(DateTime time)
+        public MemoryStream GetServerAvailableHoursTemplate(int defaultAvailableHours, DateTime time)
         {
             string excelTemplate = GetExcelTemplate(ReportType.ServerAvailableHoursTemplate);
             var templateFile = new FileInfo(excelTemplate);
             ExcelPackage package = new ExcelPackage(templateFile, true);
 
-            GenerateServerAvailableHoursTemplate(package, _serverTimeEntryService.GetServerTimeEntriesMonthlyReport(time), time);
+            GenerateServerAvailableHoursTemplate(package, _serverTimeEntryService.GetServerTimeEntriesMonthlyReport(time), defaultAvailableHours, time);
 
             var stream = new MemoryStream(package.GetAsByteArray());
             return stream;
@@ -131,7 +131,7 @@ namespace Gris.Application.Core.Services
 
         #region ServerAvailableHoursTemplate
 
-        private void GenerateServerAvailableHoursTemplate(ExcelPackage excelPackage, IEnumerable<ServerTimeEntriesMonthlyReportEntity> reportData, DateTime time)
+        private void GenerateServerAvailableHoursTemplate(ExcelPackage excelPackage, IEnumerable<ServerTimeEntriesMonthlyReportEntity> reportData, int defaultAvailableHours, DateTime time)
         {
             var dataSheet = excelPackage.Workbook.Worksheets[1];
             var index = 2; // starting index.
@@ -146,6 +146,8 @@ namespace Gris.Application.Core.Services
                 var existedAvailableHour = availableHours.FirstOrDefault(t => t.ServerId == serverGroup.Key.ServerId);
                 if (existedAvailableHour != null)
                     dataSheet.Cells["D" + index].Value = existedAvailableHour.AvailableHours;
+                else
+                    dataSheet.Cells["D" + index].Value = defaultAvailableHours;
                 index++;
             });
 

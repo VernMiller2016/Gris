@@ -8,5 +8,10 @@ namespace Gris.Application.Core
         {
             get { return int.Parse(ConfigurationManager.AppSettings["PageSize"]); }
         }
+
+        public static int DefaultAvailableHours
+        {
+            get { return int.Parse(ConfigurationManager.AppSettings["DefaultAvailableHours"]); }
+        }
     }
 }
