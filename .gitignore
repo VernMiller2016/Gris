@@ -245,4 +245,4 @@ ModelManifest.xml
 GRis/Uploads/**
 
 # ConnectionStrings
-ConnectionStrings.config
+GRis/ConnectionStrings.config
