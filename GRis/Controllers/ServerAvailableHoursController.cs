@@ -80,7 +80,7 @@ namespace GRis.Controllers
                     var dtAvailableHours = ImportUtils.ImportXlsxToDataTable(viewmodel.ExcelFile.InputStream, true);
                     int numOfEntitiesUpdated = 0;
                     // load existed entities from DB, aka "cache".
-                    var existedEntities = GetExistedAvailableHours(dtAvailableHours);
+                    var existedEntities = GetExistedAvailableHours(dtAvailableHours).ToList();
                     foreach (var row in dtAvailableHours.AsEnumerable().ToList())
                     {
                         var entityViewModel = new ServerAvailableHourAddViewModel()
