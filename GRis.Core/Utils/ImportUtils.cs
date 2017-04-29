@@ -1,4 +1,5 @@
-﻿using OfficeOpenXml;
+﻿using GRis.Core.Extensions;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -15,7 +16,7 @@ namespace GRis.Core.Utils
         /// <param name="inputStream">The Stream object of the excel sheet</param>
         /// <param name="hasHeader">A flag indicates if the excel sheet has a headers row or not</param>
         /// <returns>A Datatable represents the excel sheet</returns>
-        public static DataTable ImportXlsxToDataTable(Stream inputStream, bool hasHeader)
+        public static DataTable ImportXlsxToDataTable(Stream inputStream, bool hasHeader, bool skipEmptyRow = true)
         {
             var dt = new DataTable();
             using (var excel = new ExcelPackage(inputStream))
@@ -35,7 +36,16 @@ namespace GRis.Core.Utils
                     DataRow row = dt.NewRow();
                     foreach (var cell in wsRow)
                         row[cell.Start.Column - 1] = cell.Text;
-                    dt.Rows.Add(row);
+
+                    if (skipEmptyRow)
+                    {
+                        if (!row.AreAllColumnsNullOrEmpty())
+                            dt.Rows.Add(row);
+                    }
+                    else
+                    {
+                        dt.Rows.Add(row);
+                    }
                 }
             }
             return dt;
