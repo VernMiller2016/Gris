@@ -8,6 +8,8 @@ namespace Gris.Application.Core.Interfaces
     {
         IEnumerable<Server> GetServers(PagingInfo pagingInfo = null);
 
+        IEnumerable<Category> GetCategories();
+
         Server GetById(int id);
 
         Server GetByVendorId(int vendorId);

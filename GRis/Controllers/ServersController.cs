@@ -49,6 +49,7 @@ namespace GRis.Controllers
                 return HttpNotFound();
             }
             var viewmodel = Mapper.Map<Server, ServerDetailsViewModel>(entity);
+            
             return View(viewmodel);
         }
 
@@ -56,6 +57,11 @@ namespace GRis.Controllers
         public ActionResult Create()
         {
             var viewmodel = new ServerAddViewModel();
+            viewmodel.AvailableCategories = _serverService.GetCategories().Select(t => new SelectListItem()
+            {
+                Text = t.Name.ToString(),
+                Value = t.Id.ToString()
+            }).ToList();
             return View(viewmodel);
         }
 
@@ -100,6 +106,12 @@ namespace GRis.Controllers
                 return HttpNotFound();
             }
             var viewmodel = Mapper.Map<Server, ServerEditViewModel>(entity);
+            viewmodel.CategoryId = entity.CategoryId;
+            viewmodel.AvailableCategories = _serverService.GetCategories().Select(t => new SelectListItem()
+            {
+                Text = t.Name.ToString(),
+                Value = t.Id.ToString()
+            }).ToList(); 
             return View(viewmodel);
         }
 

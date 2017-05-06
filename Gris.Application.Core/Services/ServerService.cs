@@ -4,6 +4,7 @@ using Gris.Domain.Core.Models;
 using Gris.Infrastructure.Core.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Gris.Application.Core.Services
 {
@@ -38,6 +39,11 @@ namespace Gris.Application.Core.Services
         public Server GetByVendorId(int vendorId)
         {
             return _serverRepoitory.OneOrDefault(t => t.VendorId == vendorId);
+        }
+
+        public IEnumerable<Category> GetCategories()
+        {
+            return _serverRepoitory.GetAllCategories();
         }
 
         public IEnumerable<Server> GetServers(PagingInfo pagingInfo = null)

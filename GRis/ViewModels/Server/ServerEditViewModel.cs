@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Gris.Domain.Core.Models;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace GRis.ViewModels.Server
 {
@@ -19,6 +22,11 @@ namespace GRis.ViewModels.Server
         [Display(Name = "Last Name")]
         [StringLength(50)]
         public string LastName { get; set; }
+
+        public int? CategoryId { get; set; }
+
+        [Display(Name = "Available Categories")]
+        public List<SelectListItem> AvailableCategories { get; set; }
 
         [Display(Name = "Is Active")]
         public bool Active { get; set; }

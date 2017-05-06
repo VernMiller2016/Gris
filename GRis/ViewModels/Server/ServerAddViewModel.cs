@@ -1,5 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace GRis.ViewModels.Server
 {
@@ -23,5 +25,8 @@ namespace GRis.ViewModels.Server
         public bool Active { get; set; } = true;
 
         public int? CategoryId { get; set; }
+
+        [Display(Name = "Available Categories")]
+        public List<SelectListItem> AvailableCategories { get; set; }
     }
 }
