@@ -53,8 +53,25 @@ namespace Gris.Application.Core.Services
             else
             {
                 int total = 0;
-                var result = _serverRepoitory.FilterWithPaging(null, (list => list.OrderBy(s => s.FullName))
+                IEnumerable<Server> result = null;
+                if (!string.IsNullOrEmpty(pagingInfo.SearchOption) && !string.IsNullOrEmpty(pagingInfo.SearchValue))
+                {
+                    if (pagingInfo.SearchOption == "FirstName")
+                    {
+                       result = _serverRepoitory.FilterWithPaging(s=>s.FirstName.ToLower().Contains(pagingInfo.SearchValue.ToLower()), (list => list.OrderBy(s => s.FullName))
                     , out total, pagingInfo.PageIndex, AppSettings.PageSize);
+                    }
+                    else if (pagingInfo.SearchOption == "LastName")
+                    {
+                        result = _serverRepoitory.FilterWithPaging(s => s.LastName.ToLower().Contains(pagingInfo.SearchValue.ToLower()), (list => list.OrderBy(s => s.FullName))
+                     , out total, pagingInfo.PageIndex, AppSettings.PageSize);
+                    }
+                }
+                else
+                {
+                    result = _serverRepoitory.FilterWithPaging(null, (list => list.OrderBy(s => s.FullName))
+                                        , out total, pagingInfo.PageIndex, AppSettings.PageSize);
+                }
                 pagingInfo.Total = total;
                 return result;
             }

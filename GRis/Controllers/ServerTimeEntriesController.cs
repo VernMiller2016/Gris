@@ -32,16 +32,21 @@ namespace GRis.Controllers
         }
 
         // GET: ServerTimeEntries
-        public ActionResult Index(ServerTimeEntryFilterViewModel filter, int page = 1)
+        public ActionResult Index(ServerTimeEntryFilterViewModel filter, string search, string option, int page = 1)
         {
             var pagingInfo = new PagingInfo() { PageNumber = page };
             var entities = Enumerable.Empty<ServerTimeEntry>();
-            if (filter.Date.HasValue)
+            if (filter!= null && filter.Date.HasValue)
             {
                 entities = _serverTimeEntryService.GetServerTimeEntries(filter.Date.Value, pagingInfo);
             }
             else
             {
+                if (!string.IsNullOrEmpty(search) && !string.IsNullOrEmpty(option))
+                {
+                    pagingInfo.SearchOption = option;
+                    pagingInfo.SearchValue = search;
+                }
                 entities = _serverTimeEntryService.GetServerTimeEntries(pagingInfo);
             }
 

@@ -7,5 +7,9 @@
         public int PageNumber { get; set; }
 
         public int Total { get; set; }
+
+        public string SearchOption { get; set; }
+
+        public string SearchValue { get; set; }
     }
 }

@@ -35,6 +35,16 @@
         </div>
     }
 </div>
+<div>
+    @using (Html.BeginForm("Index", "ServerTimeEntries", FormMethod.Get))
+    {
+        <b> Search Option: </b>@Html.RadioButton("option", "ServerName") <text>Server Name</text> @Html.RadioButton("option", "PaySourceName") <text >Pay Source </text>
+        @Html.TextBox("search")
+        <input type="submit" name="submit" value="Search" />
+    }
+
+
+</div>
 <table class="table">
     <tr>
         <th>
@@ -89,7 +99,9 @@
     }
 </table>
 
-@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page, date = filterViewModel.DateAsMonthYear }))
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page, date = filterViewModel.DateAsMonthYear,option = Request.QueryString["option"],
+    search = Request.QueryString["search"]
+}))
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

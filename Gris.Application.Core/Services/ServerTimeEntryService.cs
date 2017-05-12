@@ -53,8 +53,27 @@ namespace Gris.Application.Core.Services
             else
             {
                 int total = 0;
-                var result = _serverTimeEntryRepoitory.FilterWithPaging(null, (list => list.OrderBy(t => t.Server.FullName))
+                //
+                IEnumerable<ServerTimeEntry> result = null;
+                if (!string.IsNullOrEmpty(pagingInfo.SearchOption) && !string.IsNullOrEmpty(pagingInfo.SearchValue))
+                {
+                    if (pagingInfo.SearchOption == "ServerName")
+                    {
+                        result = _serverTimeEntryRepoitory.FilterWithPaging(s => s.Server.FirstName.ToLower().Contains(pagingInfo.SearchValue.ToLower()) || s.Server.LastName.ToLower().Contains(pagingInfo.SearchValue.ToLower()), (list => list.OrderBy(t => t.Server.FullName))
                     , out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Server, t => t.PaySource);
+                    }
+                    else if (pagingInfo.SearchOption == "PaySourceName")
+                    {
+                        result = _serverTimeEntryRepoitory.FilterWithPaging(s => s.PaySource.Description.ToLower().Contains(pagingInfo.SearchValue.ToLower()), (list => list.OrderBy(t => t.Server.FullName))
+                    , out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Server, t => t.PaySource);
+                    }
+                }
+                //
+                else
+                {
+                    result = _serverTimeEntryRepoitory.FilterWithPaging(null, (list => list.OrderBy(t => t.Server.FullName))
+                       , out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Server, t => t.PaySource);
+                }
                 pagingInfo.Total = total;
                 return result;
             }

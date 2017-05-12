@@ -28,9 +28,14 @@ namespace GRis.Controllers
         }
 
         // GET: Servers
-        public ActionResult Index(int page = 1)
+        public ActionResult Index(string search, string option, int page = 1)
         {
             var pagingInfo = new PagingInfo() { PageNumber = page };
+            if(!string.IsNullOrEmpty(search) && !string.IsNullOrEmpty(option))
+            {
+                pagingInfo.SearchOption = option;
+                pagingInfo.SearchValue = search;
+            }
             var entites = _serverService.GetServers(pagingInfo);
             var viewmodel = entites.ToMappedPagedList<Server, ServerDetailsViewModel>(pagingInfo);
             return View(viewmodel);

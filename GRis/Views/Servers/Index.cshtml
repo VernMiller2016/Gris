@@ -11,6 +11,16 @@
 <p>
     @Html.ActionLink("Create New", "Create") | @Html.ActionLink("Upload excel sheet", "Upload")
 </p>
+<p>
+    @using(Html.BeginForm("Index", "Servers", FormMethod.Get))
+    {
+     <b> Search Option: </b>@Html.RadioButton("option", "FirstName") <text>First Name</text> @Html.RadioButton("option", "LastName") <text >Last Name </text>
+     @Html.TextBox("search") 
+    <input type = "submit" name = "submit" value = "Search" / >
+    }
+    
+    
+</p>
 <table class="table">
     <thead>
         <tr>
@@ -65,4 +75,10 @@
     }
 </table>
 @*Page @(((IPagedList)Model).PageCount < ((IPagedList)Model).PageNumber ? 0 : ((IPagedList)Model).PageNumber) from @((Model as IPagedList).PageCount)*@
-@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }))
+@*@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }))*@
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new
+{
+    page,
+    option = Request.QueryString["option"],
+    search = Request.QueryString["search"]
+}))
