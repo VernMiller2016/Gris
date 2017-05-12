@@ -8,6 +8,17 @@
 
 <h2>Index</h2>
 
+<div>
+    @using (Html.BeginForm("Index", "PaySources", FormMethod.Get))
+    {
+        <b> Search Option: </b> @Html.RadioButton("option", "PaySourceName") <text> Pay source name</text>
+        @Html.TextBox("search")
+        <input type="submit" name="submit" value="Search" />
+    }
+
+
+</div>
+
 <p>
     @Html.ActionLink("Create New", "Create") | @Html.ActionLink("Upload excel sheet", "Upload")
 </p>
@@ -47,4 +58,7 @@
 
 </table>
 
-@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }))
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page,
+    option = Request.QueryString["option"],
+    search = Request.QueryString["search"]
+}))
