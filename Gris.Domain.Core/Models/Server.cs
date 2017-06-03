@@ -22,6 +22,9 @@ namespace Gris.Domain.Core.Models
 
         public int? CategoryId { get; set; }
 
+        [StringLength(15)]
+        public string GpEmpNumber { get; set; }
+
         public Category Category { get; set; }
 
         public string FullName => LastName + ", " + FirstName;
