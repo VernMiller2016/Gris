@@ -28,6 +28,9 @@ namespace GRis.ViewModels.Server
         [Display(Name = "Is Active")]
         public bool Active { get; set; } = true;
 
+        [Display(Name ="Gp Employee Number")]
+        public string GpEmpNumber { get; set; }
+
         [Display(Name = "Server Category")]
         public string CategoryName
         {

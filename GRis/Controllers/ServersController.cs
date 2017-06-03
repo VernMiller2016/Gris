@@ -198,6 +198,7 @@ namespace GRis.Controllers
                             // some columns does not have ',' separater.
                             FirstName = row["Sort Name"].ToString().Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)[1],
                             LastName = row["Sort Name"].ToString().Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)[0],
+                            GpEmpNumber = row["Gp Emp #"].ToString(),
                             Active = row["active"].ToString() == "Y" ? true : false,
                             CategoryId = CategoryConverter.ConvertFromCategoryNameToId(row["Category"].ToString())
                         };

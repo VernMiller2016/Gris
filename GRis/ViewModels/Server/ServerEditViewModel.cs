@@ -23,6 +23,9 @@ namespace GRis.ViewModels.Server
         [StringLength(50)]
         public string LastName { get; set; }
 
+        [StringLength(15)]
+        public string GpEmpNumber { get; set; }
+
         public int? CategoryId { get; set; }
 
         [Display(Name = "Available Categories")]

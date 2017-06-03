@@ -21,6 +21,9 @@ namespace GRis.ViewModels.Server
         [StringLength(50)]
         public string LastName { get; set; }
 
+        [StringLength(15)]
+        public string GpEmpNumber { get; set; }
+
         [Display(Name = "Is Active")]
         public bool Active { get; set; } = true;
 
