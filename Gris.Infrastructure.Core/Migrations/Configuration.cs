@@ -25,10 +25,12 @@ namespace Gris.Infrastructure.Core.Migrations
             //
             context.Categories.AddOrUpdate(
               c => c.Id,
-              new Category { Id = 1,Name= "Combined-admin" },
+              new Category { Id = 1, Name = "Combined-admin" },
               new Category { Id = 2, Name = "MH-admin" },
-              new Category { Id =3, Name = "MED-admin" },
-              new Category { Id = 4, Name = "CD-Admin" }
+              new Category { Id = 3, Name = "MED-admin" },
+              new Category { Id = 4, Name = "CD-Admin" },
+              new Category { Id = 5, Name = "CD-Clinical" },
+              new Category { Id = 6, Name = "MH-Clinical" }
             );
 
             var UserStore = new UserStore<ApplicationUser>(context);

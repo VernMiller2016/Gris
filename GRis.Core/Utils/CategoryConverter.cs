@@ -28,6 +28,14 @@ namespace GRis.Core.Utils
                 {
                     return 3;
                 }
+                else if(categoryName.ToLower() == "CD-Clinical".ToLower())
+                {
+                    return 5;
+                }
+                else if(categoryName.ToLower() == "MH-Clinical".ToLower())
+                {
+                    return 6;
+                }
                 else
                 {
                     return 4;
