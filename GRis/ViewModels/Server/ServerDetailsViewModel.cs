@@ -31,6 +31,9 @@ namespace GRis.ViewModels.Server
         [Display(Name ="Gp Employee Number")]
         public string GpEmpNumber { get; set; }
 
+        [Required]
+        public int Element { get; set; }
+
         [Display(Name = "Server Category")]
         public string CategoryName
         {
