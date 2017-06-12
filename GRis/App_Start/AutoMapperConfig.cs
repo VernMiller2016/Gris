@@ -22,6 +22,8 @@ namespace GRis.App_Start
                 .ForMember(dest => dest.PaysourceDescription, opt => opt.MapFrom(src => src.PaySource.Description))
                 .ForMember(dest => dest.ProgramId, opt => opt.MapFrom(src => src.PaySource.Program.Id))
                 .ForMember(dest => dest.ProgramName, opt => opt.MapFrom(src => src.PaySource.Program.Name))
+                .ForMember(dest => dest.ServerCategoryName, opt => opt.MapFrom(src => src.Server.Category.Name))
+                .ForMember(dest => dest.ServerCategoryId, opt => opt.MapFrom(src => src.Server.Category.Id))
                 ;
 
                 #region Program

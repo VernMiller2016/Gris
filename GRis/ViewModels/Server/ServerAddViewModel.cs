@@ -30,9 +30,9 @@ namespace GRis.ViewModels.Server
         [Display(Name = "Is Active")]
         public bool Active { get; set; } = true;
 
+        [Display(Name = "Category")]
         public int? CategoryId { get; set; }
 
-        [Display(Name = "Available Categories")]
         public List<SelectListItem> AvailableCategories { get; set; }
     }
 }

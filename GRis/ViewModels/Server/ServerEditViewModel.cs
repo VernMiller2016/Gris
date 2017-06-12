@@ -29,9 +29,9 @@ namespace GRis.ViewModels.Server
         [Required]
         public int Element { get; set; }
 
+        [Display(Name = "Category")]
         public int? CategoryId { get; set; }
         
-        [Display(Name = "Available Categories")]
         public List<SelectListItem> AvailableCategories { get; set; }
 
         [Display(Name = "Is Active")]

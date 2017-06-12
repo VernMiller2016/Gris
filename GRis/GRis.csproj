@@ -277,6 +277,7 @@
     <Content Include="ConnectionStrings.config" />
     <Content Include="Content\ExcelTemplates\ServerAvailableHoursTemplate.xlsx" />
     <Content Include="Content\ExcelTemplates\StaffPercentagesMonthlyReportTemplate.xlsx" />
+    <Content Include="Content\ExcelTemplates\CategoryPercentagesMonthlyReportTemplate.xlsx" />
     <None Include="Properties\PublishProfiles\Local.pubxml" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\app.js" />
@@ -386,6 +387,7 @@
     <Content Include="Views\ServerAvailableHours\Index.cshtml" />
     <Content Include="Views\ServerAvailableHours\_ServerAvailableHourList.cshtml" />
     <Content Include="Views\Reports\StaffPercentagesMonthlyReport.cshtml" />
+    <Content Include="Views\Reports\CategoryPercentagesMonthlyReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -15,11 +15,13 @@ namespace Gris.Application.Core.Services
     {
         private IServerTimeEntryService _serverTimeEntryService;
         private IServerAvailableHourService _serverAvailableHourService;
+        private IServerService _serverService;
 
-        public ExcelExportingService(IServerTimeEntryService serverTimeEntryService, IServerAvailableHourService serverAvailableHourService)
+        public ExcelExportingService(IServerTimeEntryService serverTimeEntryService, IServerAvailableHourService serverAvailableHourService, IServerService serverService)
         {
             _serverTimeEntryService = serverTimeEntryService;
             _serverAvailableHourService = serverAvailableHourService;
+            _serverService = serverService;
         }
 
         public MemoryStream GetServerTimeEntriesMonthlyReportExcel(DateTime time)
@@ -53,6 +55,18 @@ namespace Gris.Application.Core.Services
             ExcelPackage package = new ExcelPackage(templateFile, true);
 
             GenerateStaffPercentagesMonthlyReportExcel(package, _serverTimeEntryService.GetServerTimeEntriesMonthlyReport(time), time);
+
+            var stream = new MemoryStream(package.GetAsByteArray());
+            return stream;
+        }
+
+        public MemoryStream GetCategoryPercentagesMonthlyReportExcel(DateTime time)
+        {
+            string excelTemplate = GetExcelTemplate(ReportType.CategoryPercentagesMonthly);
+            var templateFile = new FileInfo(excelTemplate);
+            ExcelPackage package = new ExcelPackage(templateFile, true);
+
+            GenerateCategoryPercentagesMonthlyReportExcel(package, _serverTimeEntryService.GetServerTimeEntriesMonthlyReport(time), time);
 
             var stream = new MemoryStream(package.GetAsByteArray());
             return stream;
@@ -258,6 +272,97 @@ namespace Gris.Application.Core.Services
 
         #endregion StaffPercentagesMonthlyReport
 
+        #region CategoryPercentagesMonthlyReport
+
+        private void GenerateCategoryPercentagesMonthlyReportExcel(ExcelPackage excelPackage, IEnumerable<ServerTimeEntriesMonthlyReportEntity> reportData, DateTime time)
+        {
+            var dataSheet = excelPackage.Workbook.Worksheets[1];
+            var rowIndex = 1; // starting row index.
+            var programColIndex = 2; // starting column index of programs.
+            var availableHours = _serverAvailableHourService.GetByDate(time);
+            var categories = _serverService.GetCategories();
+
+            #region Setup headers
+
+            // first cell which indicate selected date
+            dataSheet.Cells[1, 1].Value = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(time.Month) + " - " + time.Year;
+            // programs as column header
+            var programs = reportData.Select(t => new { t.ProgramId, t.ProgramName }).Distinct().OrderBy(t => t.ProgramName).ToList();
+            if (programs.Any())
+            {
+                programs.ForEachWithIndex((program, programIndex) =>
+                {
+                    dataSheet.Cells[1, 1].Copy(dataSheet.Cells[rowIndex, programColIndex]);
+                    dataSheet.Cells[rowIndex, programColIndex].Value = program.ProgramName;
+                    programColIndex++;
+                });
+                // "Total" column.
+                dataSheet.Cells[1, 1].Copy(dataSheet.Cells[rowIndex, programColIndex]);
+                dataSheet.Cells[rowIndex, programColIndex].Value = "Total";
+                programColIndex++;
+                // programs as percentage columns headers
+                programs.ForEachWithIndex((program, programIndex) =>
+                {
+                    dataSheet.Cells[1, 1].Copy(dataSheet.Cells[rowIndex, programColIndex]);
+                    dataSheet.Cells[rowIndex, programColIndex].Value = $"% {program.ProgramName}";
+                    programColIndex++;
+                });
+                // "Total"(s) column(s).
+                dataSheet.Cells[1, 1].Copy(dataSheet.Cells[rowIndex, programColIndex]);
+                dataSheet.Cells[rowIndex, programColIndex].Value = "Total";
+                programColIndex++;
+            }
+            #endregion Setup headers
+
+            rowIndex++;
+
+            foreach (var category in categories)
+            {
+                var currentColIndex = 1;
+                dataSheet.Cells[rowIndex, currentColIndex].Value = category.Name;
+                dataSheet.Cells[rowIndex, currentColIndex].Style.Font.Bold = true;
+                currentColIndex++;
+
+                var categoryGroup = reportData.Where(t => t.ServerCategoryId == category.Id);
+                //groupByCategory.ForEachWithIndex((categoryGroup, categoryIndex) =>
+                //{                    
+                var startIndexOfCategoryProgram = currentColIndex;
+                programs.ForEachWithIndex((program, programIndex) =>
+                {
+                    dataSheet.Cells[rowIndex, currentColIndex].Style.Numberformat.Format = "[h]:mm:ss";
+                    dataSheet.Cells[rowIndex, currentColIndex].Value = categoryGroup.Where(t => t.ProgramId == program.ProgramId)
+                    .Sum(t => t.Duration);
+                    currentColIndex++;
+                });
+
+                var indexOfCategoryProgramTotal = currentColIndex;
+                dataSheet.Cells[rowIndex, currentColIndex].Style.Numberformat.Format = "[h]:mm:ss";
+                dataSheet.Cells[rowIndex, currentColIndex].Formula = $"=SUM(${dataSheet.Cells[rowIndex, startIndexOfCategoryProgram].Address}"
+                        + $":${dataSheet.Cells[rowIndex, startIndexOfCategoryProgram + (programs.Count - 1)].Address})";
+                currentColIndex++;
+
+                var startIndexOfCategoryProgramPercentage = currentColIndex;
+                programs.ForEachWithIndex((program, programIndex) =>
+                {
+                    dataSheet.Cells[rowIndex, currentColIndex].Style.Numberformat.Format = "0.00 %";
+                    dataSheet.Cells[rowIndex, currentColIndex].Formula = $"=IF(${dataSheet.Cells[rowIndex, indexOfCategoryProgramTotal].Address}=0,0,"
+                    + $"+${dataSheet.Cells[rowIndex, startIndexOfCategoryProgram + programIndex].Address}/${dataSheet.Cells[rowIndex, indexOfCategoryProgramTotal].Address})";
+                    currentColIndex++;
+                });
+
+                dataSheet.Cells[rowIndex, currentColIndex].Style.Numberformat.Format = "0.00 %";
+                dataSheet.Cells[rowIndex, currentColIndex].Formula = $"=SUM(${dataSheet.Cells[rowIndex, startIndexOfCategoryProgramPercentage].Address}"
+                        + $":${dataSheet.Cells[rowIndex, startIndexOfCategoryProgramPercentage + (programs.Count - 1)].Address})";
+                currentColIndex++;
+
+                rowIndex++;
+                //});
+            }
+            dataSheet.Cells.AutoFitColumns();
+        }
+
+        #endregion StaffPercentagesMonthlyReport
+
         #region Private Methods
 
         private string GetExcelTemplate(ReportType type)
@@ -277,6 +382,10 @@ namespace Gris.Application.Core.Services
 
                 case ReportType.StaffPercentagesMonthly:
                     templatePath = System.AppDomain.CurrentDomain.BaseDirectory + "Content\\ExcelTemplates\\StaffPercentagesMonthlyReportTemplate.xlsx";
+                    break;
+
+                case ReportType.CategoryPercentagesMonthly:
+                    templatePath = System.AppDomain.CurrentDomain.BaseDirectory + "Content\\ExcelTemplates\\CategoryPercentagesMonthlyReportTemplate.xlsx";
                     break;
 
                 default:

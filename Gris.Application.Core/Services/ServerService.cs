@@ -43,7 +43,7 @@ namespace Gris.Application.Core.Services
 
         public IEnumerable<Category> GetCategories()
         {
-            return _serverRepoitory.GetAllCategories();
+            return _serverRepoitory.GetAllCategories().OrderBy(t => t.Name);
         }
 
         public IEnumerable<Server> GetServers(PagingInfo pagingInfo = null)
@@ -58,8 +58,8 @@ namespace Gris.Application.Core.Services
                 {
                     if (pagingInfo.SearchOption == "FirstName")
                     {
-                       result = _serverRepoitory.FilterWithPaging(s=>s.FirstName.ToLower().Contains(pagingInfo.SearchValue.ToLower()), (list => list.OrderBy(s => s.FullName))
-                    , out total, pagingInfo.PageIndex, AppSettings.PageSize);
+                        result = _serverRepoitory.FilterWithPaging(s => s.FirstName.ToLower().Contains(pagingInfo.SearchValue.ToLower()), (list => list.OrderBy(s => s.FullName))
+                     , out total, pagingInfo.PageIndex, AppSettings.PageSize);
                     }
                     else if (pagingInfo.SearchOption == "LastName")
                     {

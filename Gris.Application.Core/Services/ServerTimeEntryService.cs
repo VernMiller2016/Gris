@@ -106,7 +106,7 @@ namespace Gris.Application.Core.Services
                             Get(t => t.BeginDate.Year == selectedDate.Year && t.BeginDate.Month == selectedDate.Month
                             && t.PaySource != null && t.PaySource.ProgramId.HasValue
                             , (list => list.OrderBy(st => st.Server.FullName))
-                            , st => st.PaySource, st => st.PaySource.Program, st => st.Server)
+                            , st => st.PaySource, st => st.PaySource.Program, st => st.Server, st => st.Server.Category)
                             ;
             }
             else

@@ -21,5 +21,9 @@ namespace Gris.Application.Core.Contracts.Reports
         public string ProgramName { get; set; }
 
         public int ProgramId { get; set; }
+
+        public int ServerCategoryId { get; set; }
+
+        public string ServerCategoryName { get; set; }
     }
 }

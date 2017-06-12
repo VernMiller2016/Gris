@@ -52,6 +52,12 @@ namespace GRis.Controllers
             return View(viewmodel);
         }
 
+        public ActionResult CategoryPercentagesMonthlyReport()
+        {
+            ReportFilterViewModel viewmodel = new ReportFilterViewModel();
+            return View(viewmodel);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ExportStaffPercentagesMonthlyReportToExcel(ReportFilterViewModel viewmodel)
@@ -78,6 +84,22 @@ namespace GRis.Controllers
                 string.Format(Constants.ServerTimeEntriesMonthlyReportExcelFileName
                 , CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(viewmodel.Date.Value.Month)
                 , viewmodel.Date.Value.Year));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ExportCategoryPercentagesMonthlyReportToExcel(ReportFilterViewModel viewmodel)
+        {
+            if (ModelState.IsValid)
+            {
+                MemoryStream stream = _exportingService.GetCategoryPercentagesMonthlyReportExcel(viewmodel.Date.Value);
+
+                return File(stream, Constants.ExcelFilesMimeType,
+                    string.Format(Constants.CategoryPercentagesMonthlyReportExcelFileName
+                    , CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(viewmodel.Date.Value.Month)
+                    , viewmodel.Date.Value.Year));
+            }
+            return View("CategoryPercentagesMonthlyReport", viewmodel);
         }
     }
 }
