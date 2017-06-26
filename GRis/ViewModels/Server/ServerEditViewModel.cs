@@ -27,12 +27,15 @@ namespace GRis.ViewModels.Server
         public string GpEmpNumber { get; set; }
 
         [Required]
-        public int Element { get; set; }
+        [Display(Name = "Element")]
+        public int ElementId { get; set; }
 
         [Display(Name = "Category")]
         public int? CategoryId { get; set; }
         
         public List<SelectListItem> AvailableCategories { get; set; }
+
+        public List<SelectListItem> AvailableElements { get; set; }
 
         [Display(Name = "Is Active")]
         public bool Active { get; set; }

@@ -206,6 +206,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\ElementsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PaySourcesController.cs" />
     <Compile Include="Controllers\ProgramsController.cs" />
@@ -232,6 +233,9 @@
     <Compile Include="Validations\AllowedFileExtensionAttribute.cs" />
     <Compile Include="ViewModels\Common\Alert.cs" />
     <Compile Include="ViewModels\Common\UploadedExcelSheetViewModel.cs" />
+    <Compile Include="ViewModels\Element\ElementAddViewModel.cs" />
+    <Compile Include="ViewModels\Element\ElementDetailsViewModel.cs" />
+    <Compile Include="ViewModels\Element\ElementEditViewModel.cs" />
     <Compile Include="ViewModels\PaySource\PaySourceDetailsViewModel.cs" />
     <Compile Include="ViewModels\PaySource\PaySourceEditViewModel.cs" />
     <Compile Include="ViewModels\PaySource\PaySourceAddViewModel.cs" />
@@ -389,6 +393,11 @@
     <Content Include="Views\ServerAvailableHours\_ServerAvailableHourList.cshtml" />
     <Content Include="Views\Reports\StaffPercentagesMonthlyReport.cshtml" />
     <Content Include="Views\Reports\CategoryPercentagesMonthlyReport.cshtml" />
+    <Content Include="Views\Elements\Index.cshtml" />
+    <Content Include="Views\Elements\Create.cshtml" />
+    <Content Include="Views\Elements\Details.cshtml" />
+    <Content Include="Views\Elements\Edit.cshtml" />
+    <Content Include="Views\Elements\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -472,7 +481,7 @@
     </ItemGroup>
     <MakeDir Directories="$(WebProjectOutputDir)\bin\roslyn" />
     <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(WebProjectOutputDir)\bin\roslyn" SkipUnchangedFiles="true" Retries="$(CopyRetryCount)" RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" />
-</Target>
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -3,23 +3,18 @@
 
 namespace Gris.Utilities.App_Start
 {
-    using System;
-    using System.Web;
-
+    using Application.Core.Interfaces;
+    using Application.Core.Services;
+    using Domain.Core.Models;
+    using Infrastructure.Core;
+    using Infrastructure.Core.DAL;
+    using Infrastructure.Core.Interfaces;
+    using Infrastructure.Core.Repositories;
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
-
     using Ninject;
     using Ninject.Web.Common;
-
-    using Application.Core.Interfaces;
-    using Infrastructure.Core;
-    using Infrastructure.Core.Repositories;
-    using Infrastructure.Core.Interfaces;
-    using Application.Core.Services;
-    using System.Collections.Generic;
-    using System.Web.Http.Dependencies;
-    using Infrastructure.Core.DAL;
-    using Domain.Core.Models;
+    using System;
+    using System.Web;
 
     public static class NinjectWebCommon
     {
@@ -42,6 +37,7 @@ namespace Gris.Utilities.App_Start
         {
             bootstrapper.ShutDown();
         }
+
         public static object CurrentDbContext
         {
             get
@@ -53,7 +49,9 @@ namespace Gris.Utilities.App_Start
                 return currentKernal.Get(typeof(ApplicationDbContext));
             }
         }
+
         private static StandardKernel currentKernal = null;
+
         /// <summary>
         /// Creates the kernel that will manage your application.
         /// </summary>
@@ -102,8 +100,9 @@ namespace Gris.Utilities.App_Start
 
             kernel.Bind<IRepository<ServerAvailableHour>>().To<EFRepository<ServerAvailableHour>>();
             kernel.Bind<IServerAvailableHourService>().To<ServerAvailableHourService>();
+
+            kernel.Bind<IRepository<Element>>().To<EFRepository<Element>>();
+            kernel.Bind<IElementService>().To<ElementService>();
         }
     }
-
-
 }

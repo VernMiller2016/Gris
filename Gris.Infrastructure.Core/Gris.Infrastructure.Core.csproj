@@ -113,6 +113,10 @@
     <Compile Include="Migrations\201706072048073_AddColumnElement.Designer.cs">
       <DependentUpon>201706072048073_AddColumnElement.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706260013193_AddElementTable.cs" />
+    <Compile Include="Migrations\201706260013193_AddElementTable.Designer.cs">
+      <DependentUpon>201706260013193_AddElementTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\EFRepository.cs" />
@@ -170,6 +174,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706072048073_AddColumnElement.resx">
       <DependentUpon>201706072048073_AddColumnElement.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706260013193_AddElementTable.resx">
+      <DependentUpon>201706260013193_AddElementTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

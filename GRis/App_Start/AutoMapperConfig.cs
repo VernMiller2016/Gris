@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Gris.Application.Core.Contracts.Reports;
 using Gris.Domain.Core.Models;
+using GRis.ViewModels.Element;
 using GRis.ViewModels.PaySource;
 using GRis.ViewModels.Program;
 using GRis.ViewModels.Server;
@@ -44,6 +45,7 @@ namespace GRis.App_Start
                 #region Server
 
                 cfg.CreateMap<Server, ServerDetailsViewModel>()
+                .ForMember(dest => dest.ElementDisplayName, opt => opt.MapFrom(src => src.Element.DisplayName))
                 ;
 
                 cfg.CreateMap<ServerAddViewModel, Server>()
@@ -106,6 +108,20 @@ namespace GRis.App_Start
                 ;
 
                 #endregion ServerAvailableHour
+
+                #region Element
+
+                cfg.CreateMap<Element, ElementDetailsViewModel>()
+                ;
+
+                cfg.CreateMap<ElementAddViewModel, Element>()
+                ;
+
+                cfg.CreateMap<Element, ElementEditViewModel>()
+                .ReverseMap()
+                ;
+
+                #endregion Element
             });
         }
     }
