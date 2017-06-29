@@ -27,6 +27,17 @@
         </dd>
 
         <dt>
+            @Html.DisplayNameFor(model => model.Programs)
+        </dt>
+
+        <dd>
+            @foreach (var program in Model.Programs)
+            {
+                <p>@program.Name</p>
+            }
+        </dd>
+
+        <dt>
             @Html.DisplayNameFor(model => model.Active)
         </dt>
 

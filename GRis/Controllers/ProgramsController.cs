@@ -5,7 +5,6 @@ using Gris.Domain.Core.Models;
 using GRis.Core.Extensions;
 using GRis.Extensions;
 using GRis.ViewModels.Program;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
@@ -53,7 +52,7 @@ namespace GRis.Controllers
         public ActionResult Create()
         {
             var viewmodel = new ProgramAddViewModel();
-            viewmodel.PaySources = _programService.GetAvailablePaySourcesNotRelatedToPrograms().Select(t => new SelectListItem()
+            viewmodel.PaySources = _paySourceService.GetPaySources().Select(t => new SelectListItem()
             {
                 Text = t.VendorId.ToString(),
                 Value = t.Id.ToString()
@@ -82,7 +81,7 @@ namespace GRis.Controllers
                     Success($"<strong>{entity.Name}</strong> was successfully added.");
                     return RedirectToAction("Index");
                 }
-                viewmodel.PaySources = _programService.GetAvailablePaySourcesNotRelatedToPrograms().Select(t => new SelectListItem()
+                viewmodel.PaySources = _paySourceService.GetPaySources().Select(t => new SelectListItem()
                 {
                     Text = t.VendorId.ToString(),
                     Value = t.Id.ToString()
@@ -91,7 +90,7 @@ namespace GRis.Controllers
             }
             catch
             {
-                viewmodel.PaySources = _programService.GetAvailablePaySourcesNotRelatedToPrograms().Select(t => new SelectListItem()
+                viewmodel.PaySources = _paySourceService.GetPaySources().Select(t => new SelectListItem()
                 {
                     Text = t.VendorId.ToString(),
                     Value = t.Id.ToString()

@@ -25,7 +25,7 @@ namespace GRis.ViewModels.Server
 
         [Required]
         [Display(Name = "Element")]
-        public int ElementId { get; set; }
+        public int? ElementId { get; set; }
 
         [Display(Name = "Is Active")]
         public bool Active { get; set; } = true;

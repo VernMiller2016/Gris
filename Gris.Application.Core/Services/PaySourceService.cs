@@ -32,18 +32,18 @@ namespace Gris.Application.Core.Services
 
         public PaySource GetById(int id)
         {
-            return _paySourceRepoitory.GetById(id);
+            return _paySourceRepoitory.OneOrDefault(t => t.Id == id, t => t.Programs);
         }
 
         public PaySource GetByVendorId(int vendorId)
         {
-            return _paySourceRepoitory.OneOrDefault(t => t.VendorId == vendorId);
+            return _paySourceRepoitory.OneOrDefault(t => t.VendorId == vendorId, t => t.Programs);
         }
 
         public IEnumerable<PaySource> GetPaySources(PagingInfo pagingInfo)
         {
             if (pagingInfo == null)
-                return _paySourceRepoitory.Get(null, (list => list.OrderBy(p => p.VendorId)));
+                return _paySourceRepoitory.Get(null, (list => list.OrderBy(p => p.VendorId)), t => t.Programs);
             else
             {
                 int total = 0;
@@ -52,12 +52,12 @@ namespace Gris.Application.Core.Services
                 {
                     if (pagingInfo.SearchOption == "PaySourceName")
                     {
-                        result = _paySourceRepoitory.FilterWithPaging(s => s.Description.ToLower().Contains(pagingInfo.SearchValue.ToLower()), (list => list.OrderBy(p => p.VendorId)), out total, pagingInfo.PageIndex, AppSettings.PageSize);
+                        result = _paySourceRepoitory.FilterWithPaging(s => s.Description.ToLower().Contains(pagingInfo.SearchValue.ToLower()), (list => list.OrderBy(p => p.VendorId)), out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Programs);
                     }
                 }
                 else
                 {
-                    result = _paySourceRepoitory.FilterWithPaging(null, (list => list.OrderBy(p => p.VendorId)), out total, pagingInfo.PageIndex, AppSettings.PageSize);
+                    result = _paySourceRepoitory.FilterWithPaging(null, (list => list.OrderBy(p => p.VendorId)), out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Programs);
                 }
                 pagingInfo.Total = total;
                 return result;

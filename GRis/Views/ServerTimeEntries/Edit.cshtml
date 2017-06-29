@@ -6,29 +6,36 @@
 
 <h2>Edit</h2>
 
-
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Id)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.ServerVendorId, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.ServerId, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.ServerVendorId, Model.SelectedServers, "--Select Server--", new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.ServerVendorId, "", new { @class = "text-danger" })
+                @Html.DropDownListFor(model => model.ServerId, Model.SelectedServers, "--Select Server--", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ServerId, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.PaySourceVendorId, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.PaySourceId, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.PaySourceVendorId, Model.SelectedPaySources, "--Select PaySource--", new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.PaySourceVendorId, "", new { @class = "text-danger" })
+                @Html.DropDownListFor(model => model.PaySourceId, Model.SelectedPaySources, "--Select PaySource--", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.PaySourceId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ProgramId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.ProgramId, Model.SelectedPrograms, "--Select Program--", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ProgramId, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -64,4 +71,27 @@
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/plugins")
     @Scripts.Render("~/bundles/app")
+    <script type="text/javascript">
+        $(function () {
+            $('#PaySourceId').change(function () {
+                var paysourceId = $('#PaySourceId :selected').val();
+                if (paysourceId && paysourceId > 0) {
+                    $.LoadingOverlay("show");
+                    $.ajax({
+                        url: '/api/paysource/' + paysourceId + '/programs',
+                        method: 'GET'
+                    }).done(function (result) {
+                        $programs = $('#ProgramId');
+                        $programs.empty().append('<option selected="selected" value="">--Select Program--</option>');
+                        $.each(result, function (key, value) {
+                            $programs.append($("<option />", {
+                                value: value.value,
+                                text: value.text
+                            }));
+                        });
+                    }).always(function () { $.LoadingOverlay("hide"); });
+                }
+            });
+        });
+    </script>
 }

@@ -228,13 +228,23 @@ namespace GRis.Controllers
                             FirstName = row["Sort Name"].ToString().Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)[1],
                             LastName = row["Sort Name"].ToString().Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)[0],
                             GpEmpNumber = !string.IsNullOrWhiteSpace(row["Gp Emp #"].ToString()) ? row["Gp Emp #"].ToString() : null,
-                            //Element = !string.IsNullOrWhiteSpace(row["Element"].ToString()) ? int.Parse(row["Element"].ToString()) : 0,
+                            ElementId = !string.IsNullOrWhiteSpace(row["Element"].ToString()) ? int.Parse(row["Element"].ToString()) : (int?)null,
                             Active = row["active"].ToString() == "Y" ? true : false,
                             CategoryId = CategoryConverter.ConvertFromCategoryNameToId(row["Category"].ToString())
                         };
                         //check if server does not exist
                         if (entityViewModel.VendorId != 0)
                         {
+                            if (entityViewModel.ElementId.HasValue)
+                            {
+                                var existedElement = _elementService.GetByVendorId(entityViewModel.ElementId.Value);
+                                if (existedElement == null)
+                                {
+                                    Danger($"Invalid Element Id with value ={entityViewModel.ElementId.Value}");
+                                    continue;
+                                }
+                            }
+
                             var existedEntity = _serverService.GetByVendorId(entityViewModel.VendorId);
                             if (existedEntity == null)
                             {
