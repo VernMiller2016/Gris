@@ -14,14 +14,16 @@ namespace Gris.Application.Core.Services
     public class ExcelExportingService : IExportingService
     {
         private IServerTimeEntryService _serverTimeEntryService;
+        private IServerSalaryReportService _serverSalariesService;
         private IServerAvailableHourService _serverAvailableHourService;
         private IServerService _serverService;
 
-        public ExcelExportingService(IServerTimeEntryService serverTimeEntryService, IServerAvailableHourService serverAvailableHourService, IServerService serverService)
+        public ExcelExportingService(IServerTimeEntryService serverTimeEntryService, IServerAvailableHourService serverAvailableHourService, IServerService serverService,IServerSalaryReportService serverSalaiesService)
         {
             _serverTimeEntryService = serverTimeEntryService;
             _serverAvailableHourService = serverAvailableHourService;
             _serverService = serverService;
+            _serverSalariesService = serverSalaiesService;
         }
 
         public MemoryStream GetServerTimeEntriesMonthlyReportExcel(DateTime time)
@@ -35,7 +37,19 @@ namespace Gris.Application.Core.Services
             var stream = new MemoryStream(package.GetAsByteArray());
             return stream;
         }
+        public MemoryStream GetServerSalariesMothlyReportExcel(DateTime time)
+        {
+            string excelTemplate = GetExcelTemplate(ReportType.ServerSalariesMonthly);
+            var templateFile = new FileInfo(excelTemplate);
+            ExcelPackage package = new ExcelPackage(templateFile, true);
 
+            GenerateServerSalariesMonthlyReportExcel(package, _serverSalariesService.GetServerSalaryMonthlyReport(time), time);
+
+            var stream = new MemoryStream(package.GetAsByteArray());
+            return stream;
+        }
+
+        
         public MemoryStream GetServerAvailableHoursTemplate(int defaultAvailableHours, DateTime time)
         {
             string excelTemplate = GetExcelTemplate(ReportType.ServerAvailableHoursTemplate);
@@ -140,6 +154,60 @@ namespace Gris.Application.Core.Services
             dataSheet.Name = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(time.Month) + " - " + time.Year;
             dataSheet.Cells.AutoFitColumns();
         }
+        private void GenerateServerSalariesMonthlyReportExcel(ExcelPackage excelPackage, IEnumerable<ServerSalaryReportViewModel> reportData, DateTime time)
+        {
+            // 1- create sheets per program which should be copy of the first sheet.
+            var index = 2; // starting index of each sheet.
+            var groupByMonth = reportData.GroupBy(t => new { t.TRXDATE.Month, t.TRXDATE.Year });
+            groupByMonth.ForEachWithIndex((grouping, year) =>
+            {
+                var serverSalariesSheet = excelPackage.Workbook.Worksheets.Add(
+                    grouping.Key.Month + " - " + grouping.Key.Year
+                    , excelPackage.Workbook.Worksheets[1]);
+                index = 2;
+                var groupByServer = grouping.GroupBy(t => t.ServerName);
+
+                groupByServer.ForEachWithIndex((serverGroup, serverIndex) =>
+                {
+                    var currentServerGroupStartIndex = index;
+                    foreach (var item in serverGroup)
+                    {
+                        serverSalariesSheet.Cells["A" + index].Value = item.ServerName;
+                        serverSalariesSheet.Cells["B" + index].Value = item.SalaryAccount != null ? item.SalaryAccount.Value : 0;
+                        serverSalariesSheet.Cells["C" + index].Value = item.TempHelpAccount != null ? item.TempHelpAccount.Value : 0; 
+                        serverSalariesSheet.Cells["D" + index].Value = item.OverTimeAccount != null? item.OverTimeAccount.Value:0;
+                        serverSalariesSheet.Cells["E" + index].Value = item.RetirementAccount != null ? item.RetirementAccount.Value : 0;
+                        serverSalariesSheet.Cells["F" + index].Value = item.SocialSecurityAccount != null ? item.SocialSecurityAccount.Value : 0;
+                        serverSalariesSheet.Cells["G" + index].Value = item.MedicalAndLifeInsuranceAccount != null ? item.MedicalAndLifeInsuranceAccount.Value : 0;
+                        serverSalariesSheet.Cells["H" + index].Value = item.IndustrialInsuranceAccount != null ? item.IndustrialInsuranceAccount.Value : 0;
+                        serverSalariesSheet.Cells["I" + index].Value = item.Total;
+                       // serverSalariesSheet.Row(index).OutlineLevel = (2);
+                        //serverSalariesSheet.Row(index).Collapsed = true;
+                        index++;
+                    }
+         
+                });
+
+                serverSalariesSheet.Cells.AutoFitColumns();
+               // serverSalariesSheet.View.TabSelected = false;
+            });
+
+            //// 2- create the first sheet that contains all data.
+            //var dataSheet = excelPackage.Workbook.Worksheets[1]; // main sheet that contains all records.
+            //index = 2;
+            //foreach (var item in reportData)
+            //{
+            //    dataSheet.Cells["A" + index].Value = item.ServerVendorId;
+            //    dataSheet.Cells["B" + index].Value = item.ServerName;
+            //    dataSheet.Cells["C" + index].Value = item.BeginDate.ToString(Constants.ShortDateFormat);
+            //    dataSheet.Cells["D" + index].Value = item.Duration.ToString();
+            //    dataSheet.Cells["E" + index].Value = item.PaysourceDescription;
+            //    index++;
+            //}
+            //dataSheet.Name = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(time.Month) + " - " + time.Year;
+            //dataSheet.Cells.AutoFitColumns();
+        }
+        
 
         #endregion ServerTimeEntriesMonthlyReport
 
@@ -388,6 +456,9 @@ namespace Gris.Application.Core.Services
                     templatePath = System.AppDomain.CurrentDomain.BaseDirectory + "Content\\ExcelTemplates\\CategoryPercentagesMonthlyReportTemplate.xlsx";
                     break;
 
+                case ReportType.ServerSalariesMonthly:
+                    templatePath = System.AppDomain.CurrentDomain.BaseDirectory + "Content\\ExcelTemplates\\ServerSalariesMonthlyReportTemplate.xlsx";
+                    break;
                 default:
                     templatePath = String.Empty;
                     break;

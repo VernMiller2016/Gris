@@ -5,6 +5,7 @@
         ServerTimeEntriesMonthly = 1,
         ServerAvailableHoursTemplate = 2,
         StaffPercentagesMonthly = 3,
-        CategoryPercentagesMonthly = 4
+        CategoryPercentagesMonthly = 4,
+        ServerSalariesMonthly = 5
     }
 }

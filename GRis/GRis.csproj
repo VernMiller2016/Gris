@@ -278,6 +278,7 @@
     <Content Include="Content\ExcelTemplates\ServerAvailableHoursTemplate.xlsx" />
     <Content Include="Content\ExcelTemplates\StaffPercentagesMonthlyReportTemplate.xlsx" />
     <Content Include="Content\ExcelTemplates\CategoryPercentagesMonthlyReportTemplate.xlsx" />
+    <Content Include="Content\ExcelTemplates\ServerSalariesMonthlyReportTemplate.xlsx" />
     <None Include="Properties\PublishProfiles\Local.pubxml" />
     <None Include="Properties\PublishProfiles\PublishGris.pubxml" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
@@ -389,6 +390,8 @@
     <Content Include="Views\ServerAvailableHours\_ServerAvailableHourList.cshtml" />
     <Content Include="Views\Reports\StaffPercentagesMonthlyReport.cshtml" />
     <Content Include="Views\Reports\CategoryPercentagesMonthlyReport.cshtml" />
+    <Content Include="Views\Reports\_ServerSalariesMonthlyReportListing.cshtml" />
+    <Content Include="Views\Reports\ServerSalariesMonthlyReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -472,7 +475,7 @@
     </ItemGroup>
     <MakeDir Directories="$(WebProjectOutputDir)\bin\roslyn" />
     <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(WebProjectOutputDir)\bin\roslyn" SkipUnchangedFiles="true" Retries="$(CopyRetryCount)" RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" />
-</Target>
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

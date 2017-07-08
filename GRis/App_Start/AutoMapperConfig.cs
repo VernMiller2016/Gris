@@ -106,6 +106,16 @@ namespace GRis.App_Start
                 ;
 
                 #endregion ServerAvailableHour
+
+                #region ServerMonthlyReport
+                cfg.CreateMap<ServerSalaryReportEntity, ServerSalaryReportViewModel>()
+               .ForMember(dest => dest.ServerName, opt => opt.MapFrom(src => src.ORMSTRNM))
+               .ForMember(dest => dest.GpEmpNumber, opt => opt.MapFrom(src => src.ORMSTRID))
+               //.ForMember(dest => dest.CreditAmount, opt => opt.MapFrom(src => src.CRDTAMNT))
+               //.ForMember(dest => dest.DebitAmount, opt => opt.MapFrom(src => src.DEBITAMT))
+               //.ForMember(dest => dest.AccountDescription , opt => opt.MapFrom(src =>  src.ACTDESCR))
+               ;
+                #endregion
             });
         }
     }

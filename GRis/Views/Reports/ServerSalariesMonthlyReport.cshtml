@@ -1,0 +1,73 @@
+﻿@using Gris.Application.Core.Contracts.Reports;
+@using X.PagedList.Mvc;
+@using X.PagedList;
+@using GRis.ViewModels.Reports;
+@model IEnumerable<ServerSalaryReportViewModel>
+
+@{
+    ViewBag.Title = "Server Salary Report";
+    //var pagedList = (IPagedList)Model;
+    var filterViewModel = ViewBag.FilterViewModel as ReportFilterViewModel;
+    var displayResults = (bool)ViewBag.DisplayResults;
+}
+<h2>Service Details Monthly Report</h2>
+
+@using (Html.BeginForm("ServerSalariesMonthlyReport", "Reports", FormMethod.Get))
+{
+    <div class="form-horizontal">
+        <br />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => filterViewModel.Date, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => filterViewModel.Date, new { fieldName = "date" })
+                @Html.ValidationMessageFor(model => filterViewModel.Date, "", new { @class = "text-danger", data_valmsg_for = "date" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Generate" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+@if (displayResults)
+{
+    <hr />
+    <h4>
+        Results:
+    </h4>
+
+    if (Model.Any())
+    {
+        using (Html.BeginForm("ExportServerSalariesMonthlyReportToExcel", "Reports"))
+        {
+            @Html.HiddenFor(model => filterViewModel.Date, new { Name = "date" })
+            @Html.AntiForgeryToken()
+
+            <button type="submit" class="btn btn-labeled btn-success pull-right">
+                <span><i class="glyphicon glyphicon-download-alt"></i></span> Export To Excel
+            </button>
+        }
+        Html.RenderPartial("_ServerSalariesMonthlyReportListing", Model);
+        @*<div>
+            Page @(pagedList.PageCount < pagedList.PageNumber ? 0 : pagedList.PageNumber) from @pagedList.PageCount
+            @Html.PagedListPager((IPagedList)Model, page => Url.Action("ServerTimeEntriesMonthlyReport", new { page, date = filterViewModel.DateAsMonthYear }));
+        </div>*@
+    }
+    else
+    {
+        <h4>
+            <span class="label label-info">No data match the search criteria!</span>
+        </h4>
+    }
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/plugins")
+    @Scripts.Render("~/bundles/app")
+}

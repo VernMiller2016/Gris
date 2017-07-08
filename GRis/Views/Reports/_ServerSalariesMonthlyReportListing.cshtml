@@ -1,0 +1,75 @@
+﻿@using X.PagedList.Mvc;
+@using X.PagedList;
+@model IEnumerable<Gris.Application.Core.Contracts.Reports.ServerSalaryReportViewModel>
+
+<table class="table table-striped">
+    <tr>
+        <th>
+            Server Id
+        </th>
+        <th>
+            Server Name
+        </th>
+        <th>
+            Salary
+        </th>
+        <th>
+            Temp Help
+        </th>
+        <th>
+            Overtime
+        </th>
+        <th>
+            Retirement
+        </th>
+        <th>
+            Social Security
+        </th>
+        <th>
+            Medical & Life Ins
+        </th>
+        <th>
+            Indust Ins
+        </th>
+        <th>
+            Total
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+            {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.GpEmpNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ServerName)
+            </td>
+            <td>
+                @*@Html.DisplayFor(modelItem => item.BeginDate)*@
+                @Html.DisplayFor(modelItem => item.SalaryAccount.Value)
+            </td>
+            <td>
+               @Html.DisplayFor(modelItem => item.TempHelpAccount.Value)
+            </td>
+            <td>
+               @Html.DisplayFor(modelItem => item.OverTimeAccount.Value)
+            </td>
+            <td>
+               @Html.DisplayFor(modelItem => item.RetirementAccount.Value)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SocialSecurityAccount.Value)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MedicalAndLifeInsuranceAccount.Value)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IndustrialInsuranceAccount.Value)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Total)
+            </td>
+        </tr>
+    }
+</table>

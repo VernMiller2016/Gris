@@ -16,6 +16,7 @@ namespace Gris.Infrastructure.Core.DAL
             : base("DefaultConnection", throwIfV1Schema: false)
         {
             this.Configuration.LazyLoadingEnabled = false;
+            this.Database.CommandTimeout = 600;
         }
 
         static ApplicationDbContext()
@@ -56,6 +57,8 @@ namespace Gris.Infrastructure.Core.DAL
             // Add this, so that IdentityRole can share a table with ApplicationRole:
             modelBuilder.Entity<IdentityRole>().ToTable("AspNetRoles");
 
+            modelBuilder.Entity<ServerSalaryReportEntity>().ToTable("salaryReport");
+
             //modelBuilder.Entity<User>().
             // HasMany(u => u.Roles).
             // WithMany(r => r.Users).
@@ -88,5 +91,7 @@ namespace Gris.Infrastructure.Core.DAL
         public System.Data.Entity.DbSet<ServerTimeEntry> ServerTimeEntries { get; set; }
 
         public System.Data.Entity.DbSet<ServerAvailableHour> ServerAvailableHours { get; set; }
+
+        public System.Data.Entity.DbSet<ServerSalaryReportEntity> ServerSalaryMonthlyReport { get; set; }
     }
 }

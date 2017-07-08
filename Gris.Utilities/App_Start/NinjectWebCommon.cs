@@ -102,6 +102,9 @@ namespace Gris.Utilities.App_Start
 
             kernel.Bind<IRepository<ServerAvailableHour>>().To<EFRepository<ServerAvailableHour>>();
             kernel.Bind<IServerAvailableHourService>().To<ServerAvailableHourService>();
+
+            kernel.Bind<IServerSalaryReportRepository>().To<ServerSalaryReportRepository>();
+            kernel.Bind<IServerSalaryReportService>().To<ServerMonthlyReportService>();
         }
     }
 
