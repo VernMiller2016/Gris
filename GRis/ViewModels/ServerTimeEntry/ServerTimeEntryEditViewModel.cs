@@ -11,11 +11,14 @@ namespace GRis.ViewModels.ServerTimeEntry
 
         [Required]
         [Display(Name = "Server")]
-        public int ServerVendorId { get; set; }
+        public int ServerId { get; set; }
 
         [Required]
         [Display(Name = "PaySource")]
-        public int PaySourceVendorId { get; set; }
+        public int PaySourceId { get; set; }
+
+        [Display(Name = "Program")]
+        public int? ProgramId { get; set; }
 
         [Required]
         [Display(Name = "Duration")]
@@ -30,5 +33,7 @@ namespace GRis.ViewModels.ServerTimeEntry
         public IEnumerable<SelectListItem> SelectedServers { get; set; }
 
         public IEnumerable<SelectListItem> SelectedPaySources { get; set; }
+
+        public IEnumerable<SelectListItem> SelectedPrograms { get; set; }
     }
 }

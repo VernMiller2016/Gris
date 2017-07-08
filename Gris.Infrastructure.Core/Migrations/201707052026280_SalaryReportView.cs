@@ -10,7 +10,7 @@ namespace Gris.Infrastructure.Core.Migrations
             Sql(@"EXEC ('/****** Script for SelectTopNRows command from SSMS  ******/
 
 
-              CREATE PROCEDURE GetServerSalaryReportData
+              Create PROCEDURE GetServerSalaryReportData
 	            @StartDate DATETIME,
 	            @EndDate DATETIME
             AS
@@ -32,13 +32,12 @@ namespace Gris.Infrastructure.Core.Migrations
             FROM GCTEST.dbo.slbAccountTrx join GCTEST.dbo.GL00105 
              ON slbAccountTrx.actindx = GL00105.actindx
 
-            where GL00105.ACTNUMST BETWEEN '108.150.00.0000.560001100' 
-              AND '108.150.00.0000.560002599'
-              AND slbAccountTrx.TRXDATE BETWEEN @StartDate AND @EndDate
+            where 
+               slbAccountTrx.TRXDATE BETWEEN @StartDate AND @EndDate
             ORDER BY ACTNUMST, JRNENTRY, ORMSTRNM
             
             END
-            GO
+          
             
             ')");
         }

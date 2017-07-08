@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Gris.Domain.Core.Models
 {
@@ -16,9 +17,13 @@ namespace Gris.Domain.Core.Models
         [StringLength(50)]
         public string Description { get; set; }
 
-        public int? ProgramId { get; set; }
+        //[NotMapped]
+        //public int? ProgramId { get; set; }
 
-        public Program Program { get; set; }
+        //[NotMapped]
+        //public Program Program { get; set; }
+
+        public virtual ICollection<Program> Programs { get; set; }
 
         public virtual ICollection<ServerTimeEntry> ServerTimeEntries { get; set; }
     }

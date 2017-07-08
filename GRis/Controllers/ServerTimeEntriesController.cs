@@ -36,7 +36,7 @@ namespace GRis.Controllers
         {
             var pagingInfo = new PagingInfo() { PageNumber = page };
             var entities = Enumerable.Empty<ServerTimeEntry>();
-            if (filter!= null && filter.Date.HasValue)
+            if (filter != null && filter.Date.HasValue)
             {
                 entities = _serverTimeEntryService.GetServerTimeEntries(filter.Date.Value, pagingInfo);
             }
@@ -76,14 +76,15 @@ namespace GRis.Controllers
             var viewmodel = new ServerTimeEntryAddViewModel();
             viewmodel.SelectedServers = _serverService.GetServers().Select(t => new SelectListItem()
             {
-                Text = t.FullName.ToString(),
+                Text = t.FullName,
                 Value = t.Id.ToString()
             });
             viewmodel.SelectedPaySources = _paySourceService.GetPaySources().Select(t => new SelectListItem()
             {
-                Text = t.Description.ToString(),
+                Text = t.Description,
                 Value = t.Id.ToString()
             });
+            viewmodel.SelectedPrograms = new List<SelectListItem>();
             return View(viewmodel);
         }
 
@@ -102,14 +103,15 @@ namespace GRis.Controllers
 
             viewmodel.SelectedServers = _serverService.GetServers().Select(t => new SelectListItem()
             {
-                Text = t.FullName.ToString(),
+                Text = t.FullName,
                 Value = t.Id.ToString()
             });
             viewmodel.SelectedPaySources = _paySourceService.GetPaySources().Select(t => new SelectListItem()
             {
-                Text = t.Description.ToString(),
+                Text = t.Description,
                 Value = t.Id.ToString()
             });
+            viewmodel.SelectedPrograms = new List<SelectListItem>();
             return View(viewmodel);
         }
 
@@ -129,12 +131,18 @@ namespace GRis.Controllers
             var viewmodel = Mapper.Map<ServerTimeEntry, ServerTimeEntryEditViewModel>(entity);
             viewmodel.SelectedServers = _serverService.GetServers().Select(t => new SelectListItem()
             {
-                Text = t.FullName.ToString(),
+                Text = t.FullName,
                 Value = t.Id.ToString()
             });
-            viewmodel.SelectedPaySources = _paySourceService.GetPaySources().Select(t => new SelectListItem()
+            var paysourceList = _paySourceService.GetPaySources();
+            viewmodel.SelectedPaySources = paysourceList.Select(t => new SelectListItem()
             {
-                Text = t.Description.ToString(),
+                Text = t.Description,
+                Value = t.Id.ToString()
+            });
+            viewmodel.SelectedPrograms = paysourceList.FirstOrDefault(t => t.Id == entity.PaySourceId).Programs.Select(t => new SelectListItem()
+            {
+                Text = t.Name,
                 Value = t.Id.ToString()
             });
             return View(viewmodel);
@@ -159,12 +167,18 @@ namespace GRis.Controllers
             }
             viewmodel.SelectedServers = _serverService.GetServers().Select(t => new SelectListItem()
             {
-                Text = t.FullName.ToString(),
+                Text = t.FullName,
                 Value = t.Id.ToString()
             });
-            viewmodel.SelectedPaySources = _paySourceService.GetPaySources().Select(t => new SelectListItem()
+            var paysourceList = _paySourceService.GetPaySources();
+            viewmodel.SelectedPaySources = paysourceList.Select(t => new SelectListItem()
             {
-                Text = t.Description.ToString(),
+                Text = t.Description,
+                Value = t.Id.ToString()
+            });
+            viewmodel.SelectedPrograms = paysourceList.FirstOrDefault(t => t.Id == viewmodel.PaySourceId).Programs.Select(t => new SelectListItem()
+            {
+                Text = t.Name,
                 Value = t.Id.ToString()
             });
             return View(viewmodel);
@@ -219,27 +233,28 @@ namespace GRis.Controllers
                     {
                         var timeEntryViewModel = new ServerTimeEntryAddViewModel()
                         {
-                            ServerVendorId = int.Parse(row["Server ID"].ToString()),
-                            PaySourceVendorId = int.Parse(row["Current Pay Source"].ToString()),
+                            ServerId = int.Parse(row["Server ID"].ToString()),
+                            PaySourceId = int.Parse(row["Current Pay Source"].ToString()),
                             BeginDate = DateTime.Parse(row["Begin Date"].ToString()),
                             Duration = TimeSpan.Parse(row["Duration"].ToString())
                         };
-                        var existedServer = _serverService.GetByVendorId(timeEntryViewModel.ServerVendorId);
+                        var existedServer = _serverService.GetByVendorId(timeEntryViewModel.ServerId);
                         if (existedServer == null)
                         {
-                            ModelState.AddModelError("", $"Invalid Server Id with value ={timeEntryViewModel.ServerVendorId}");
+                            ModelState.AddModelError("", $"Invalid Server Id with value ={timeEntryViewModel.ServerId}");
                         }
 
-                        var existedPaySource = _paySourceService.GetByVendorId(timeEntryViewModel.PaySourceVendorId);
+                        var existedPaySource = _paySourceService.GetByVendorId(timeEntryViewModel.PaySourceId);
                         if (existedPaySource == null)
                         {
-                            ModelState.AddModelError("", $"Invalid PaySource Id with value ={timeEntryViewModel.PaySourceVendorId}");
+                            ModelState.AddModelError("", $"Invalid PaySource Id with value ={timeEntryViewModel.PaySourceId}");
                         }
 
                         // check if entity already exists.
                         var entity = Mapper.Map<ServerTimeEntryAddViewModel, ServerTimeEntry>(timeEntryViewModel);
                         entity.ServerId = existedServer.Id;
                         entity.PaySourceId = existedPaySource.Id;
+                        entity.ProgramId = existedPaySource.Programs.Any() ? existedPaySource.Programs.ToList()[0].Id : (int?)null;
                         if (!_serverTimeEntryService.TimeEntryExists(entity))
                             timeEntries.Add(entity);
                     }

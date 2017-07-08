@@ -21,17 +21,18 @@ namespace GRis.Controllers
     public class ServersController : BaseController
     {
         private IServerService _serverService;
+        private IElementService _elementService;
 
-        public ServersController(IServerService serverService)
+        public ServersController(IServerService serverService, IElementService elementService)
         {
             _serverService = serverService;
+            _elementService = elementService;
         }
 
-        // GET: Servers
         public ActionResult Index(string search, string option, int page = 1)
         {
             var pagingInfo = new PagingInfo() { PageNumber = page };
-            if(!string.IsNullOrEmpty(search) && !string.IsNullOrEmpty(option))
+            if (!string.IsNullOrEmpty(search) && !string.IsNullOrEmpty(option))
             {
                 pagingInfo.SearchOption = option;
                 pagingInfo.SearchValue = search;
@@ -41,7 +42,6 @@ namespace GRis.Controllers
             return View(viewmodel);
         }
 
-        // GET: Servers/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -54,25 +54,28 @@ namespace GRis.Controllers
                 return HttpNotFound();
             }
             var viewmodel = Mapper.Map<Server, ServerDetailsViewModel>(entity);
-            
+
             return View(viewmodel);
         }
 
-        // GET: Servers/Create
         public ActionResult Create()
         {
             var viewmodel = new ServerAddViewModel();
             viewmodel.AvailableCategories = _serverService.GetCategories().Select(t => new SelectListItem()
             {
-                Text = t.Name.ToString(),
+                Text = t.Name,
                 Value = t.Id.ToString()
             }).ToList();
+
+            viewmodel.AvailableElements = _elementService.GetElements().Select(t => new SelectListItem()
+            {
+                Text = t.DisplayName,
+                Value = t.Id.ToString()
+            }).ToList();
+
             return View(viewmodel);
         }
 
-        // POST: Servers/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(ServerAddViewModel viewmodel)
@@ -94,10 +97,21 @@ namespace GRis.Controllers
                 }
             }
 
+            viewmodel.AvailableCategories = _serverService.GetCategories().Select(t => new SelectListItem()
+            {
+                Text = t.Name,
+                Value = t.Id.ToString()
+            }).ToList();
+
+            viewmodel.AvailableElements = _elementService.GetElements().Select(t => new SelectListItem()
+            {
+                Text = t.DisplayName,
+                Value = t.Id.ToString()
+            }).ToList();
+
             return View(viewmodel);
         }
 
-        // GET: Servers/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -114,15 +128,19 @@ namespace GRis.Controllers
             viewmodel.CategoryId = entity.CategoryId;
             viewmodel.AvailableCategories = _serverService.GetCategories().Select(t => new SelectListItem()
             {
-                Text = t.Name.ToString(),
+                Text = t.Name,
                 Value = t.Id.ToString()
-            }).ToList(); 
+            }).ToList();
+
+            viewmodel.AvailableElements = _elementService.GetElements().Select(t => new SelectListItem()
+            {
+                Text = t.DisplayName,
+                Value = t.Id.ToString()
+            }).ToList();
+
             return View(viewmodel);
         }
 
-        // POST: Servers/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(ServerEditViewModel viewmodel)
@@ -140,25 +158,36 @@ namespace GRis.Controllers
                 Success($"<strong>{entity.FullName}</strong> was successfully updated.");
                 return RedirectToAction("Index");
             }
+            viewmodel.AvailableCategories = _serverService.GetCategories().Select(t => new SelectListItem()
+            {
+                Text = t.Name,
+                Value = t.Id.ToString()
+            }).ToList();
+
+            viewmodel.AvailableElements = _elementService.GetElements().Select(t => new SelectListItem()
+            {
+                Text = t.DisplayName,
+                Value = t.Id.ToString()
+            }).ToList();
+
             return View(viewmodel);
         }
 
-        // GET: Servers/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Server server = _serverService.GetById(id.Value);
-            if (server == null)
+            var entity = _serverService.GetById(id.Value);
+            if (entity == null)
             {
                 return HttpNotFound();
             }
-            return View(server);
+            var viewmodel = Mapper.Map<Server, ServerDetailsViewModel>(entity);
+            return View(viewmodel);
         }
 
-        // POST: Servers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -198,14 +227,24 @@ namespace GRis.Controllers
                             // some columns does not have ',' separater.
                             FirstName = row["Sort Name"].ToString().Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)[1],
                             LastName = row["Sort Name"].ToString().Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)[0],
-                            GpEmpNumber =!string.IsNullOrWhiteSpace(row["Gp Emp #"].ToString())? row["Gp Emp #"].ToString():null,
-                            Element =!string.IsNullOrWhiteSpace(row["Element"].ToString())? int.Parse(row["Element"].ToString()):0,
+                            GpEmpNumber = !string.IsNullOrWhiteSpace(row["Gp Emp #"].ToString()) ? row["Gp Emp #"].ToString() : null,
+                            ElementId = !string.IsNullOrWhiteSpace(row["Element"].ToString()) ? int.Parse(row["Element"].ToString()) : (int?)null,
                             Active = row["active"].ToString() == "Y" ? true : false,
                             CategoryId = CategoryConverter.ConvertFromCategoryNameToId(row["Category"].ToString())
                         };
                         //check if server does not exist
                         if (entityViewModel.VendorId != 0)
                         {
+                            if (entityViewModel.ElementId.HasValue)
+                            {
+                                var existedElement = _elementService.GetByVendorId(entityViewModel.ElementId.Value);
+                                if (existedElement == null)
+                                {
+                                    Danger($"Invalid Element Id with value ={entityViewModel.ElementId.Value}");
+                                    continue;
+                                }
+                            }
+
                             var existedEntity = _serverService.GetByVendorId(entityViewModel.VendorId);
                             if (existedEntity == null)
                             {

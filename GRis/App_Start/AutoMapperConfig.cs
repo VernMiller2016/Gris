@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Gris.Application.Core.Contracts.Reports;
 using Gris.Domain.Core.Models;
+using GRis.ViewModels.Element;
 using GRis.ViewModels.PaySource;
 using GRis.ViewModels.Program;
 using GRis.ViewModels.Server;
@@ -20,8 +21,8 @@ namespace GRis.App_Start
                 .ForMember(dest => dest.ServerVendorId, opt => opt.MapFrom(src => src.Server.VendorId))
                 .ForMember(dest => dest.PaysourceVendorId, opt => opt.MapFrom(src => src.PaySource.VendorId))
                 .ForMember(dest => dest.PaysourceDescription, opt => opt.MapFrom(src => src.PaySource.Description))
-                .ForMember(dest => dest.ProgramId, opt => opt.MapFrom(src => src.PaySource.Program.Id))
-                .ForMember(dest => dest.ProgramName, opt => opt.MapFrom(src => src.PaySource.Program.Name))
+                .ForMember(dest => dest.ProgramId, opt => opt.MapFrom(src => src.Program.Id))
+                .ForMember(dest => dest.ProgramName, opt => opt.MapFrom(src => src.Program.Name))
                 .ForMember(dest => dest.ServerCategoryName, opt => opt.MapFrom(src => src.Server.Category.Name))
                 .ForMember(dest => dest.ServerCategoryId, opt => opt.MapFrom(src => src.Server.Category.Id))
                 ;
@@ -29,6 +30,7 @@ namespace GRis.App_Start
                 #region Program
 
                 cfg.CreateMap<Program, ProgramDetailsViewModel>()
+                .MaxDepth(1)
                 ;
 
                 cfg.CreateMap<ProgramAddViewModel, Program>()
@@ -44,6 +46,7 @@ namespace GRis.App_Start
                 #region Server
 
                 cfg.CreateMap<Server, ServerDetailsViewModel>()
+                .ForMember(dest => dest.ElementDisplayName, opt => opt.MapFrom(src => src.Element.DisplayName))
                 ;
 
                 cfg.CreateMap<ServerAddViewModel, Server>()
@@ -75,22 +78,20 @@ namespace GRis.App_Start
 
                 cfg.CreateMap<ServerTimeEntry, ServerTimeEntryDetailsViewModel>()
                 .ForMember(dest => dest.ServerName, opt => opt.MapFrom(src => src.Server.FullName))
-                .ForMember(dest => dest.ServerVendorId, opt => opt.MapFrom(src => src.ServerId))
-                .ForMember(dest => dest.PaySourceVendorId, opt => opt.MapFrom(src => src.PaySourceId))
+                .ForMember(dest => dest.ServerId, opt => opt.MapFrom(src => src.ServerId))
+                .ForMember(dest => dest.PaySourceId, opt => opt.MapFrom(src => src.PaySourceId))
                 .ForMember(dest => dest.PaySourceDescription, opt => opt.MapFrom(src => src.PaySource.Description))
+                .ForMember(dest => dest.ProgramName, opt => opt.MapFrom(src => src.Program.Name))
                 ;
 
                 cfg.CreateMap<ServerTimeEntryAddViewModel, ServerTimeEntry>()
-                .ForMember(dest => dest.ServerId, opt => opt.MapFrom(src => src.ServerVendorId))
-                .ForMember(dest => dest.PaySourceId, opt => opt.MapFrom(src => src.PaySourceVendorId))
                 ;
 
                 cfg.CreateMap<ServerTimeEntry, ServerTimeEntryEditViewModel>()
-                .ForMember(dest => dest.ServerVendorId, opt => opt.MapFrom(src => src.ServerId))
-                .ForMember(dest => dest.PaySourceVendorId, opt => opt.MapFrom(src => src.PaySourceId))
                 .ReverseMap()
-                .ForMember(dest => dest.ServerId, opt => opt.Ignore())
-                .ForMember(dest => dest.PaySourceId, opt => opt.Ignore())
+                .ForMember(dest => dest.Server, opt => opt.Ignore())
+                .ForMember(dest => dest.PaySource, opt => opt.Ignore())
+                .ForMember(dest => dest.Program, opt => opt.Ignore())
                 ;
 
                 #endregion ServerTimeEntry
@@ -107,7 +108,21 @@ namespace GRis.App_Start
 
                 #endregion ServerAvailableHour
 
-                #region ServerMonthlyReport
+                #region Element
+
+                cfg.CreateMap<Element, ElementDetailsViewModel>()
+                ;
+
+                cfg.CreateMap<ElementAddViewModel, Element>()
+                ;
+
+                cfg.CreateMap<Element, ElementEditViewModel>()
+                .ReverseMap()
+                ;
+
+                #endregion Element
+
+                #region ServerSalaryMonthlyReport
                 cfg.CreateMap<ServerSalaryReportEntity, ServerSalaryReportViewModel>()
                .ForMember(dest => dest.ServerName, opt => opt.MapFrom(src => src.ORMSTRNM))
                .ForMember(dest => dest.GpEmpNumber, opt => opt.MapFrom(src => src.ORMSTRID))

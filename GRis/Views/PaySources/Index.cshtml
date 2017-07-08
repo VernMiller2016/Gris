@@ -15,8 +15,6 @@
         @Html.TextBox("search")
         <input type="submit" name="submit" value="Search" />
     }
-
-
 </div>
 
 <p>
@@ -29,6 +27,9 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Programs)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Active)
@@ -46,6 +47,12 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
+                @foreach (var program in item.Programs)
+                {
+                    <p>@program.Name</p>
+                }
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Active)
             </td>
             <td>
@@ -55,10 +62,11 @@
             </td>
         </tr>
     }
-
 </table>
 
-@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page,
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new
+{
+    page,
     option = Request.QueryString["option"],
     search = Request.QueryString["search"]
 }))

@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using GRis.ViewModels.Program;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 
 namespace GRis.ViewModels.PaySource
@@ -19,5 +21,8 @@ namespace GRis.ViewModels.PaySource
 
         [Display(Name = "Is Active")]
         public bool Active { get; set; } = true;
+
+        [Display(Name = "Related Programs")]
+        public List<ProgramDetailsViewModel> Programs { get; set; }
     }
 }

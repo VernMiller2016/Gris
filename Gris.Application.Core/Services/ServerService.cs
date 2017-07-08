@@ -4,7 +4,6 @@ using Gris.Domain.Core.Models;
 using Gris.Infrastructure.Core.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 namespace Gris.Application.Core.Services
 {
@@ -33,7 +32,7 @@ namespace Gris.Application.Core.Services
 
         public Server GetById(int id)
         {
-            return _serverRepoitory.GetById(id);
+            return _serverRepoitory.OneOrDefault(t => t.Id == id, t => t.Element);
         }
 
         public Server GetByVendorId(int vendorId)
@@ -49,7 +48,7 @@ namespace Gris.Application.Core.Services
         public IEnumerable<Server> GetServers(PagingInfo pagingInfo = null)
         {
             if (pagingInfo == null)
-                return _serverRepoitory.Get(null, (list => list.OrderBy(s => s.FullName)));
+                return _serverRepoitory.Get(null, (list => list.OrderBy(s => s.FullName)), t => t.Element);
             else
             {
                 int total = 0;
@@ -59,18 +58,18 @@ namespace Gris.Application.Core.Services
                     if (pagingInfo.SearchOption == "FirstName")
                     {
                         result = _serverRepoitory.FilterWithPaging(s => s.FirstName.ToLower().Contains(pagingInfo.SearchValue.ToLower()), (list => list.OrderBy(s => s.FullName))
-                     , out total, pagingInfo.PageIndex, AppSettings.PageSize);
+                     , out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Element);
                     }
                     else if (pagingInfo.SearchOption == "LastName")
                     {
                         result = _serverRepoitory.FilterWithPaging(s => s.LastName.ToLower().Contains(pagingInfo.SearchValue.ToLower()), (list => list.OrderBy(s => s.FullName))
-                     , out total, pagingInfo.PageIndex, AppSettings.PageSize);
+                     , out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Element);
                     }
                 }
                 else
                 {
                     result = _serverRepoitory.FilterWithPaging(null, (list => list.OrderBy(s => s.FullName))
-                                        , out total, pagingInfo.PageIndex, AppSettings.PageSize);
+                                        , out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Element);
                 }
                 pagingInfo.Total = total;
                 return result;

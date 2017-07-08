@@ -114,6 +114,14 @@
     <Compile Include="Migrations\201706072048073_AddColumnElement.Designer.cs">
       <DependentUpon>201706072048073_AddColumnElement.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706260013193_AddElementTable.cs" />
+    <Compile Include="Migrations\201706260013193_AddElementTable.Designer.cs">
+      <DependentUpon>201706260013193_AddElementTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706281746236_UpdatePaysourceWithMultiProgram.cs" />
+    <Compile Include="Migrations\201706281746236_UpdatePaysourceWithMultiProgram.Designer.cs">
+      <DependentUpon>201706281746236_UpdatePaysourceWithMultiProgram.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\201707052026280_SalaryReportView.cs" />
     <Compile Include="Migrations\201707052026280_SalaryReportView.Designer.cs">
       <DependentUpon>201707052026280_SalaryReportView.cs</DependentUpon>
@@ -176,6 +184,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706072048073_AddColumnElement.resx">
       <DependentUpon>201706072048073_AddColumnElement.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706260013193_AddElementTable.resx">
+      <DependentUpon>201706260013193_AddElementTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706281746236_UpdatePaysourceWithMultiProgram.resx">
+      <DependentUpon>201706281746236_UpdatePaysourceWithMultiProgram.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201707052026280_SalaryReportView.resx">
       <DependentUpon>201707052026280_SalaryReportView.cs</DependentUpon>

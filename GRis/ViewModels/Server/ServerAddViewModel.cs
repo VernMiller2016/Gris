@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 
@@ -25,7 +24,8 @@ namespace GRis.ViewModels.Server
         public string GpEmpNumber { get; set; }
 
         [Required]
-        public int Element { get; set; }
+        [Display(Name = "Element")]
+        public int? ElementId { get; set; }
 
         [Display(Name = "Is Active")]
         public bool Active { get; set; } = true;
@@ -34,5 +34,7 @@ namespace GRis.ViewModels.Server
         public int? CategoryId { get; set; }
 
         public List<SelectListItem> AvailableCategories { get; set; }
+
+        public List<SelectListItem> AvailableElements { get; set; }
     }
 }

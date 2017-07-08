@@ -1,12 +1,8 @@
 ﻿using Gris.Domain.Core.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gris.Infrastructure.Core.DAL
 {
@@ -50,7 +46,6 @@ namespace Gris.Infrastructure.Core.DAL
                             = l.ProviderKey
                     }).ToTable("AspNetUserLogins");
 
-
             EntityTypeConfiguration<IdentityUserClaim> table1 =
                 modelBuilder.Entity<IdentityUserClaim>().ToTable("AspNetUserClaims");
 
@@ -91,6 +86,8 @@ namespace Gris.Infrastructure.Core.DAL
         public System.Data.Entity.DbSet<ServerTimeEntry> ServerTimeEntries { get; set; }
 
         public System.Data.Entity.DbSet<ServerAvailableHour> ServerAvailableHours { get; set; }
+
+        public System.Data.Entity.DbSet<Element> Elements { get; set; }
 
         public System.Data.Entity.DbSet<ServerSalaryReportEntity> ServerSalaryMonthlyReport { get; set; }
     }

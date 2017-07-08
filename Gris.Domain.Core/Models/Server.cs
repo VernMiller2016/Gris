@@ -25,13 +25,14 @@ namespace Gris.Domain.Core.Models
         [StringLength(15)]
         public string GpEmpNumber { get; set; }
 
-        [Required]
-        public int Element { get; set; }
+        public int? ElementId { get; set; }
 
         public Category Category { get; set; }
 
         public string FullName => LastName + ", " + FirstName;
 
         public virtual ICollection<ServerTimeEntry> ServerTimeEntries { get; set; }
+
+        public Element Element { get; set; }
     }
 }

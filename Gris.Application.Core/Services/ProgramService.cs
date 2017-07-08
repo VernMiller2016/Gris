@@ -56,10 +56,5 @@ namespace Gris.Application.Core.Services
             _programRepository.Update(Program);
             _unitOfWork.Commit();
         }
-
-        public IEnumerable<PaySource> GetAvailablePaySourcesNotRelatedToPrograms()
-        {
-            return _paySourceRepository.Get(t => t.ProgramId == null);
-        }
     }
 }

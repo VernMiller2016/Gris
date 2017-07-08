@@ -20,6 +20,6 @@ namespace Gris.Application.Core.Interfaces
         /// Get all the available paysources, which are "not related yet" to any program.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<PaySource> GetAvailablePaySourcesNotRelatedToPrograms();
+        //IEnumerable<PaySource> GetAvailablePaySourcesNotRelatedToPrograms();
     }
 }

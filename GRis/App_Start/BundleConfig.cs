@@ -1,5 +1,4 @@
-﻿using System.Web;
-using System.Web.Optimization;
+﻿using System.Web.Optimization;
 
 namespace GRis
 {
@@ -26,7 +25,8 @@ namespace GRis
             bundles.Add(new ScriptBundle("~/bundles/plugins").Include(
                         "~/Scripts/moment.js",
                         "~/Scripts/moment-with-locales.js",
-                        "~/Scripts/bootstrap-datetimepicker.js"));
+                        "~/Scripts/bootstrap-datetimepicker.js",
+                        "~/Scripts/loadingoverlay.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/app").Include(
                 "~/Scripts/app.js"));
