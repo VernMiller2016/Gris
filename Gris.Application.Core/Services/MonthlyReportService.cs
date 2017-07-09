@@ -63,22 +63,24 @@ namespace Gris.Application.Core.Services
                         }
                     }
                 }
-                var filteredResultsGroupedByGpEmpNumber = filteredResults.GroupBy(s =>new { s.ORMSTRID,s.ORMSTRNM,s.JRNENTRY,s.ORGNTSRC });
+                var filteredResultsGroupedByGpEmpNumber = filteredResults.GroupBy(s =>new { s.ORMSTRID });
 
                 foreach (var item in filteredResultsGroupedByGpEmpNumber)
                 {
                     var addedSalaryServerEntity = new ServerSalaryReportViewModel
                     {
                         // ACTNUMST = itemValue.ACTNUMST,
-                        GpEmpNumber = item.Key.ORMSTRID,
-                        ServerName = item.Key.ORMSTRNM,
-                        JRNENTRY = item.Key.JRNENTRY,
-                        ORGNTSRC = item.Key.ORGNTSRC,
+                        GpEmpNumber = item.Key.ORMSTRID
                         //TRXDATE = itemValue.TRXDATE
                     };
                     foreach (var itemValue in item)
                     {
-                       
+                        if(string.IsNullOrWhiteSpace(addedSalaryServerEntity.ServerName))
+                        addedSalaryServerEntity.ServerName = itemValue.ORMSTRNM;
+                        if(addedSalaryServerEntity.JRNENTRY == 0)
+                        addedSalaryServerEntity.JRNENTRY = itemValue.JRNENTRY;
+                        if(string.IsNullOrWhiteSpace(addedSalaryServerEntity.ORGNTSRC))
+                        addedSalaryServerEntity.ORGNTSRC = itemValue.ORGNTSRC;
                         if(itemValue.ACTDESCR.ToLower() == Constants.Salaries.ToLower())
                         {
                             addedSalaryServerEntity.SalaryAccount = new SalaryAccount
