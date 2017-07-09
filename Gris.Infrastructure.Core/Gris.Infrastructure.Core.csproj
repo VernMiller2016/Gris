@@ -122,9 +122,9 @@
     <Compile Include="Migrations\201706281746236_UpdatePaysourceWithMultiProgram.Designer.cs">
       <DependentUpon>201706281746236_UpdatePaysourceWithMultiProgram.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201707052026280_SalaryReportView.cs" />
-    <Compile Include="Migrations\201707052026280_SalaryReportView.Designer.cs">
-      <DependentUpon>201707052026280_SalaryReportView.cs</DependentUpon>
+    <Compile Include="Migrations\201707092147212_SalaryReportView.cs" />
+    <Compile Include="Migrations\201707092147212_SalaryReportView.Designer.cs">
+      <DependentUpon>201707092147212_SalaryReportView.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -191,8 +191,8 @@
     <EmbeddedResource Include="Migrations\201706281746236_UpdatePaysourceWithMultiProgram.resx">
       <DependentUpon>201706281746236_UpdatePaysourceWithMultiProgram.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201707052026280_SalaryReportView.resx">
-      <DependentUpon>201707052026280_SalaryReportView.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201707092147212_SalaryReportView.resx">
+      <DependentUpon>201707092147212_SalaryReportView.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
