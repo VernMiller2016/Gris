@@ -5,6 +5,7 @@ using Gris.Domain.Core.Models;
 using GRis.Core.Extensions;
 using GRis.Extensions;
 using GRis.ViewModels.Program;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
@@ -54,7 +55,7 @@ namespace GRis.Controllers
             var viewmodel = new ProgramAddViewModel();
             viewmodel.PaySources = _paySourceService.GetPaySources().Select(t => new SelectListItem()
             {
-                Text = t.VendorId.ToString(),
+                Text = t.VendorId.ToString() + "|" + t.Description,
                 Value = t.Id.ToString()
             });
             return View(viewmodel);
@@ -70,10 +71,10 @@ namespace GRis.Controllers
                 if (ModelState.IsValid)
                 {
                     var entity = Mapper.Map<ProgramAddViewModel, Program>(viewmodel);
-                    var selectedPaysourcesList = viewmodel.SelectedPaySources.Select(t => new PaySource() { Id = t }).ToList();
+                    var selectedPaysourcesList = viewmodel.SelectedPaySources.Select(t => new PaySource() { Id = int.Parse(t.Split('|')[0]) }).ToList();
                     foreach (var id in viewmodel.SelectedPaySources.AsNotNull())
                     {
-                        var paysource = _paySourceService.GetById(id);
+                        var paysource = _paySourceService.GetById(int.Parse(id.Split('|')[0]));
                         entity.PaySources.Add(paysource);
                     }
                     _programService.AddProgram(entity);
@@ -112,6 +113,12 @@ namespace GRis.Controllers
                 return HttpNotFound();
             }
             var viewmodel = Mapper.Map<Program, ProgramEditViewModel>(entity);
+            viewmodel.PaySources = _paySourceService.GetPaySources().Select(t => new SelectListItem()
+            {
+                Text = t.VendorId.ToString() + "|" + t.Description,
+                Value = t.Id.ToString()
+            });
+            viewmodel.SelectedPaySources = entity.PaySources.Select(t => t.Id).ToArray();
             return View(viewmodel);
         }
 
@@ -130,6 +137,12 @@ namespace GRis.Controllers
                         return HttpNotFound();
                     }
                     Mapper.Map(viewmodel, entity);
+                    entity.PaySources = new List<PaySource>(); 
+                    foreach (var paySourceId in viewmodel.SelectedPaySources.AsNotNull())
+                    {
+                        var paysource = _paySourceService.GetById(paySourceId);
+                        entity.PaySources.Add(paysource);
+                    }
                     _programService.UpdateProgram(entity);
 
                     Success($"<strong>{entity.Name}</strong> was successfully updated.");

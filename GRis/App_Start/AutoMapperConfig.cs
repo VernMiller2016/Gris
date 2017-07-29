@@ -37,9 +37,10 @@ namespace GRis.App_Start
                 ;
 
                 cfg.CreateMap<Program, ProgramEditViewModel>()
-                .ReverseMap()
-                .ForMember(dest => dest.PaySources, opt => opt.Ignore())
-                ;
+                .ForMember(dest => dest.PaySources, opt => opt.Ignore());
+
+                cfg.CreateMap<ProgramEditViewModel, Program>()
+              .ForMember(dest => dest.PaySources, opt => opt.Ignore());
 
                 #endregion Program
 

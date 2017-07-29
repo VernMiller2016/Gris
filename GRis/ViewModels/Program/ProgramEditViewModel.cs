@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace GRis.ViewModels.Program
 {
@@ -23,5 +25,11 @@ namespace GRis.ViewModels.Program
 
         [Display(Name = "Is Active")]
         public bool Active { get; set; }
+
+        [Display(Name = "Related PaySources")]
+        [Required(ErrorMessage = "Please select paysource")]
+        public int[] SelectedPaySources { get; set; }
+
+        public IEnumerable<SelectListItem> PaySources { get; set; }
     }
 }

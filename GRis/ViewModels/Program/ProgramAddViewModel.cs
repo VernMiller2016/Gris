@@ -25,7 +25,7 @@ namespace GRis.ViewModels.Program
 
         [Display(Name = "Related PaySources")]
         [Required(ErrorMessage = "Please select paysource")]
-        public int[] SelectedPaySources { get; set; }
+        public string[] SelectedPaySources { get; set; }
 
         public IEnumerable<SelectListItem> PaySources { get; set; }
     }
