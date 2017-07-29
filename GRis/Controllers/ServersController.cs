@@ -243,9 +243,14 @@ namespace GRis.Controllers
                                     Danger($"Invalid Element Id with value ={entityViewModel.ElementId.Value}");
                                     continue;
                                 }
+                                else
+                                {
+                                    entityViewModel.ElementId = existedElement.Id;
+                                }
                             }
 
                             var existedEntity = _serverService.GetByVendorId(entityViewModel.VendorId);
+                            
                             if (existedEntity == null)
                             {
                                 var entity = Mapper.Map<ServerAddViewModel, Server>(entityViewModel);
