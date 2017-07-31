@@ -228,7 +228,8 @@ namespace GRis.Controllers
                     List<ServerTimeEntry> timeEntries = new List<ServerTimeEntry>();
                     viewmodel.ExcelFile.SaveAs(path); // save a copy of the uploaded file.
                     // convert the uploaded file into datatable, then add/update db entities.
-                    var dtServers = ImportUtils.ImportXlsxToDataTable(viewmodel.ExcelFile.InputStream, true);
+                    var columnsToImport = new string[] { "Server ID", "Current Pay Source", "Begin Date", "Duration" };
+                    var dtServers = ImportUtils.ImportXlsxToDataTable(viewmodel.ExcelFile.InputStream, true, columnsToImport);
                     foreach (var row in dtServers.AsEnumerable().ToList())
                     {
                         var timeEntryViewModel = new ServerTimeEntryAddViewModel()

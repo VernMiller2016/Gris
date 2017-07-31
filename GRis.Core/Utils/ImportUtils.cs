@@ -15,6 +15,7 @@ namespace GRis.Core.Utils
         /// </summary>
         /// <param name="inputStream">The Stream object of the excel sheet</param>
         /// <param name="hasHeader">A flag indicates if the excel sheet has a headers row or not</param>
+        /// <param name="skipEmptyRow">A flag indicates if rows with empty data should be skipped or not</param>
         /// <returns>A Datatable represents the excel sheet</returns>
         public static DataTable ImportXlsxToDataTable(Stream inputStream, bool hasHeader, bool skipEmptyRow = true)
         {
@@ -55,10 +56,11 @@ namespace GRis.Core.Utils
         /// Convert stream (of excel sheet) into datatable, with specific set of columns.
         /// So, it will import only the required passed columns.
         /// </summary>
-        /// <param name="inputStream"></param>
-        /// <param name="columnsToImport"></param>
+        /// <param name="inputStream">The Stream object of the excel sheet</param>
+        /// <param name="skipEmptyRow">A flag indicates if rows with empty data should be skipped or not</param>
+        /// <param name="columnsToImport">List of columns to be imported</param>
         /// <returns></returns>
-        public static DataTable ImportXlsxToDataTable(Stream inputStream, params string[] columnsToImport)
+        public static DataTable ImportXlsxToDataTable(Stream inputStream, bool skipEmptyRow = true, params string[] columnsToImport)
         {
             var dt = new DataTable();
             const bool hasHeader = true; // it must be true, as we are importing specific columns.
