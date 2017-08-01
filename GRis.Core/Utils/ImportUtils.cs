@@ -93,7 +93,15 @@ namespace GRis.Core.Utils
                         }
                     }
 
-                    dt.Rows.Add(row);
+                    if (skipEmptyRow)
+                    {
+                        if (!row.AreAllColumnsNullOrEmpty())
+                            dt.Rows.Add(row);
+                    }
+                    else
+                    {
+                        dt.Rows.Add(row);
+                    }
                 }
             }
 

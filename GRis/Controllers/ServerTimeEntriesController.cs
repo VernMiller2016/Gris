@@ -230,6 +230,8 @@ namespace GRis.Controllers
                     // convert the uploaded file into datatable, then add/update db entities.
                     var columnsToImport = new string[] { "Server ID", "Current Pay Source", "Begin Date", "Duration" };
                     var dtServers = ImportUtils.ImportXlsxToDataTable(viewmodel.ExcelFile.InputStream, true, columnsToImport);
+                    var invalidServers = new List<int>();
+                    var invalidPaysources = new List<int>();
                     foreach (var row in dtServers.AsEnumerable().ToList())
                     {
                         var timeEntryViewModel = new ServerTimeEntryAddViewModel()
@@ -242,25 +244,32 @@ namespace GRis.Controllers
                         var existedServer = _serverService.GetByVendorId(timeEntryViewModel.ServerId);
                         if (existedServer == null)
                         {
-                            ModelState.AddModelError("", $"Invalid Server Id with value ={timeEntryViewModel.ServerId}");
+                            if (!invalidServers.Any(t => t == timeEntryViewModel.ServerId))
+                                invalidServers.Add(timeEntryViewModel.ServerId);
                         }
 
                         var existedPaySource = _paySourceService.GetByVendorId(timeEntryViewModel.PaySourceId);
                         if (existedPaySource == null)
                         {
-                            ModelState.AddModelError("", $"Invalid PaySource Id with value ={timeEntryViewModel.PaySourceId}");
+                            if (!invalidPaysources.Any(t => t == timeEntryViewModel.PaySourceId))
+                                invalidPaysources.Add(timeEntryViewModel.PaySourceId);
                         }
 
-                        // check if entity already exists.
-                        var entity = Mapper.Map<ServerTimeEntryAddViewModel, ServerTimeEntry>(timeEntryViewModel);
-                        entity.ServerId = existedServer.Id;
-                        entity.PaySourceId = existedPaySource.Id;
-                        entity.ProgramId = existedPaySource.Programs.Any() ? existedPaySource.Programs.ToList()[0].Id : (int?)null;
-                        if (!_serverTimeEntryService.TimeEntryExists(entity))
-                            timeEntries.Add(entity);
+                        if (existedServer != null && existedPaySource != null)
+                        {
+                            // check if entity already exists.
+                            var entity = Mapper.Map<ServerTimeEntryAddViewModel, ServerTimeEntry>(timeEntryViewModel);
+                            entity.ServerId = existedServer.Id;
+                            entity.PaySourceId = existedPaySource.Id;
+                            entity.ProgramId = existedPaySource.Programs.Any() ? existedPaySource.Programs.ToList()[0].Id : (int?)null;
+                            if (!_serverTimeEntryService.TimeEntryExists(entity))
+                                timeEntries.Add(entity);
+                        }
                     }
-                    if (ModelState.Keys.Any())
+                    if (invalidServers.Any() || invalidPaysources.Any())
                     {
+                        invalidServers.ForEach(invalidServerId => { ModelState.AddModelError("", $"Invalid Server Id with value ={invalidServerId}"); });
+                        invalidPaysources.ForEach(invalidPaysource => { ModelState.AddModelError("", $"Invalid PaySource Id with value ={invalidPaysource}"); });
                         return View(viewmodel);
                     }
                     else
