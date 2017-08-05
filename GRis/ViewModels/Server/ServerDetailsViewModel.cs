@@ -38,40 +38,7 @@ namespace GRis.ViewModels.Server
         public string ElementDisplayName { get; set; }
 
         [Display(Name = "Server Category")]
-        public string CategoryName
-        {
-            get
-            {
-                if (CategoryId == null)
-                {
-                    _categoryName = "Not Found";
-                }
-                else
-                {
-                    if (CategoryId == 1)
-                    {
-                        _categoryName = "Combined - admin";
-                    }
-                    else if (CategoryId == 2)
-                    {
-                        _categoryName = "MH-admin";
-                    }
-                    else if (CategoryId == 3)
-                    {
-                        _categoryName = "MED - admin";
-                    }
-                    else if (CategoryId == 4)
-                    {
-                        _categoryName = "CD-Admin";
-                    }
-                    else
-                    {
-                        _categoryName = "Not Found";
-                    }
-                }
-                return _categoryName;
-            }
-        }
+        public string CategoryName { get; set; }
 
         public int? CategoryId { get; set; }
     }

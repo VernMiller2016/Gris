@@ -48,6 +48,7 @@ namespace GRis.App_Start
 
                 cfg.CreateMap<Server, ServerDetailsViewModel>()
                 .ForMember(dest => dest.ElementDisplayName, opt => opt.MapFrom(src => src.Element.DisplayName))
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
                 ;
 
                 cfg.CreateMap<ServerAddViewModel, Server>()

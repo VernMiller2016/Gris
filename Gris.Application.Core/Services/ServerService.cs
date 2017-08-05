@@ -48,7 +48,7 @@ namespace Gris.Application.Core.Services
         public IEnumerable<Server> GetServers(PagingInfo pagingInfo = null)
         {
             if (pagingInfo == null)
-                return _serverRepoitory.Get(null, (list => list.OrderBy(s => s.FullName)), t => t.Element);
+                return _serverRepoitory.Get(null, (list => list.OrderBy(s => s.FullName)), t => t.Element, t => t.Category);
             else
             {
                 int total = 0;
@@ -58,18 +58,18 @@ namespace Gris.Application.Core.Services
                     if (pagingInfo.SearchOption == "FirstName")
                     {
                         result = _serverRepoitory.FilterWithPaging(s => s.FirstName.ToLower().Contains(pagingInfo.SearchValue.ToLower()), (list => list.OrderBy(s => s.FullName))
-                     , out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Element);
+                     , out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Element, t => t.Category);
                     }
                     else if (pagingInfo.SearchOption == "LastName")
                     {
                         result = _serverRepoitory.FilterWithPaging(s => s.LastName.ToLower().Contains(pagingInfo.SearchValue.ToLower()), (list => list.OrderBy(s => s.FullName))
-                     , out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Element);
+                     , out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Element, t => t.Category);
                     }
                 }
                 else
                 {
                     result = _serverRepoitory.FilterWithPaging(null, (list => list.OrderBy(s => s.FullName))
-                                        , out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Element);
+                                        , out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Element, t => t.Category);
                 }
                 pagingInfo.Total = total;
                 return result;
