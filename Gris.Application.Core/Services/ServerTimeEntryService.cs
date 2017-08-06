@@ -124,9 +124,14 @@ namespace Gris.Application.Core.Services
             return Mapper.Map<IEnumerable<ServerTimeEntriesMonthlyReportEntity>>(result);
         }
 
-        public void UpdateServerTimeEntry(ServerTimeEntry entity)
+        public void UpdateServerTimeEntry(ServerTimeEntry entity, bool applyProgramEditToAllEntries = false)
         {
             _serverTimeEntryRepoitory.Update(entity);
+            if (applyProgramEditToAllEntries)
+            {
+                _serverTimeEntryRepoitory.BatchUpdate(t => (t.ServerId == entity.ServerId && t.PaySourceId == entity.PaySourceId)
+                , t => new ServerTimeEntry() { ProgramId = entity.ProgramId });
+            }
             _unitOfWork.Commit();
         }
 

@@ -22,7 +22,7 @@ namespace Gris.Application.Core.Interfaces
 
         IEnumerable<ServerTimeEntriesMonthlyReportEntity> GetServerTimeEntriesMonthlyReport(DateTime selectedDate, PagingInfo pagingInfo = null);
 
-        void UpdateServerTimeEntry(ServerTimeEntry entity);
+        void UpdateServerTimeEntry(ServerTimeEntry entity, bool applyProgramEditToAllEntries = false);
 
         void Remove(ServerTimeEntry entity);
     }

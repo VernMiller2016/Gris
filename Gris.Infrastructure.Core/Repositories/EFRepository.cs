@@ -8,6 +8,7 @@ using System.Data.Entity.Validation;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using Z.EntityFramework.Plus;
 
 namespace Gris.Infrastructure.Core.Repositories
 {
@@ -89,7 +90,7 @@ namespace Gris.Infrastructure.Core.Repositories
             int skipCount = index * size;
             var query = this.Get(filter, orderBy, includes).AsQueryable();
             total = query.Count();
-            query = skipCount == 0 ? query.Take(size) : query.Skip(skipCount).Take(size);            
+            query = skipCount == 0 ? query.Take(size) : query.Skip(skipCount).Take(size);
             return query;
         }
 
@@ -188,6 +189,16 @@ namespace Gris.Infrastructure.Core.Repositories
                 return;// not found; assume already deleted.
 
             Delete(entity);
+        }
+
+        public virtual void BatchDelete(Expression<Func<T, bool>> filter)
+        {
+            _dbSet.Where(filter).Delete();
+        }
+
+        public virtual void BatchUpdate(Expression<Func<T, bool>> filter, Expression<Func<T, T>> updateFactory)
+        {
+            _dbSet.Where(filter).Update(updateFactory);
         }
 
         /// <summary>

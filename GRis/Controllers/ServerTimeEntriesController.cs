@@ -160,7 +160,7 @@ namespace GRis.Controllers
                     return HttpNotFound();
                 }
                 Mapper.Map(viewmodel, entity);
-                _serverTimeEntryService.UpdateServerTimeEntry(entity);
+                _serverTimeEntryService.UpdateServerTimeEntry(entity, viewmodel.ApplyProgramUpdateToAllEntries);
 
                 Success($"<strong>Time Entry</strong> was successfully updated.");
                 return RedirectToAction("Index");

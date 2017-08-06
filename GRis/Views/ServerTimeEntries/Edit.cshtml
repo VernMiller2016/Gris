@@ -35,6 +35,12 @@
             @Html.LabelFor(model => model.ProgramId, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownListFor(model => model.ProgramId, Model.SelectedPrograms, "--Select Program--", new { @class = "form-control" })
+                <div class="checkbox">
+                    <label>
+                        @Html.CheckBoxFor(model => model.ApplyProgramUpdateToAllEntries)
+                        @Html.DisplayNameFor(model => model.ApplyProgramUpdateToAllEntries)
+                    </label>
+                </div>
                 @Html.ValidationMessageFor(model => model.ProgramId, "", new { @class = "text-danger" })
             </div>
         </div>

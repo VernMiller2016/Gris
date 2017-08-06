@@ -30,6 +30,9 @@ namespace GRis.ViewModels.ServerTimeEntry
         [UIHint("DatePicker")]
         public DateTime? BeginDate { get; set; }
 
+        [Display(Name ="Apply program update to all time entries for this Sever under the specified PaySource?")]
+        public bool ApplyProgramUpdateToAllEntries { get; set; } = false;
+
         public IEnumerable<SelectListItem> SelectedServers { get; set; }
 
         public IEnumerable<SelectListItem> SelectedPaySources { get; set; }

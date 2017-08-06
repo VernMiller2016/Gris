@@ -94,5 +94,9 @@ namespace Gris.Infrastructure.Core.Interfaces
         /// <param name="id">identifier.</param>
         /// <returns></returns>
         void Delete(object id);
+
+        void BatchDelete(Expression<Func<T, bool>> filter);
+
+        void BatchUpdate(Expression<Func<T, bool>> filter, Expression<Func<T, T>> updateFactory);
     }
 }
