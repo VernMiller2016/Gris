@@ -75,17 +75,10 @@ namespace GRis.Controllers
             }
             ViewBag.FilterViewModel = filter;
 
-            //var viewmodel = entities.ToManualPagedList(pagingInfo);
             return View(entities);
 
         }
-
-        //public ActionResult ServerSalariesMonthlyReport()
-        //{
-        //    ReportFilterViewModel viewmodel = new ReportFilterViewModel();
-        //    return View(viewmodel);
-        //}
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ExportStaffPercentagesMonthlyReportToExcel(ReportFilterViewModel viewmodel)

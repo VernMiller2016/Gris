@@ -43,7 +43,7 @@ namespace Gris.Application.Core.Services
         public IEnumerable<PaySource> GetPaySources(PagingInfo pagingInfo)
         {
             if (pagingInfo == null)
-                return _paySourceRepoitory.Get(null, (list => list.OrderBy(p => p.VendorId)), t => t.Programs);
+                return _paySourceRepoitory.Get(null, (list => list.OrderBy(p => p.Description)), t => t.Programs);
             else
             {
                 int total = 0;
@@ -52,12 +52,12 @@ namespace Gris.Application.Core.Services
                 {
                     if (pagingInfo.SearchOption == "PaySourceName")
                     {
-                        result = _paySourceRepoitory.FilterWithPaging(s => s.Description.ToLower().Contains(pagingInfo.SearchValue.ToLower()), (list => list.OrderBy(p => p.VendorId)), out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Programs);
+                        result = _paySourceRepoitory.FilterWithPaging(s => s.Description.ToLower().Contains(pagingInfo.SearchValue.ToLower()), (list => list.OrderBy(p => p.Description)), out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Programs);
                     }
                 }
                 else
                 {
-                    result = _paySourceRepoitory.FilterWithPaging(null, (list => list.OrderBy(p => p.VendorId)), out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Programs);
+                    result = _paySourceRepoitory.FilterWithPaging(null, (list => list.OrderBy(p => p.Description)), out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Programs);
                 }
                 pagingInfo.Total = total;
                 return result;

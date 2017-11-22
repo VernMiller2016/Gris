@@ -1,61 +1,48 @@
-﻿using Gris.Application.Core.Interfaces;
+﻿using Gris.Application.Core.Contracts.Paging;
+using Gris.Application.Core.Contracts.Reports;
+using Gris.Application.Core.Interfaces;
+using Gris.Domain.Core.Models;
+using Gris.Infrastructure.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Gris.Application.Core.Contracts.Paging;
-using Gris.Application.Core.Contracts.Reports;
-using Gris.Domain.Core.Models;
-using Gris.Infrastructure.Core.Interfaces;
-using AutoMapper;
 
 namespace Gris.Application.Core.Services
 {
     public class ServerMonthlyReportService : IServerSalaryReportService
     {
-        
-
         private IServerSalaryReportRepository _serverMonthlyReportRepository;
         private IServerRepository _serverRepository;
         private IUnitOfWork _unitOfWork;
 
-        public ServerMonthlyReportService(IServerSalaryReportRepository serverMonthlyReportRepoitory,IServerRepository serverRepository, IUnitOfWork unitOfWork)
+        public ServerMonthlyReportService(IServerSalaryReportRepository serverMonthlyReportRepoitory, IServerRepository serverRepository, IUnitOfWork unitOfWork)
         {
             _serverMonthlyReportRepository = serverMonthlyReportRepoitory;
             _serverRepository = serverRepository;
             _unitOfWork = unitOfWork;
         }
+
         public IEnumerable<ServerSalaryReportViewModel> GetServerSalaryMonthlyReport(DateTime selectedDate, PagingInfo pagingInfo = null)
         {
             var result = Enumerable.Empty<ServerSalaryReportEntity>();
             var mappedServerEntities = new List<ServerSalaryReportViewModel>();
+            selectedDate = selectedDate.AddMonths(1);
             if (pagingInfo == null)
             {
-                //result = _serverMonthlyReportRepository.
-                //            Get(t => t.TRXDATE.Year == selectedDate.Year && t.TRXDATE.Month == selectedDate.Month
-                //            , (list => list.OrderBy(st => st.ORMSTRNM)));
                 result = _serverMonthlyReportRepository.GetServerSalaryDataByMonth(selectedDate);
             }
             else
             {
-                //int total = 0;
-                //result = _serverMonthlyReportRepository.
-                //            FilterWithPaging(t => t.TRXDATE.Year == selectedDate.Year && t.TRXDATE.Month == selectedDate.Month
-                //            , (list => list.OrderBy(st => st.ORMSTRNM))
-                //            , out total, pagingInfo.PageIndex, AppSettings.PageSize);
-                //pagingInfo.Total = total;
                 result = _serverMonthlyReportRepository.GetServerSalaryDataByMonth(selectedDate);
             }
-            if(result.Any())
+            if (result.Any())
             {
-
                 var resultsFilteredByGpEmpNumber = result.GroupBy(s => s.ORMSTRID);
                 List<ServerSalaryReportEntity> filteredResults = new List<ServerSalaryReportEntity>();
                 var allServers = _serverRepository.GetAll();
                 foreach (var item in resultsFilteredByGpEmpNumber)
                 {
-                    if(allServers.FirstOrDefault(s => s.GpEmpNumber == item.Key) != null)
+                    if (allServers.FirstOrDefault(s => s.GpEmpNumber == item.Key) != null)
                     {
                         foreach (var itemValue in item)
                         {
@@ -63,25 +50,23 @@ namespace Gris.Application.Core.Services
                         }
                     }
                 }
-                var filteredResultsGroupedByGpEmpNumber = filteredResults.GroupBy(s =>new { s.ORMSTRID });
+                var filteredResultsGroupedByGpEmpNumber = filteredResults.GroupBy(s => new { s.ORMSTRID });
 
                 foreach (var item in filteredResultsGroupedByGpEmpNumber)
                 {
                     var addedSalaryServerEntity = new ServerSalaryReportViewModel
                     {
-                        // ACTNUMST = itemValue.ACTNUMST,
                         GpEmpNumber = item.Key.ORMSTRID
-                        //TRXDATE = itemValue.TRXDATE
                     };
                     foreach (var itemValue in item)
                     {
-                        if(string.IsNullOrWhiteSpace(addedSalaryServerEntity.ServerName))
-                        addedSalaryServerEntity.ServerName = itemValue.ORMSTRNM;
-                        if(addedSalaryServerEntity.JRNENTRY == 0)
-                        addedSalaryServerEntity.JRNENTRY = itemValue.JRNENTRY;
-                        if(string.IsNullOrWhiteSpace(addedSalaryServerEntity.ORGNTSRC))
-                        addedSalaryServerEntity.ORGNTSRC = itemValue.ORGNTSRC;
-                        if(itemValue.ACTDESCR.ToLower() == Constants.Salaries.ToLower())
+                        if (string.IsNullOrWhiteSpace(addedSalaryServerEntity.ServerName))
+                            addedSalaryServerEntity.ServerName = itemValue.ORMSTRNM;
+                        if (addedSalaryServerEntity.JRNENTRY == 0)
+                            addedSalaryServerEntity.JRNENTRY = itemValue.JRNENTRY;
+                        if (string.IsNullOrWhiteSpace(addedSalaryServerEntity.ORGNTSRC))
+                            addedSalaryServerEntity.ORGNTSRC = itemValue.ORGNTSRC;
+                        if (itemValue.ACTDESCR.ToLower() == Constants.Salaries.ToLower())
                         {
                             addedSalaryServerEntity.SalaryAccount = new SalaryAccount
                             {
@@ -89,7 +74,7 @@ namespace Gris.Application.Core.Services
                                 DebitAmount = itemValue.DEBITAMT
                             };
                         }
-                        else if(itemValue.ACTDESCR.ToLower() == Constants.Retirement.ToLower())
+                        else if (itemValue.ACTDESCR.ToLower() == Constants.Retirement.ToLower())
                         {
                             addedSalaryServerEntity.RetirementAccount = new RetirementAccount
                             {
@@ -121,9 +106,8 @@ namespace Gris.Application.Core.Services
                                 DebitAmount = itemValue.DEBITAMT
                             };
                         }
-                        
                     }
-                    addedSalaryServerEntity.Total = addedSalaryServerEntity.SalaryAccount != null ? (double)addedSalaryServerEntity.SalaryAccount.Value:0;
+                    addedSalaryServerEntity.Total = addedSalaryServerEntity.SalaryAccount != null ? (double)addedSalaryServerEntity.SalaryAccount.Value : 0;
                     addedSalaryServerEntity.Total += addedSalaryServerEntity.TempHelpAccount != null ? (double)addedSalaryServerEntity.SalaryAccount.Value : 0;
                     addedSalaryServerEntity.Total += addedSalaryServerEntity.OverTimeAccount != null ? (double)addedSalaryServerEntity.OverTimeAccount.Value : 0;
                     addedSalaryServerEntity.Total += addedSalaryServerEntity.RetirementAccount != null ? (double)addedSalaryServerEntity.RetirementAccount.Value : 0;
@@ -132,9 +116,7 @@ namespace Gris.Application.Core.Services
                     addedSalaryServerEntity.Total += addedSalaryServerEntity.IndustrialInsuranceAccount != null ? (double)addedSalaryServerEntity.IndustrialInsuranceAccount.Value : 0;
 
                     mappedServerEntities.Add(addedSalaryServerEntity);
-
                 }
-               
             }
             return mappedServerEntities;
         }

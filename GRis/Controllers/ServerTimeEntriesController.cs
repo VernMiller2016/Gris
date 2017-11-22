@@ -23,6 +23,7 @@ namespace GRis.Controllers
         private IServerTimeEntryService _serverTimeEntryService;
         private IServerService _serverService;
         private IPaySourceService _paySourceService;
+        private const string FilterDateKey = "SelectedDate";
 
         public ServerTimeEntriesController(IServerTimeEntryService serverTimeEntryService, IServerService serverService, IPaySourceService paySourceService)
         {
@@ -39,6 +40,7 @@ namespace GRis.Controllers
             if (filter != null && filter.Date.HasValue)
             {
                 entities = _serverTimeEntryService.GetServerTimeEntries(filter.Date.Value, pagingInfo);
+                TempData[FilterDateKey] = filter;
             }
             else
             {
@@ -47,7 +49,14 @@ namespace GRis.Controllers
                     pagingInfo.SearchOption = option;
                     pagingInfo.SearchValue = search;
                 }
-                entities = _serverTimeEntryService.GetServerTimeEntries(pagingInfo);
+
+                if (TempData.Peek(FilterDateKey) != null)
+                {
+                    filter = TempData.Peek(FilterDateKey) as ServerTimeEntryFilterViewModel;
+                    entities = _serverTimeEntryService.GetServerTimeEntries(filter.Date.Value, pagingInfo);
+                }
+                else
+                    entities = _serverTimeEntryService.GetServerTimeEntries(pagingInfo);
             }
 
             ViewBag.FilterViewModel = filter;
@@ -58,6 +67,7 @@ namespace GRis.Controllers
 
         public ActionResult Details(int? id)
         {
+            KeepFilterIfFound();
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -67,6 +77,7 @@ namespace GRis.Controllers
             {
                 return HttpNotFound();
             }
+
             var viewmodel = Mapper.Map<ServerTimeEntry, ServerTimeEntryDetailsViewModel>(entity);
             return View(viewmodel);
         }
@@ -117,6 +128,7 @@ namespace GRis.Controllers
 
         public ActionResult Edit(int? id)
         {
+            KeepFilterIfFound();
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -145,6 +157,7 @@ namespace GRis.Controllers
                 Text = t.Name,
                 Value = t.Id.ToString()
             });
+
             return View(viewmodel);
         }
 
@@ -152,6 +165,7 @@ namespace GRis.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(ServerTimeEntryEditViewModel viewmodel)
         {
+            KeepFilterIfFound();
             if (ModelState.IsValid)
             {
                 ServerTimeEntry entity = _serverTimeEntryService.GetById(viewmodel.Id);
@@ -181,11 +195,13 @@ namespace GRis.Controllers
                 Text = t.Name,
                 Value = t.Id.ToString()
             });
+
             return View(viewmodel);
         }
 
         public ActionResult Delete(int? id)
         {
+            KeepFilterIfFound();
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -283,6 +299,12 @@ namespace GRis.Controllers
             }
 
             return View(viewmodel);
+        }
+
+        private void KeepFilterIfFound()
+        {
+            if (TempData.Peek(FilterDateKey) != null)
+                TempData.Keep(FilterDateKey);
         }
     }
 }
