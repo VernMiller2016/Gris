@@ -90,7 +90,7 @@ namespace Gris.Application.Core.Services
             {
                 int total = 0;
                 var result = _serverTimeEntryRepoitory.FilterWithPaging(t => t.BeginDate.Year == selectedDate.Year && t.BeginDate.Month == selectedDate.Month
-                , (list => list.OrderByDescending(st => new { st.BeginDate }))
+                , (list => list.OrderByDescending(st => st.BeginDate))
                 , out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Server, t => t.PaySource, t => t.Program);
                 pagingInfo.Total = total;
                 return result;
