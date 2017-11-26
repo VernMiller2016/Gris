@@ -43,58 +43,20 @@ namespace Gris.Application.Core.Services
             _unitOfWork.Commit();
         }
 
-        public IEnumerable<ServerTimeEntry> GetServerTimeEntries(PagingInfo pagingInfo = null)
+        public IEnumerable<ServerTimeEntry> GetServerTimeEntries(DateTime? selectedDate, string serverName, string paysourceName, PagingInfo pagingInfo = null)
         {
+            int total = 0;
+            IEnumerable<ServerTimeEntry> result = null;
             if (pagingInfo == null)
             {
-                return _serverTimeEntryRepoitory.Get(null, (list => list.OrderBy(t => t.BeginDate))
-                    , t => t.Server, t => t.PaySource, t => t.Program);
+                result = _serverTimeEntryRepoitory.SearchForEntries(selectedDate, serverName, paysourceName, out total, -1, -1);
             }
             else
             {
-                int total = 0;
-                //
-                IEnumerable<ServerTimeEntry> result = null;
-                if (!string.IsNullOrEmpty(pagingInfo.SearchOption) && !string.IsNullOrEmpty(pagingInfo.SearchValue))
-                {
-                    if (pagingInfo.SearchOption == "ServerName")
-                    {
-                        result = _serverTimeEntryRepoitory.FilterWithPaging(s => s.Server.FirstName.ToLower().Contains(pagingInfo.SearchValue.ToLower()) || s.Server.LastName.ToLower().Contains(pagingInfo.SearchValue.ToLower()), (list => list.OrderBy(t => t.BeginDate))
-                    , out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Server, t => t.PaySource, t => t.Program);
-                    }
-                    else if (pagingInfo.SearchOption == "PaySourceName")
-                    {
-                        result = _serverTimeEntryRepoitory.FilterWithPaging(s => s.PaySource.Description.ToLower().Contains(pagingInfo.SearchValue.ToLower()), (list => list.OrderBy(t => t.BeginDate))
-                    , out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Server, t => t.PaySource, t => t.Program);
-                    }
-                }
-                //
-                else
-                {
-                    result = _serverTimeEntryRepoitory.FilterWithPaging(null, (list => list.OrderBy(t => t.BeginDate))
-                       , out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Server, t => t.PaySource, t => t.Program);
-                }
+                result = _serverTimeEntryRepoitory.SearchForEntries(selectedDate, serverName, paysourceName, out total, pagingInfo.PageIndex, AppSettings.PageSize);
                 pagingInfo.Total = total;
-                return result;
             }
-        }
-
-        public IEnumerable<ServerTimeEntry> GetServerTimeEntries(DateTime selectedDate, PagingInfo pagingInfo)
-        {
-            if (pagingInfo == null)
-            {
-                return _serverTimeEntryRepoitory.Get(t => t.BeginDate.Year == selectedDate.Year && t.BeginDate.Month == selectedDate.Month
-                , (list => list.OrderByDescending(st => st.BeginDate)), t => t.Server, t => t.PaySource, t => t.Program);
-            }
-            else
-            {
-                int total = 0;
-                var result = _serverTimeEntryRepoitory.FilterWithPaging(t => t.BeginDate.Year == selectedDate.Year && t.BeginDate.Month == selectedDate.Month
-                , (list => list.OrderByDescending(st => st.BeginDate))
-                , out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Server, t => t.PaySource, t => t.Program);
-                pagingInfo.Total = total;
-                return result;
-            }
+            return result;
         }
 
         public IEnumerable<ServerTimeEntriesMonthlyReportEntity> GetServerTimeEntriesMonthlyReport(DateTime selectedDate, PagingInfo pagingInfo = null)
@@ -105,7 +67,7 @@ namespace Gris.Application.Core.Services
                 result = _serverTimeEntryRepoitory.
                             Get(t => t.BeginDate.Year == selectedDate.Year && t.BeginDate.Month == selectedDate.Month
                             && t.PaySource != null && t.ProgramId.HasValue
-                            , (list => list.OrderBy(st => st.BeginDate))
+                            , (list => list.OrderByDescending(st => st.BeginDate))
                             , st => st.PaySource, st => st.Program, st => st.Server, st => st.Server.Category)
                             ;
             }
@@ -115,7 +77,7 @@ namespace Gris.Application.Core.Services
                 result = _serverTimeEntryRepoitory.
                             FilterWithPaging(t => t.BeginDate.Year == selectedDate.Year && t.BeginDate.Month == selectedDate.Month
                             && t.PaySource != null && t.ProgramId.HasValue
-                            , (list => list.OrderBy(st => st.BeginDate))
+                            , (list => list.OrderByDescending(st => st.BeginDate))
                             , out total, pagingInfo.PageIndex, AppSettings.PageSize
                             , st => st.PaySource, st => st.Program, st => st.Server)
                             ;

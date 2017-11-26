@@ -1,9 +1,11 @@
-﻿@using X.PagedList;
+﻿@using GRis.ViewModels.Server
+@using X.PagedList;
 @using X.PagedList.Mvc;
 @model IEnumerable<GRis.ViewModels.Server.ServerDetailsViewModel>
 
 @{
     ViewBag.Title = "Index";
+    var filterViewModel = ViewBag.FilterViewModel as ServerFilterViewModel;
 }
 
 <h2>Index</h2>
@@ -12,14 +14,31 @@
     @Html.ActionLink("Create New", "Create") | @Html.ActionLink("Upload excel sheet", "Upload")
 </p>
 <p>
-    @using(Html.BeginForm("Index", "Servers", FormMethod.Get))
+    @using (Html.BeginForm("Index", "Servers", FormMethod.Get))
     {
-     <b> Search Option: </b>@Html.RadioButton("option", "FirstName") <text>First Name</text> @Html.RadioButton("option", "LastName") <text >Last Name </text>
-     @Html.TextBox("search") 
-    <input type = "submit" name = "submit" value = "Search" / >
+        <div class="form-horizontal">
+            <hr />
+            <div class="form-group">
+                @Html.LabelFor(model => filterViewModel.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => filterViewModel.FirstName, null, "firstname", new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => filterViewModel.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => filterViewModel.LastName, null, "lastname", new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Filter" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
     }
-    
-    
 </p>
 <table class="table">
     <thead>
@@ -91,6 +110,6 @@
 @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new
 {
     page,
-    option = Request.QueryString["option"],
-    search = Request.QueryString["search"]
+    firstname = filterViewModel.FirstName,
+    lastname = filterViewModel.LastName
 }))

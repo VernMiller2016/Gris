@@ -19,11 +19,24 @@
     {
         <div class="form-horizontal">
             <hr />
-
             <div class="form-group">
                 @Html.LabelFor(model => filterViewModel.Date, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     @Html.EditorFor(model => filterViewModel.Date, new { fieldName = "date" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => filterViewModel.ServerName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => filterViewModel.ServerName, null, "servername", new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => filterViewModel.PaysourceName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => filterViewModel.PaysourceName, null, "paysourcename", new { htmlAttributes = new { @class = "form-control" } })
                 </div>
             </div>
 
@@ -35,16 +48,7 @@
         </div>
     }
 </div>
-<div>
-    @using (Html.BeginForm("Index", "ServerTimeEntries", FormMethod.Get))
-    {
-        <b> Search Option: </b>@Html.RadioButton("option", "ServerName") <text>Server Name</text> @Html.RadioButton("option", "PaySourceName") <text >Pay Source </text>
-        @Html.TextBox("search")
-        <input type="submit" name="submit" value="Search" />
-    }
 
-
-</div>
 <table class="table">
     <tr>
         <th>
@@ -86,10 +90,10 @@
                     @Html.DisplayFor(modelItem => item.BeginDate)
                 </td>
                 <td>
-                        @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-                        @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-                        @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-                    </td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
             </tr>
         }
     }
@@ -105,8 +109,12 @@
     }
 </table>
 
-@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page, date = filterViewModel.DateAsMonthYear,option = Request.QueryString["option"],
-    search = Request.QueryString["search"]
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new
+{
+    page,
+    date = filterViewModel.DateAsMonthYear,
+    servername = filterViewModel.ServerName,
+    paysourcename = filterViewModel.PaysourceName
 }))
 
 @section Scripts {

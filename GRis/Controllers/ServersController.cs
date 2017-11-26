@@ -29,15 +29,11 @@ namespace GRis.Controllers
             _elementService = elementService;
         }
 
-        public ActionResult Index(string search, string option, int page = 1)
+        public ActionResult Index(ServerFilterViewModel filter, int page = 1)
         {
             var pagingInfo = new PagingInfo() { PageNumber = page };
-            if (!string.IsNullOrEmpty(search) && !string.IsNullOrEmpty(option))
-            {
-                pagingInfo.SearchOption = option;
-                pagingInfo.SearchValue = search;
-            }
-            var entites = _serverService.GetServers(pagingInfo);
+            var entites = _serverService.GetServers(pagingInfo, filter.FirstName, filter.LastName);
+            ViewBag.FilterViewModel = filter;
             var viewmodel = entites.ToMappedPagedList<Server, ServerDetailsViewModel>(pagingInfo);
             return View(viewmodel);
         }
@@ -250,7 +246,7 @@ namespace GRis.Controllers
                             }
 
                             var existedEntity = _serverService.GetByVendorId(entityViewModel.VendorId);
-                            
+
                             if (existedEntity == null)
                             {
                                 var entity = Mapper.Map<ServerAddViewModel, Server>(entityViewModel);

@@ -49,7 +49,7 @@ namespace Gris.Infrastructure.Core.Repositories
             return query.FirstOrDefault(filter);
         }
 
-        public override IEnumerable<T> Get(Expression<Func<T, bool>> filter = null, Func<IEnumerable<T>, IOrderedEnumerable<T>> orderBy = null, params Expression<Func<T, object>>[] includes)
+        public override IEnumerable<T> Get(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, params Expression<Func<T, object>>[] includes)
         {
             return base.Get(filter, orderBy, includes).Where(t => t.Active);
         }

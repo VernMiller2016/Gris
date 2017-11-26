@@ -253,6 +253,7 @@
     <Compile Include="ViewModels\PaySource\PaySourceDetailsViewModel.cs" />
     <Compile Include="ViewModels\PaySource\PaySourceEditViewModel.cs" />
     <Compile Include="ViewModels\PaySource\PaySourceAddViewModel.cs" />
+    <Compile Include="ViewModels\PaySource\PaysourceFilterViewModel.cs" />
     <Compile Include="ViewModels\Program\ProgramDetailsViewModel.cs" />
     <Compile Include="ViewModels\Program\ProgramEditViewModel.cs" />
     <Compile Include="ViewModels\Program\ProgramAddViewModel.cs" />
@@ -270,6 +271,7 @@
     <Compile Include="ViewModels\Server\ServerDetailsViewModel.cs" />
     <Compile Include="ViewModels\Server\ServerAddViewModel.cs" />
     <Compile Include="ViewModels\Server\ServerEditViewModel.cs" />
+    <Compile Include="ViewModels\Server\ServerFilterViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-datetimepicker.css" />
@@ -502,7 +504,7 @@
     </ItemGroup>
     <MakeDir Directories="$(WebProjectOutputDir)\bin\roslyn" />
     <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(WebProjectOutputDir)\bin\roslyn" SkipUnchangedFiles="true" Retries="$(CopyRetryCount)" RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" />
-</Target>
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

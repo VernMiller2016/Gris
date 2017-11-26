@@ -45,35 +45,19 @@ namespace Gris.Application.Core.Services
             return _serverRepoitory.GetAllCategories().OrderBy(t => t.Name);
         }
 
-        public IEnumerable<Server> GetServers(PagingInfo pagingInfo = null)
+        public IEnumerable<Server> GetServers(PagingInfo pagingInfo = null, string firstName = "", string lastName = "")
         {
+            int total = 0;
+            IEnumerable<Server> result = null;
+
             if (pagingInfo == null)
-                return _serverRepoitory.Get(null, (list => list.OrderBy(s => s.FullName)), t => t.Element, t => t.Category);
+                return _serverRepoitory.SearchForServers(firstName, lastName, out total, -1, -1);
             else
             {
-                int total = 0;
-                IEnumerable<Server> result = null;
-                if (!string.IsNullOrEmpty(pagingInfo.SearchOption) && !string.IsNullOrEmpty(pagingInfo.SearchValue))
-                {
-                    if (pagingInfo.SearchOption == "FirstName")
-                    {
-                        result = _serverRepoitory.FilterWithPaging(s => s.FirstName.ToLower().Contains(pagingInfo.SearchValue.ToLower()), (list => list.OrderBy(s => s.FullName))
-                     , out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Element, t => t.Category);
-                    }
-                    else if (pagingInfo.SearchOption == "LastName")
-                    {
-                        result = _serverRepoitory.FilterWithPaging(s => s.LastName.ToLower().Contains(pagingInfo.SearchValue.ToLower()), (list => list.OrderBy(s => s.FullName))
-                     , out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Element, t => t.Category);
-                    }
-                }
-                else
-                {
-                    result = _serverRepoitory.FilterWithPaging(null, (list => list.OrderBy(s => s.FullName))
-                                        , out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Element, t => t.Category);
-                }
+                result = _serverRepoitory.SearchForServers(firstName, lastName, out total, pagingInfo.PageIndex, AppSettings.PageSize);
                 pagingInfo.Total = total;
-                return result;
             }
+            return result;
         }
 
         public void Remove(Server server)

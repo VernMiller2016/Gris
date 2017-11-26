@@ -1,9 +1,11 @@
-﻿@using X.PagedList.Mvc;
+﻿@using GRis.ViewModels.PaySource
+@using X.PagedList.Mvc;
 @using X.PagedList;
 @model IEnumerable<GRis.ViewModels.PaySource.PaySourceDetailsViewModel>
 
 @{
     ViewBag.Title = "Index";
+    var filterViewModel = ViewBag.FilterViewModel as PaysourceFilterViewModel;
 }
 
 <h2>Index</h2>
@@ -11,9 +13,21 @@
 <div>
     @using (Html.BeginForm("Index", "PaySources", FormMethod.Get))
     {
-        <b> Search Option: </b> @Html.RadioButton("option", "PaySourceName") <text> Pay source name</text>
-        @Html.TextBox("search")
-        <input type="submit" name="submit" value="Search" />
+        <div class="form-horizontal">
+            <hr />
+            <div class="form-group">
+                @Html.LabelFor(model => filterViewModel.PaysourceName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => filterViewModel.PaysourceName, null, "paysourcename", new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Filter" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
     }
 </div>
 
@@ -67,6 +81,5 @@
 @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new
 {
     page,
-    option = Request.QueryString["option"],
-    search = Request.QueryString["search"]
+    paysourcename = filterViewModel.PaysourceName
 }))

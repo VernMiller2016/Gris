@@ -6,7 +6,7 @@ namespace Gris.Application.Core.Interfaces
 {
     public interface IServerService
     {
-        IEnumerable<Server> GetServers(PagingInfo pagingInfo = null);
+        IEnumerable<Server> GetServers(PagingInfo pagingInfo = null, string firstName = "", string lastName = "");
 
         IEnumerable<Category> GetCategories();
 

@@ -43,7 +43,7 @@ namespace Gris.Infrastructure.Core.Interfaces
         /// <param name="orderBy">A function to order entities.</param>
         /// <param name="includes">A lambda expression representing the path(s) to include</param>
         /// <returns>Entities as IEnumerable.</returns>
-        IEnumerable<T> Get(Expression<Func<T, bool>> filter = null, Func<IEnumerable<T>, IOrderedEnumerable<T>> orderBy = null, params Expression<Func<T, object>>[] includes);
+        IEnumerable<T> Get(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, params Expression<Func<T, object>>[] includes);
 
         /// <summary>
         ///   Gets entities from database with filtering and paging.
@@ -52,7 +52,7 @@ namespace Gris.Infrastructure.Core.Interfaces
         /// <param name="total"> Specified the total records count. </param>
         /// <param name="index"> Specified the page index. </param>
         /// <param name="size"> Specified the page size </param>
-        IEnumerable<T> FilterWithPaging(Expression<Func<T, bool>> filter, Func<IEnumerable<T>, IOrderedEnumerable<T>> orderBy, out int total, int index = 0, int size = 50, params Expression<Func<T, object>>[] includes);
+        IEnumerable<T> FilterWithPaging(Expression<Func<T, bool>> filter, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy, out int total, int index = 0, int size = 50, params Expression<Func<T, object>>[] includes);
 
         /// <summary>
         ///   Check if there any entities with the specified filtering criteria.

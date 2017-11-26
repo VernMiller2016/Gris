@@ -60,35 +60,15 @@ namespace Gris.Infrastructure.Core.Repositories
             return query.FirstOrDefault(filter);
         }
 
-        public virtual IEnumerable<T> Get(Expression<Func<T, bool>> filter = null, Func<IEnumerable<T>, IOrderedEnumerable<T>> orderBy = null, params Expression<Func<T, object>>[] includes)
+        public virtual IEnumerable<T> Get(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, params Expression<Func<T, object>>[] includes)
         {
-            IQueryable<T> query = _dbSet;
-
-            if (filter != null)
-            {
-                query = query.Where(filter);
-            }
-
-            if (includes.Any())
-            {
-                foreach (var includeProperty in includes)
-                {
-                    query = query.Include(includeProperty);
-                }
-            }
-
-            if (orderBy != null)
-            {
-                return orderBy(query);
-            }
-
-            return query.AsEnumerable();
+            return this.GetQuery(filter, orderBy, includes);            
         }
 
-        public virtual IEnumerable<T> FilterWithPaging(Expression<Func<T, bool>> filter, Func<IEnumerable<T>, IOrderedEnumerable<T>> orderBy, out int total, int index = 0, int size = 50, params Expression<Func<T, object>>[] includes)
+        public virtual IEnumerable<T> FilterWithPaging(Expression<Func<T, bool>> filter, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy, out int total, int index = 0, int size = 50, params Expression<Func<T, object>>[] includes)
         {
             int skipCount = index * size;
-            var query = this.Get(filter, orderBy, includes).AsQueryable();
+            var query = this.GetQuery(filter, orderBy, includes).AsQueryable();
             total = query.Count();
             query = skipCount == 0 ? query.Take(size) : query.Skip(skipCount).Take(size);
             return query;
@@ -199,6 +179,31 @@ namespace Gris.Infrastructure.Core.Repositories
         public virtual void BatchUpdate(Expression<Func<T, bool>> filter, Expression<Func<T, T>> updateFactory)
         {
             _dbSet.Where(filter).Update(updateFactory);
+        }
+
+        protected virtual IQueryable<T> GetQuery(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _dbSet;
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            if (includes.Any())
+            {
+                foreach (var includeProperty in includes)
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+
+            if (orderBy != null)
+            {
+                query = orderBy(query);
+            }
+
+            return query;
         }
 
         /// <summary>
