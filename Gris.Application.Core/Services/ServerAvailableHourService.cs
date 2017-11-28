@@ -34,14 +34,14 @@ namespace Gris.Application.Core.Services
         public IEnumerable<ServerAvailableHour> GetByServerId(int serverId)
         {
             return _serverAvailableHourRepoitory.Get(t => t.ServerId == serverId
-            , (list => list.OrderBy(t => t.Server.FullName))
+            , (list => list.OrderBy(t => t.Server.LastName))
             , t => t.Server);
         }
 
         public IEnumerable<ServerAvailableHour> GetByServerVendorId(int serverVendorId)
         {
             return _serverAvailableHourRepoitory.Get(t => t.Server.VendorId == serverVendorId
-            , (list => list.OrderBy(t => t.Server.FullName))
+            , (list => list.OrderBy(t => t.Server.LastName))
             , t => t.Server);
         }
 
@@ -50,14 +50,14 @@ namespace Gris.Application.Core.Services
             if (pagingInfo == null)
             {
                 return _serverAvailableHourRepoitory.Get(t => t.DateRange.Year == selectedDate.Year && t.DateRange.Month == selectedDate.Month
-                    , (list => list.OrderBy(t => t.Server.FullName))
+                    , (list => list.OrderBy(t => t.Server.LastName))
                     , t => t.Server);
             }
             else
             {
                 int total = 0;
                 var result = _serverAvailableHourRepoitory.FilterWithPaging(t => t.DateRange.Year == selectedDate.Year && t.DateRange.Month == selectedDate.Month
-                , (list => list.OrderBy(t => t.Server.FullName))
+                , (list => list.OrderBy(t => t.Server.LastName))
                 , out total, pagingInfo.PageIndex, AppSettings.PageSize, t => t.Server);
                 pagingInfo.Total = total;
                 return result;
