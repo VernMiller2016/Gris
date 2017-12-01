@@ -114,7 +114,7 @@ namespace GRis.Controllers
             MemoryStream stream = _exportingService.GetServerSalariesMothlyReportExcel(viewmodel.Date.Value);
 
             return File(stream, Constants.ExcelFilesMimeType,
-                string.Format(Constants.ServerTimeEntriesMonthlyReportExcelFileName
+                string.Format(Constants.ServerSalariesReportExcelFileName
                 , CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(viewmodel.Date.Value.Month)
                 , viewmodel.Date.Value.Year));
         }
