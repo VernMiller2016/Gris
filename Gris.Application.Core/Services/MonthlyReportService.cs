@@ -68,43 +68,115 @@ namespace Gris.Application.Core.Services
                             addedSalaryServerEntity.ORGNTSRC = itemValue.ORGNTSRC;
                         if (itemValue.ACTDESCR.ToLower() == Constants.Salaries.ToLower())
                         {
-                            addedSalaryServerEntity.SalaryAccount = new SalaryAccount
+                            if (addedSalaryServerEntity.SalaryAccount == null)
                             {
-                                CreditAmount = itemValue.CRDTAMNT,
-                                DebitAmount = itemValue.DEBITAMT
-                            };
+                                addedSalaryServerEntity.SalaryAccount = new SalaryAccount
+                                {
+                                    CreditAmount = itemValue.CRDTAMNT,
+                                    DebitAmount = itemValue.DEBITAMT
+                                };
+                            }
+                            else
+                            {
+                                addedSalaryServerEntity.SalaryAccount.CreditAmount += itemValue.CRDTAMNT;
+                                addedSalaryServerEntity.SalaryAccount.DebitAmount += itemValue.DEBITAMT;
+                            }
                         }
                         else if (itemValue.ACTDESCR.ToLower() == Constants.Retirement.ToLower())
                         {
-                            addedSalaryServerEntity.RetirementAccount = new RetirementAccount
+                            if (addedSalaryServerEntity.RetirementAccount == null)
                             {
-                                CreditAmount = itemValue.CRDTAMNT,
-                                DebitAmount = itemValue.DEBITAMT
-                            };
+                                addedSalaryServerEntity.RetirementAccount = new RetirementAccount
+                                {
+                                    CreditAmount = itemValue.CRDTAMNT,
+                                    DebitAmount = itemValue.DEBITAMT
+                                };
+                            }
+                            else
+                            {
+                                addedSalaryServerEntity.RetirementAccount.CreditAmount += itemValue.CRDTAMNT;
+                                addedSalaryServerEntity.RetirementAccount.DebitAmount += itemValue.DEBITAMT;
+                            }
                         }
                         else if (itemValue.ACTDESCR.ToLower() == Constants.SocialSecurity.ToLower())
                         {
-                            addedSalaryServerEntity.SocialSecurityAccount = new SocialSecurityAccount
+                            if (addedSalaryServerEntity.SocialSecurityAccount == null)
                             {
-                                CreditAmount = itemValue.CRDTAMNT,
-                                DebitAmount = itemValue.DEBITAMT
-                            };
+                                addedSalaryServerEntity.SocialSecurityAccount = new SocialSecurityAccount
+                                {
+                                    CreditAmount = itemValue.CRDTAMNT,
+                                    DebitAmount = itemValue.DEBITAMT
+                                };
+                            }
+                            else
+                            {
+                                addedSalaryServerEntity.SocialSecurityAccount.CreditAmount += itemValue.CRDTAMNT;
+                                addedSalaryServerEntity.SocialSecurityAccount.DebitAmount += itemValue.DEBITAMT;
+                            }
                         }
                         else if (itemValue.ACTDESCR.ToLower() == Constants.IndustrialInsurance.ToLower())
                         {
-                            addedSalaryServerEntity.IndustrialInsuranceAccount = new IndustrialInsuranceAccount
+                            if (addedSalaryServerEntity.IndustrialInsuranceAccount == null)
                             {
-                                CreditAmount = itemValue.CRDTAMNT,
-                                DebitAmount = itemValue.DEBITAMT
-                            };
+                                addedSalaryServerEntity.IndustrialInsuranceAccount = new IndustrialInsuranceAccount
+                                {
+                                    CreditAmount = itemValue.CRDTAMNT,
+                                    DebitAmount = itemValue.DEBITAMT
+                                };
+                            }
+                            else
+                            {
+                                addedSalaryServerEntity.IndustrialInsuranceAccount.CreditAmount += itemValue.CRDTAMNT;
+                                addedSalaryServerEntity.IndustrialInsuranceAccount.DebitAmount += itemValue.DEBITAMT;
+                            }
                         }
                         else if (itemValue.ACTDESCR.ToLower() == Constants.MentalHealth.ToLower())
                         {
-                            addedSalaryServerEntity.MedicalAndLifeInsuranceAccount = new MedicalAndLifeInsuranceAccount
+                            if (addedSalaryServerEntity.MedicalAndLifeInsuranceAccount == null)
                             {
-                                CreditAmount = itemValue.CRDTAMNT,
-                                DebitAmount = itemValue.DEBITAMT
-                            };
+                                addedSalaryServerEntity.MedicalAndLifeInsuranceAccount = new MedicalAndLifeInsuranceAccount
+                                {
+                                    CreditAmount = itemValue.CRDTAMNT,
+                                    DebitAmount = itemValue.DEBITAMT
+                                };
+                            }
+                            else
+                            {
+                                addedSalaryServerEntity.MedicalAndLifeInsuranceAccount.CreditAmount += itemValue.CRDTAMNT;
+                                addedSalaryServerEntity.MedicalAndLifeInsuranceAccount.DebitAmount += itemValue.DEBITAMT;
+                            }
+                        }
+                        else if (itemValue.ACTDESCR.ToLower() == Constants.OVERTIME.ToLower())
+                        {
+                            if (addedSalaryServerEntity.OverTimeAccount == null)
+                            {
+                                addedSalaryServerEntity.OverTimeAccount = new OverTimeAccount
+                                {
+                                    CreditAmount = itemValue.CRDTAMNT,
+                                    DebitAmount = itemValue.DEBITAMT
+                                };
+                            }
+                            else
+                            {
+                                addedSalaryServerEntity.OverTimeAccount.CreditAmount += itemValue.CRDTAMNT;
+                                addedSalaryServerEntity.OverTimeAccount.DebitAmount += itemValue.DEBITAMT;
+                            }
+                        }
+                        else if(itemValue.ACTDESCR.ToLower() == Constants.MedicalAndLifeInsurance.ToLower())
+                        {
+                            if(addedSalaryServerEntity.MedicalAndLifeInsuranceAccount == null)
+                            {
+                                addedSalaryServerEntity.MedicalAndLifeInsuranceAccount = new MedicalAndLifeInsuranceAccount
+                                {
+                                    CreditAmount = itemValue.CRDTAMNT,
+                                    DebitAmount = itemValue.DEBITAMT
+                                };
+                            }
+                            else
+                            {
+                                addedSalaryServerEntity.MedicalAndLifeInsuranceAccount.CreditAmount += itemValue.CRDTAMNT;
+                                addedSalaryServerEntity.MedicalAndLifeInsuranceAccount.DebitAmount += itemValue.DEBITAMT;
+                            }
                         }
                     }
                     addedSalaryServerEntity.Total = addedSalaryServerEntity.SalaryAccount != null ? (double)addedSalaryServerEntity.SalaryAccount.Value : 0;
