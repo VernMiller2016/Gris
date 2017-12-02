@@ -78,7 +78,24 @@ namespace GRis.Controllers
             return View(entities);
 
         }
-        
+
+        public ActionResult ServerSalariesMonthlyPercentageReport(ReportFilterViewModel filter, int page = 1)
+        {
+            var entities = Enumerable.Empty<ServerSalaryReportViewModel>();
+            if (TryValidateModel(filter))
+            {
+                entities = _serverSalaryReportService.GetServerSalaryMonthlyPercentageReport(filter.Date.Value);
+                ViewBag.DisplayResults = true;
+            }
+            else
+            {
+                ViewBag.DisplayResults = false;
+            }
+            ViewBag.FilterViewModel = filter;
+
+            return View(entities);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ExportStaffPercentagesMonthlyReportToExcel(ReportFilterViewModel viewmodel)

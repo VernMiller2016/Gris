@@ -71,7 +71,13 @@ namespace Gris.Application.Core.Contracts.Reports
     public class TempHelpAccount
     {
 
-        public decimal Value { get; set; }
+        public decimal Value
+        {
+            get
+            {
+                return DebitAmount != 0 ? DebitAmount : CreditAmount;
+            }
+        }
 
         public decimal CreditAmount { get; set; }
 

@@ -421,6 +421,8 @@
     <Content Include="Views\Elements\Delete.cshtml" />
     <Content Include="Views\Reports\_ServerSalariesMonthlyReportListing.cshtml" />
     <Content Include="Views\Reports\ServerSalariesMonthlyReport.cshtml" />
+    <Content Include="Views\Reports\ServerSalariesMonthlyPercentageReport.cshtml" />
+    <Content Include="Views\Reports\_ServerSalariesMonthlyReportPercentageListing.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

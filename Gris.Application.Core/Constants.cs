@@ -23,6 +23,7 @@
         public const string IndustrialInsurance = "INDUSTRIAL INSURANCE";
         public const string Salaries = "REG SALARIES & WAGES";
         public const string OVERTIME = "OVERTIME";
+        public const string TempHelp = "TEMPORARY HELP";
         public const string MentalHealth = "MENTAL HEALTH. . . .MEDICAID STIPEND";
         public const string MedicalAndLifeInsurance = "MEDICAL & LIFE INSURANCE";
 

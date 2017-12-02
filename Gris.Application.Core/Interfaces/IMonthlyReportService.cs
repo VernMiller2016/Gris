@@ -12,5 +12,6 @@ namespace Gris.Application.Core.Interfaces
    public interface IServerSalaryReportService
     {
         IEnumerable<ServerSalaryReportViewModel> GetServerSalaryMonthlyReport(DateTime selectedDate, PagingInfo pagingInfo = null);
+        IEnumerable<ServerSalaryReportViewModel> GetServerSalaryMonthlyPercentageReport(DateTime selectedDate, PagingInfo pagingInfo = null);
     }
 }
