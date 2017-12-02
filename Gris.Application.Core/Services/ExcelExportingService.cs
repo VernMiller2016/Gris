@@ -412,21 +412,46 @@ namespace Gris.Application.Core.Services
         private void GenerateServerSalariesPercentageMonthlyReportExcel(ExcelPackage excelPackage,IEnumerable<ServerSalaryReportViewModel> reportData,DateTime time)
         {
             var dataSheet = excelPackage.Workbook.Worksheets[1];
+            var salarySheet = excelPackage.Workbook.Worksheets["Salary"];
+            var tempHelpSheet = excelPackage.Workbook.Worksheets["TempHelp"];
+            var overtimeSheet = excelPackage.Workbook.Worksheets["Overtime"];
             var index = 2; // starting index of each sheet.
+            var otherWorkSheetsIndex = 2;
             foreach (var item in reportData)
             {
+                if(item.Programs!= null)
+                {
+                    if(item.SalaryAccount != null)
+                    {
+                        salarySheet.Cells["A" + otherWorkSheetsIndex].Value = item.ServerName;
+                        salarySheet.Cells["B" + otherWorkSheetsIndex].Value = item.SalaryAccount.Value;
+                        var currentCell = salarySheet.Cells["B" + otherWorkSheetsIndex];
+                        int currentColumn = currentCell.Start.Column;
+                        int currentRow = currentCell.Start.Row;
+                        foreach (var program in item.Programs)
+                        {
+                            salarySheet.Cells[1,currentColumn+1].Value = program.ProgramName;
+                            salarySheet.Cells[currentRow,currentColumn+1].Value =
+                                item.SalaryAccount.Value
+                                * (decimal)(program.Duration.TotalHours / item.Programs.Sum(t => t.Duration.TotalHours));
+                            currentColumn++;
+                        }
+                    }
+                    otherWorkSheetsIndex++;
+                }
                 dataSheet.Cells["A" + index].Value = item.ServerName;
-                dataSheet.Cells["B" + index].Value = item.SalaryAccount != null ? item.SalaryAccount.Value : 0;
-                dataSheet.Cells["C" + index].Value = item.TempHelpAccount != null ? item.TempHelpAccount.Value : 0;
-                dataSheet.Cells["D" + index].Value = item.OverTimeAccount != null ? item.OverTimeAccount.Value : 0;
-                dataSheet.Cells["E" + index].Value = item.RetirementAccount != null ? item.RetirementAccount.Value : 0;
-                dataSheet.Cells["F" + index].Value = item.SocialSecurityAccount != null ? item.SocialSecurityAccount.Value : 0;
-                dataSheet.Cells["G" + index].Value = item.MedicalAndLifeInsuranceAccount != null ? item.MedicalAndLifeInsuranceAccount.Value : 0;
-                dataSheet.Cells["H" + index].Value = item.IndustrialInsuranceAccount != null ? item.IndustrialInsuranceAccount.Value : 0;
-                dataSheet.Cells["I" + index].Value = item.Total;
+                dataSheet.Cells["B" + index].Value = item.SalaryAccount != null ? item.SalaryAccount.ValueInPercentage : 0;
+                dataSheet.Cells["C" + index].Value = item.TempHelpAccount != null ? item.TempHelpAccount.ValueInPercentage : 0;
+                dataSheet.Cells["D" + index].Value = item.OverTimeAccount != null ? item.OverTimeAccount.ValueInPercentage : 0;
+                dataSheet.Cells["E" + index].Value = item.RetirementAccount != null ? item.RetirementAccount.ValueInPercentage : 0;
+                dataSheet.Cells["F" + index].Value = item.SocialSecurityAccount != null ? item.SocialSecurityAccount.ValueInPercentage : 0;
+                dataSheet.Cells["G" + index].Value = item.MedicalAndLifeInsuranceAccount != null ? item.MedicalAndLifeInsuranceAccount.ValueInPercentage : 0;
+                dataSheet.Cells["H" + index].Value = item.IndustrialInsuranceAccount != null ? item.IndustrialInsuranceAccount.ValueInPercentage : 0;
+                dataSheet.Cells["I" + index].Value = item.TotalInPercentage;
                 index++;
             }
             dataSheet.Cells.AutoFitColumns();
+            salarySheet.Cells.AutoFitColumns();
         }
 
 

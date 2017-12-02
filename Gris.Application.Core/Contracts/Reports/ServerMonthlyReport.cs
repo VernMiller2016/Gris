@@ -8,6 +8,8 @@ namespace Gris.Application.Core.Contracts.Reports
 {
     public class ServerSalaryReportViewModel
     {
+        public List<ServerTimeEntriesMonthlyReportEntity> Programs { get; set; }
+
         public DateTime TRXDATE { get; set; }
 
         public int JRNENTRY { get; set; }
@@ -49,6 +51,8 @@ namespace Gris.Application.Core.Contracts.Reports
         public IndustrialInsuranceAccount IndustrialInsuranceAccount { get; set; }
 
         public double Total { get; set; }
+
+        public double TotalInPercentage { get; set; }
         //
     }
 
@@ -62,7 +66,7 @@ namespace Gris.Application.Core.Contracts.Reports
                 return DebitAmount != 0 ? DebitAmount : CreditAmount;
             }
         }
-
+        public decimal ValueInPercentage { get; set; }
         public decimal CreditAmount { get; set; }
 
         public decimal DebitAmount { get; set; }
@@ -78,7 +82,7 @@ namespace Gris.Application.Core.Contracts.Reports
                 return DebitAmount != 0 ? DebitAmount : CreditAmount;
             }
         }
-
+        public decimal ValueInPercentage { get; set; }
         public decimal CreditAmount { get; set; }
 
         public decimal DebitAmount { get; set; }
@@ -95,8 +99,8 @@ namespace Gris.Application.Core.Contracts.Reports
                 return DebitAmount != 0 ? DebitAmount : CreditAmount;
             }
         }
-
-            public decimal CreditAmount { get; set; }
+        public decimal ValueInPercentage { get; set; }
+        public decimal CreditAmount { get; set; }
 
         public decimal DebitAmount { get; set; }
     }
@@ -111,12 +115,13 @@ namespace Gris.Application.Core.Contracts.Reports
                 return DebitAmount != 0 ? DebitAmount : CreditAmount;
             }
         }
-            public decimal CreditAmount
+        public decimal ValueInPercentage { get; set; }
+        public decimal CreditAmount
         {
             get; set;
         }
 
-            public decimal DebitAmount { get; set; }
+        public decimal DebitAmount { get; set; }
     }
 
     public class SocialSecurityAccount
@@ -129,6 +134,7 @@ namespace Gris.Application.Core.Contracts.Reports
                 return DebitAmount != 0 ? DebitAmount : CreditAmount;
             }
         }
+        public decimal ValueInPercentage { get; set; }
 
         public decimal CreditAmount { get; set; }
 
@@ -145,6 +151,7 @@ namespace Gris.Application.Core.Contracts.Reports
                 return DebitAmount != 0 ? DebitAmount : CreditAmount;
             }
         }
+        public decimal ValueInPercentage { get; set; }
 
         public decimal CreditAmount { get; set; }
 
@@ -161,6 +168,8 @@ namespace Gris.Application.Core.Contracts.Reports
                 return DebitAmount != 0 ? DebitAmount : CreditAmount;
             }
         }
+
+        public decimal ValueInPercentage { get; set; }
 
         public decimal CreditAmount { get; set; }
 

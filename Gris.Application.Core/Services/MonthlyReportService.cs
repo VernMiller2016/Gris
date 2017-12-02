@@ -12,12 +12,14 @@ namespace Gris.Application.Core.Services
     public class ServerMonthlyReportService : IServerSalaryReportService
     {
         private IServerSalaryReportRepository _serverMonthlyReportRepository;
+        private IServerTimeEntryService _serverTimeEntry;
         private IServerRepository _serverRepository;
         private IUnitOfWork _unitOfWork;
 
-        public ServerMonthlyReportService(IServerSalaryReportRepository serverMonthlyReportRepoitory, IServerRepository serverRepository, IUnitOfWork unitOfWork)
+        public ServerMonthlyReportService(IServerSalaryReportRepository serverMonthlyReportRepoitory,IServerTimeEntryService serverTimeEntry, IServerRepository serverRepository, IUnitOfWork unitOfWork)
         {
             _serverMonthlyReportRepository = serverMonthlyReportRepoitory;
+            _serverTimeEntry = serverTimeEntry;
             _serverRepository = serverRepository;
             _unitOfWork = unitOfWork;
         }
@@ -225,6 +227,7 @@ namespace Gris.Application.Core.Services
             }
             if (result.Any())
             {
+                var serverTimeEntries = _serverTimeEntry.GetServerTimeEntriesMonthlyReport(selectedDate);
                 var resultsFilteredByGpEmpNumber = result.GroupBy(s => s.ORMSTRID);
                 List<ServerSalaryReportEntity> filteredResults = new List<ServerSalaryReportEntity>();
                 var allServers = _serverRepository.GetAll();
@@ -238,8 +241,14 @@ namespace Gris.Application.Core.Services
                         }
                     }
                 }
+                if (allServers != null)
+                {
+                    foreach (var server in serverTimeEntries)
+                    {
+                        server.ServerId =int.Parse(allServers.FirstOrDefault(s => s.Id == server.ServerId).GpEmpNumber);
+                    }
+                }
                 var filteredResultsGroupedByGpEmpNumber = filteredResults.GroupBy(s => new { s.ORMSTRID });
-
                 foreach (var item in filteredResultsGroupedByGpEmpNumber)
                 {
                     var addedSalaryServerEntity = new ServerSalaryReportViewModel
@@ -248,6 +257,28 @@ namespace Gris.Application.Core.Services
                     };
                     foreach (var itemValue in item)
                     {
+                        var serverTimeEntryList = serverTimeEntries.Where(t => t.ServerId.ToString() == itemValue.ORMSTRID);
+                        if (serverTimeEntryList != null)
+                        {
+                            if (addedSalaryServerEntity.Programs == null || !addedSalaryServerEntity.Programs.Any())
+                            {
+                                addedSalaryServerEntity.Programs = new List<ServerTimeEntriesMonthlyReportEntity>();
+                            }
+                            foreach (var serverTimeEntry in serverTimeEntryList)
+                            {
+                                if (!addedSalaryServerEntity.Programs.Any(p => p.ProgramId == serverTimeEntry.ProgramId && p.ServerId == serverTimeEntry.ServerId))
+                                {
+                                    addedSalaryServerEntity.Programs.Add(new ServerTimeEntriesMonthlyReportEntity
+                                    {
+                                        ProgramId = serverTimeEntry.ProgramId,
+                                        ProgramName = serverTimeEntry.ProgramName,
+                                        ServerId = serverTimeEntry.ServerId,
+                                        Duration = serverTimeEntry.Duration
+                                    });
+                                }
+                            }
+                           
+                        }
                         if (string.IsNullOrWhiteSpace(addedSalaryServerEntity.ServerName))
                             addedSalaryServerEntity.ServerName = itemValue.ORMSTRNM;
                         if (addedSalaryServerEntity.JRNENTRY == 0)
@@ -396,12 +427,12 @@ namespace Gris.Application.Core.Services
                     {
                         if(addedSalaryServerEntity.SalaryAccount.DebitAmount != 0)
                         {
-                            addedSalaryServerEntity.SalaryAccount.DebitAmount = (addedSalaryServerEntity.SalaryAccount.DebitAmount /
+                            addedSalaryServerEntity.SalaryAccount.ValueInPercentage = (addedSalaryServerEntity.SalaryAccount.DebitAmount /
                                                                                 (decimal)addedSalaryServerEntity.Total) * 100;
                         }
                         else
                         {
-                            addedSalaryServerEntity.SalaryAccount.DebitAmount = (addedSalaryServerEntity.SalaryAccount.DebitAmount /
+                            addedSalaryServerEntity.SalaryAccount.ValueInPercentage = (addedSalaryServerEntity.SalaryAccount.CreditAmount /
                                                                                (decimal)addedSalaryServerEntity.Total) * 100;
                         }
                     }
@@ -409,12 +440,12 @@ namespace Gris.Application.Core.Services
                     {
                         if (addedSalaryServerEntity.SocialSecurityAccount.DebitAmount != 0)
                         {
-                            addedSalaryServerEntity.SocialSecurityAccount.DebitAmount = (addedSalaryServerEntity.SocialSecurityAccount.DebitAmount /
+                            addedSalaryServerEntity.SocialSecurityAccount.ValueInPercentage = (addedSalaryServerEntity.SocialSecurityAccount.DebitAmount /
                                                                                 (decimal)addedSalaryServerEntity.Total) * 100;
                         }
                         else
                         {
-                            addedSalaryServerEntity.SocialSecurityAccount.DebitAmount = (addedSalaryServerEntity.SocialSecurityAccount.DebitAmount /
+                            addedSalaryServerEntity.SocialSecurityAccount.ValueInPercentage = (addedSalaryServerEntity.SocialSecurityAccount.CreditAmount /
                                                                                (decimal)addedSalaryServerEntity.Total) * 100;
                         }
                     }
@@ -422,12 +453,12 @@ namespace Gris.Application.Core.Services
                     {
                         if (addedSalaryServerEntity.RetirementAccount.DebitAmount != 0)
                         {
-                            addedSalaryServerEntity.RetirementAccount.DebitAmount = (addedSalaryServerEntity.RetirementAccount.DebitAmount /
+                            addedSalaryServerEntity.RetirementAccount.ValueInPercentage = (addedSalaryServerEntity.RetirementAccount.DebitAmount /
                                                                                 (decimal)addedSalaryServerEntity.Total) * 100;
                         }
                         else
                         {
-                            addedSalaryServerEntity.RetirementAccount.DebitAmount = (addedSalaryServerEntity.RetirementAccount.DebitAmount /
+                            addedSalaryServerEntity.RetirementAccount.ValueInPercentage = (addedSalaryServerEntity.RetirementAccount.CreditAmount /
                                                                                (decimal)addedSalaryServerEntity.Total) * 100;
                         }
                     }
@@ -435,12 +466,12 @@ namespace Gris.Application.Core.Services
                     {
                         if (addedSalaryServerEntity.IndustrialInsuranceAccount.DebitAmount != 0)
                         {
-                            addedSalaryServerEntity.IndustrialInsuranceAccount.DebitAmount = (addedSalaryServerEntity.IndustrialInsuranceAccount.DebitAmount /
+                            addedSalaryServerEntity.IndustrialInsuranceAccount.ValueInPercentage = (addedSalaryServerEntity.IndustrialInsuranceAccount.DebitAmount /
                                                                                 (decimal)addedSalaryServerEntity.Total) * 100;
                         }
                         else
                         {
-                            addedSalaryServerEntity.IndustrialInsuranceAccount.DebitAmount = (addedSalaryServerEntity.IndustrialInsuranceAccount.DebitAmount /
+                            addedSalaryServerEntity.IndustrialInsuranceAccount.ValueInPercentage = (addedSalaryServerEntity.IndustrialInsuranceAccount.CreditAmount /
                                                                                (decimal)addedSalaryServerEntity.Total) * 100;
                         }
                     }
@@ -448,12 +479,12 @@ namespace Gris.Application.Core.Services
                     {
                         if (addedSalaryServerEntity.MedicalAndLifeInsuranceAccount.DebitAmount != 0)
                         {
-                            addedSalaryServerEntity.MedicalAndLifeInsuranceAccount.DebitAmount = (addedSalaryServerEntity.MedicalAndLifeInsuranceAccount.DebitAmount /
+                            addedSalaryServerEntity.MedicalAndLifeInsuranceAccount.ValueInPercentage = (addedSalaryServerEntity.MedicalAndLifeInsuranceAccount.DebitAmount /
                                                                                 (decimal)addedSalaryServerEntity.Total) * 100;
                         }
                         else
                         {
-                            addedSalaryServerEntity.MedicalAndLifeInsuranceAccount.DebitAmount = (addedSalaryServerEntity.MedicalAndLifeInsuranceAccount.DebitAmount /
+                            addedSalaryServerEntity.MedicalAndLifeInsuranceAccount.ValueInPercentage = (addedSalaryServerEntity.MedicalAndLifeInsuranceAccount.CreditAmount /
                                                                                (decimal)addedSalaryServerEntity.Total) * 100;
                         }
                     }
@@ -461,12 +492,12 @@ namespace Gris.Application.Core.Services
                     {
                         if (addedSalaryServerEntity.OverTimeAccount.DebitAmount != 0)
                         {
-                            addedSalaryServerEntity.OverTimeAccount.DebitAmount = (addedSalaryServerEntity.OverTimeAccount.DebitAmount /
+                            addedSalaryServerEntity.OverTimeAccount.ValueInPercentage = (addedSalaryServerEntity.OverTimeAccount.DebitAmount /
                                                                                 (decimal)addedSalaryServerEntity.Total) * 100;
                         }
                         else
                         {
-                            addedSalaryServerEntity.OverTimeAccount.DebitAmount = (addedSalaryServerEntity.OverTimeAccount.DebitAmount /
+                            addedSalaryServerEntity.OverTimeAccount.ValueInPercentage = (addedSalaryServerEntity.OverTimeAccount.CreditAmount /
                                                                                (decimal)addedSalaryServerEntity.Total) * 100;
                         }
                     }
@@ -474,17 +505,17 @@ namespace Gris.Application.Core.Services
                     {
                         if (addedSalaryServerEntity.TempHelpAccount.DebitAmount != 0)
                         {
-                            addedSalaryServerEntity.TempHelpAccount.DebitAmount = (addedSalaryServerEntity.TempHelpAccount.DebitAmount /
+                            addedSalaryServerEntity.TempHelpAccount.ValueInPercentage = (addedSalaryServerEntity.TempHelpAccount.DebitAmount /
                                                                                 (decimal)addedSalaryServerEntity.Total) * 100;
                         }
                         else
                         {
-                            addedSalaryServerEntity.TempHelpAccount.DebitAmount = (addedSalaryServerEntity.TempHelpAccount.DebitAmount /
+                            addedSalaryServerEntity.TempHelpAccount.ValueInPercentage = (addedSalaryServerEntity.TempHelpAccount.CreditAmount /
                                                                                (decimal)addedSalaryServerEntity.Total) * 100;
                         }
                     }
                     #endregion
-                    addedSalaryServerEntity.Total = 100;
+                    addedSalaryServerEntity.TotalInPercentage = 100;
                     mappedServerEntities.Add(addedSalaryServerEntity);
                 }
             }
