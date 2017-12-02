@@ -49,6 +49,18 @@ namespace Gris.Application.Core.Services
             return stream;
         }
 
+       public  MemoryStream GetServerSalariesPercentageMothlyReportExcel(DateTime time)
+        {
+            string excelTemplate = GetExcelTemplate(ReportType.ServerSalariesPercentageMonthly);
+            var templateFile = new FileInfo(excelTemplate);
+            ExcelPackage package = new ExcelPackage(templateFile, true);
+
+            GenerateServerSalariesPercentageMonthlyReportExcel(package, _serverSalariesService.GetServerSalaryMonthlyPercentageReport(time), time);
+
+            var stream = new MemoryStream(package.GetAsByteArray());
+            return stream;
+        }
+
 
         public MemoryStream GetServerAvailableHoursTemplate(int defaultAvailableHours, DateTime time)
         {
@@ -397,7 +409,25 @@ namespace Gris.Application.Core.Services
             }
             dataSheet.Cells.AutoFitColumns();
         }
-
+        private void GenerateServerSalariesPercentageMonthlyReportExcel(ExcelPackage excelPackage,IEnumerable<ServerSalaryReportViewModel> reportData,DateTime time)
+        {
+            var dataSheet = excelPackage.Workbook.Worksheets[1];
+            var index = 2; // starting index of each sheet.
+            foreach (var item in reportData)
+            {
+                dataSheet.Cells["A" + index].Value = item.ServerName;
+                dataSheet.Cells["B" + index].Value = item.SalaryAccount != null ? item.SalaryAccount.Value : 0;
+                dataSheet.Cells["C" + index].Value = item.TempHelpAccount != null ? item.TempHelpAccount.Value : 0;
+                dataSheet.Cells["D" + index].Value = item.OverTimeAccount != null ? item.OverTimeAccount.Value : 0;
+                dataSheet.Cells["E" + index].Value = item.RetirementAccount != null ? item.RetirementAccount.Value : 0;
+                dataSheet.Cells["F" + index].Value = item.SocialSecurityAccount != null ? item.SocialSecurityAccount.Value : 0;
+                dataSheet.Cells["G" + index].Value = item.MedicalAndLifeInsuranceAccount != null ? item.MedicalAndLifeInsuranceAccount.Value : 0;
+                dataSheet.Cells["H" + index].Value = item.IndustrialInsuranceAccount != null ? item.IndustrialInsuranceAccount.Value : 0;
+                dataSheet.Cells["I" + index].Value = item.Total;
+                index++;
+            }
+            dataSheet.Cells.AutoFitColumns();
+        }
 
 
         #endregion
@@ -429,6 +459,9 @@ namespace Gris.Application.Core.Services
 
                 case ReportType.ServerSalariesMonthly:
                     templatePath = System.AppDomain.CurrentDomain.BaseDirectory + "Content\\ExcelTemplates\\ServerSalariesMonthlyReportTemplate.xlsx";
+                    break;
+                case ReportType.ServerSalariesPercentageMonthly:
+                    templatePath = System.AppDomain.CurrentDomain.BaseDirectory + "Content\\ExcelTemplates\\ServerSalariesPercentageMonthlyReportTemplate.xlsx";
                     break;
                 default:
                     templatePath = String.Empty;

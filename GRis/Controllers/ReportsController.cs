@@ -138,6 +138,18 @@ namespace GRis.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public FileResult ExportServerSalariesMonthlyPercentageReportToExcel(ReportFilterViewModel viewmodel)
+        {
+            MemoryStream stream = _exportingService.GetServerSalariesPercentageMothlyReportExcel(viewmodel.Date.Value);
+
+            return File(stream, Constants.ExcelFilesMimeType,
+                string.Format(Constants.ServerSalariesPercentageReportExcelFileName
+                , CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(viewmodel.Date.Value.Month)
+                , viewmodel.Date.Value.Year));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ExportCategoryPercentagesMonthlyReportToExcel(ReportFilterViewModel viewmodel)
         {
             if (ModelState.IsValid)

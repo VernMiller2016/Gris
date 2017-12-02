@@ -11,6 +11,7 @@
         public const string ServerTimeEntriesMonthlyReportExcelFileName = "Service Details Monthly Report - {0} - {1}.xlsx";
 
         public const string ServerSalariesReportExcelFileName = "Server Salaries Report For {0} - {1}.xlsx";
+        public const string ServerSalariesPercentageReportExcelFileName = "Server Salaries Percentage Report For {0} - {1}.xlsx";
 
         public const string ServerAvailableHoursTemplateExcelFileName = "Available Hours - {0} - {1}.xlsx";
 

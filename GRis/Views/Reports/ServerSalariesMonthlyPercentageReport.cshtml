@@ -43,7 +43,7 @@
 
     if (Model.Any())
     {
-        using (Html.BeginForm("ExportServerSalariesMonthlyReportToExcel", "Reports"))
+        using (Html.BeginForm("ExportServerSalariesMonthlyPercentageReportToExcel", "Reports"))
         {
             @Html.HiddenFor(model => filterViewModel.Date, new { Name = "date" })
             @Html.AntiForgeryToken()

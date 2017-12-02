@@ -301,6 +301,7 @@
     <Content Include="Content\ExcelTemplates\StaffPercentagesMonthlyReportTemplate.xlsx" />
     <Content Include="Content\ExcelTemplates\CategoryPercentagesMonthlyReportTemplate.xlsx" />
     <Content Include="Content\ExcelTemplates\ServerSalariesMonthlyReportTemplate.xlsx" />
+    <Content Include="Content\ExcelTemplates\ServerSalariesPercentageMonthlyReportTemplate.xlsx" />
     <None Include="Properties\PublishProfiles\Local.pubxml" />
     <None Include="Properties\PublishProfiles\PublishGris.pubxml" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
