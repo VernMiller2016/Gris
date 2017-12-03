@@ -415,29 +415,145 @@ namespace Gris.Application.Core.Services
             var salarySheet = excelPackage.Workbook.Worksheets["Salary"];
             var tempHelpSheet = excelPackage.Workbook.Worksheets["TempHelp"];
             var overtimeSheet = excelPackage.Workbook.Worksheets["Overtime"];
+            var retirementSheet = excelPackage.Workbook.Worksheets["Retirement"];
+            var socialSecuritySheet = excelPackage.Workbook.Worksheets["SocialSecurity"];
+            var medicalAndLifeInsSheet = excelPackage.Workbook.Worksheets["MedicalAndLifeIns"];
+            var industInsSheet = excelPackage.Workbook.Worksheets["IndustIns"];
             var index = 2; // starting index of each sheet.
-            var otherWorkSheetsIndex = 2;
+            var salaryWorkSheetIndex = 2;
+            var tempHelpWorkSheetIndex = 2;
+            var overTimeWorkSheetIndex = 2;
+            var retirementWorkSheetIndex = 2;
+            var socialSecurityWorkSheetIndex = 2;
+            var medicalAndLifeInsWorkSheetIndex = 2;
+            var industInsWorkSheetIndex = 2;
             foreach (var item in reportData)
             {
                 if(item.Programs!= null)
                 {
                     if(item.SalaryAccount != null)
                     {
-                        salarySheet.Cells["A" + otherWorkSheetsIndex].Value = item.ServerName;
-                        salarySheet.Cells["B" + otherWorkSheetsIndex].Value = item.SalaryAccount.Value;
-                        var currentCell = salarySheet.Cells["B" + otherWorkSheetsIndex];
+                        salarySheet.Cells["A" + salaryWorkSheetIndex].Value = item.ServerName;
+                        salarySheet.Cells["B" + salaryWorkSheetIndex].Value = item.SalaryAccount.Value;
+                        var currentCell = salarySheet.Cells["B" + salaryWorkSheetIndex];
                         int currentColumn = currentCell.Start.Column;
                         int currentRow = currentCell.Start.Row;
                         foreach (var program in item.Programs)
                         {
                             salarySheet.Cells[1,currentColumn+1].Value = program.ProgramName;
-                            salarySheet.Cells[currentRow,currentColumn+1].Value =
+                            salarySheet.Cells[currentRow,currentColumn+1].Value = item.Programs.Sum(t => t.Duration.TotalHours)!=0?
                                 item.SalaryAccount.Value
-                                * (decimal)(program.Duration.TotalHours / item.Programs.Sum(t => t.Duration.TotalHours));
+                                * (decimal)(program.Duration.TotalHours / item.Programs.Sum(t => t.Duration.TotalHours)):0;
                             currentColumn++;
                         }
+                        salaryWorkSheetIndex++;
                     }
-                    otherWorkSheetsIndex++;
+                    if(item.TempHelpAccount != null)
+                    {
+                        tempHelpSheet.Cells["A" + tempHelpWorkSheetIndex].Value = item.ServerName;
+                        tempHelpSheet.Cells["B" + tempHelpWorkSheetIndex].Value = item.TempHelpAccount.Value;
+                        var currentCell = tempHelpSheet.Cells["B" + tempHelpWorkSheetIndex];
+                        int currentColumn = currentCell.Start.Column;
+                        int currentRow = currentCell.Start.Row;
+                        foreach (var program in item.Programs)
+                        {
+                            tempHelpSheet.Cells[1, currentColumn + 1].Value = program.ProgramName;
+                            tempHelpSheet.Cells[currentRow, currentColumn + 1].Value = item.Programs.Sum(t => t.Duration.TotalHours)!=0?
+                                item.TempHelpAccount.Value
+                                * (decimal)(program.Duration.TotalHours / item.Programs.Sum(t => t.Duration.TotalHours)):0;
+                            currentColumn++;
+                        }
+                        tempHelpWorkSheetIndex++;
+                    }
+                    if(item.OverTimeAccount != null)
+                    {
+                        overtimeSheet.Cells["A" + overTimeWorkSheetIndex].Value = item.ServerName;
+                        overtimeSheet.Cells["B" + overTimeWorkSheetIndex].Value = item.OverTimeAccount.Value;
+                        var currentCell = overtimeSheet.Cells["B" + overTimeWorkSheetIndex];
+                        int currentColumn = currentCell.Start.Column;
+                        int currentRow = currentCell.Start.Row;
+                        foreach (var program in item.Programs)
+                        {
+                            overtimeSheet.Cells[1, currentColumn + 1].Value = program.ProgramName;
+                            overtimeSheet.Cells[currentRow, currentColumn + 1].Value = item.Programs.Sum(t => t.Duration.TotalHours)!=0?
+                                item.OverTimeAccount.Value
+                                * (decimal)(program.Duration.TotalHours / item.Programs.Sum(t => t.Duration.TotalHours)):0;
+                            currentColumn++;
+                        }
+                        overTimeWorkSheetIndex++;
+                    }
+                    if (item.RetirementAccount != null)
+                    {
+                        retirementSheet.Cells["A" + retirementWorkSheetIndex].Value = item.ServerName;
+                        retirementSheet.Cells["B" + retirementWorkSheetIndex].Value = item.RetirementAccount.Value;
+                        var currentCell = retirementSheet.Cells["B" + retirementWorkSheetIndex];
+                        int currentColumn = currentCell.Start.Column;
+                        int currentRow = currentCell.Start.Row;
+                        foreach (var program in item.Programs)
+                        {
+                            retirementSheet.Cells[1, currentColumn + 1].Value = program.ProgramName;
+                            retirementSheet.Cells[currentRow, currentColumn + 1].Value = item.Programs.Sum(t => t.Duration.TotalHours)!=0?
+                                item.RetirementAccount.Value
+                                * (decimal)(program.Duration.TotalHours / item.Programs.Sum(t => t.Duration.TotalHours)):0;
+                            currentColumn++;
+                        }
+                        retirementWorkSheetIndex++;
+                    }
+
+                    if (item.SocialSecurityAccount != null)
+                    {
+                        socialSecuritySheet.Cells["A" + socialSecurityWorkSheetIndex].Value = item.ServerName;
+                        socialSecuritySheet.Cells["B" + socialSecurityWorkSheetIndex].Value = item.SocialSecurityAccount.Value;
+                        var currentCell = socialSecuritySheet.Cells["B" + socialSecurityWorkSheetIndex];
+                        int currentColumn = currentCell.Start.Column;
+                        int currentRow = currentCell.Start.Row;
+                        foreach (var program in item.Programs)
+                        {
+                            socialSecuritySheet.Cells[1, currentColumn + 1].Value = program.ProgramName;
+                            socialSecuritySheet.Cells[currentRow, currentColumn + 1].Value = item.Programs.Sum(t => t.Duration.TotalHours)!=0?
+                                item.SocialSecurityAccount.Value
+                                * (decimal)(program.Duration.TotalHours / item.Programs.Sum(t => t.Duration.TotalHours)):0;
+                            currentColumn++;
+                        }
+                        socialSecurityWorkSheetIndex++;
+                    }
+
+                    if (item.MedicalAndLifeInsuranceAccount != null)
+                    {
+                        medicalAndLifeInsSheet.Cells["A" + medicalAndLifeInsWorkSheetIndex].Value = item.ServerName;
+                        medicalAndLifeInsSheet.Cells["B" + medicalAndLifeInsWorkSheetIndex].Value = item.MedicalAndLifeInsuranceAccount.Value;
+                        var currentCell = medicalAndLifeInsSheet.Cells["B" + medicalAndLifeInsWorkSheetIndex];
+                        int currentColumn = currentCell.Start.Column;
+                        int currentRow = currentCell.Start.Row;
+                        foreach (var program in item.Programs)
+                        {
+                            medicalAndLifeInsSheet.Cells[1, currentColumn + 1].Value = program.ProgramName;
+                            medicalAndLifeInsSheet.Cells[currentRow, currentColumn + 1].Value = item.Programs.Sum(t => t.Duration.TotalHours)!=0?
+                                item.MedicalAndLifeInsuranceAccount.Value
+                                * (decimal)(program.Duration.TotalHours / item.Programs.Sum(t => t.Duration.TotalHours)):0;
+                            currentColumn++;
+                        }
+                        medicalAndLifeInsWorkSheetIndex++;
+                    }
+
+                    if (item.IndustrialInsuranceAccount != null)
+                    {
+                        industInsSheet.Cells["A" + industInsWorkSheetIndex].Value = item.ServerName;
+                        industInsSheet.Cells["B" + industInsWorkSheetIndex].Value = item.IndustrialInsuranceAccount.Value;
+                        var currentCell = industInsSheet.Cells["B" + industInsWorkSheetIndex];
+                        int currentColumn = currentCell.Start.Column;
+                        int currentRow = currentCell.Start.Row;
+                        foreach (var program in item.Programs)
+                        {
+                            industInsSheet.Cells[1, currentColumn + 1].Value = program.ProgramName;
+                            industInsSheet.Cells[currentRow, currentColumn + 1].Value = item.Programs.Sum(t => t.Duration.TotalHours)!=0?
+                                item.IndustrialInsuranceAccount.Value
+                                * (decimal)(program.Duration.TotalHours / item.Programs.Sum(t => t.Duration.TotalHours)):0;
+                            currentColumn++;
+                        }
+                        industInsWorkSheetIndex++;
+                    }
+
                 }
                 dataSheet.Cells["A" + index].Value = item.ServerName;
                 dataSheet.Cells["B" + index].Value = item.SalaryAccount != null ? item.SalaryAccount.ValueInPercentage : 0;
@@ -452,6 +568,12 @@ namespace Gris.Application.Core.Services
             }
             dataSheet.Cells.AutoFitColumns();
             salarySheet.Cells.AutoFitColumns();
+            industInsSheet.Cells.AutoFitColumns();
+            medicalAndLifeInsSheet.Cells.AutoFitColumns();
+            overtimeSheet.Cells.AutoFitColumns();
+            retirementSheet.Cells.AutoFitColumns();
+            socialSecuritySheet.Cells.AutoFitColumns();
+            tempHelpSheet.Cells.AutoFitColumns();
         }
 
 

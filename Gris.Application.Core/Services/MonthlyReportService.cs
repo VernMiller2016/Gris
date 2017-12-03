@@ -245,7 +245,15 @@ namespace Gris.Application.Core.Services
                 {
                     foreach (var server in serverTimeEntries)
                     {
-                        server.ServerId =int.Parse(allServers.FirstOrDefault(s => s.Id == server.ServerId).GpEmpNumber);
+                        var localServer = allServers.FirstOrDefault(s => s.Id == server.ServerId);
+                        if (localServer != null && localServer.GpEmpNumber!=null)
+                        {
+                            server.ServerId = int.Parse(localServer.GpEmpNumber);
+                        }
+                        else
+                        {
+
+                        }
                     }
                 }
                 var filteredResultsGroupedByGpEmpNumber = filteredResults.GroupBy(s => new { s.ORMSTRID });
