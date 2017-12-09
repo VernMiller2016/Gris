@@ -16,7 +16,7 @@ namespace Gris.Application.Core.Interfaces
 
         void AddServerTimeEntries(IEnumerable<ServerTimeEntry> entities);
 
-        IEnumerable<ServerTimeEntry> GetServerTimeEntries(DateTime? selectedDate, string serverName, string paysourceName, PagingInfo pagingInfo = null);
+        IEnumerable<ServerTimeEntry> GetServerTimeEntries(DateTime? selectedDate, string firstName,string secondName, string paysourceName, PagingInfo pagingInfo = null);
 
         IEnumerable<ServerTimeEntriesMonthlyReportEntity> GetServerTimeEntriesMonthlyReport(DateTime selectedDate, PagingInfo pagingInfo = null);
 

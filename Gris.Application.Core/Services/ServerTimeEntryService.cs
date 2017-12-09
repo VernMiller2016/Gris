@@ -43,17 +43,17 @@ namespace Gris.Application.Core.Services
             _unitOfWork.Commit();
         }
 
-        public IEnumerable<ServerTimeEntry> GetServerTimeEntries(DateTime? selectedDate, string serverName, string paysourceName, PagingInfo pagingInfo = null)
+        public IEnumerable<ServerTimeEntry> GetServerTimeEntries(DateTime? selectedDate, string firstName,string secondName, string paysourceName, PagingInfo pagingInfo = null)
         {
             int total = 0;
             IEnumerable<ServerTimeEntry> result = null;
             if (pagingInfo == null)
             {
-                result = _serverTimeEntryRepoitory.SearchForEntries(selectedDate, serverName, paysourceName, out total, -1, -1);
+                result = _serverTimeEntryRepoitory.SearchForEntries(selectedDate, firstName,secondName, paysourceName, out total, -1, -1);
             }
             else
             {
-                result = _serverTimeEntryRepoitory.SearchForEntries(selectedDate, serverName, paysourceName, out total, pagingInfo.PageIndex, AppSettings.PageSize);
+                result = _serverTimeEntryRepoitory.SearchForEntries(selectedDate, firstName,secondName, paysourceName, out total, pagingInfo.PageIndex, AppSettings.PageSize);
                 pagingInfo.Total = total;
             }
             return result;

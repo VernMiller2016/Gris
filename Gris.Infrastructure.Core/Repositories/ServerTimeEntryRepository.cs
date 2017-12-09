@@ -14,15 +14,18 @@ namespace Gris.Infrastructure.Core.Repositories
         {
         }
 
-        public List<ServerTimeEntry> SearchForEntries(DateTime? selectedDate, string serverName, string paysourceName, out int total, int pageIndex = 0, int pageSize = 50)
+        public List<ServerTimeEntry> SearchForEntries(DateTime? selectedDate, string firstName,string secondName, string paysourceName, out int total, int pageIndex = 0, int pageSize = 50)
         {
             var query = _dbSet.Include(t => t.Server).Include(t => t.PaySource).Include(t => t.Program);
 
             if (selectedDate.HasValue)
                 query = query.Where(t => t.BeginDate.Year == selectedDate.Value.Year && t.BeginDate.Month == selectedDate.Value.Month);
 
-            if (!string.IsNullOrWhiteSpace(serverName))
-                query = query.Where(t => t.Server.FirstName.ToLower().Contains(serverName.ToLower()) || t.Server.LastName.ToLower().Contains(serverName.ToLower()));
+            if (!string.IsNullOrWhiteSpace(firstName))
+                query = query.Where(t => t.Server.FirstName.ToLower().Contains(firstName.ToLower()));
+
+            if (!string.IsNullOrWhiteSpace(secondName))
+                query = query.Where(t => t.Server.LastName.ToLower().Contains(secondName.ToLower()));
 
             if (!string.IsNullOrWhiteSpace(paysourceName))
                 query = query.Where(t => t.PaySource.Description.ToLower().Contains(paysourceName.ToLower()));

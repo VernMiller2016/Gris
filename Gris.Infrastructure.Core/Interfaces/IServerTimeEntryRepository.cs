@@ -6,7 +6,7 @@ namespace Gris.Infrastructure.Core.Interfaces
 {
     public interface IServerTimeEntryRepository : IRepository<ServerTimeEntry>
     {
-        List<ServerTimeEntry> SearchForEntries(DateTime? selectedDate, string serverName, string paysourceName, out int total, int pageIndex = 0, int pageSize = 50);
+        List<ServerTimeEntry> SearchForEntries(DateTime? selectedDate, string firstName,string secondName, string paysourceName, out int total, int pageIndex = 0, int pageSize = 50);
 
         bool TimeEntryExists(ServerTimeEntry entity);
     }

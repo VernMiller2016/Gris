@@ -46,7 +46,7 @@ namespace GRis.Controllers
                 if (TempData.Peek(FilterDateKey) != null)
                     filter = TempData.Peek(FilterDateKey) as ServerTimeEntryFilterViewModel;
             }
-            entities = _serverTimeEntryService.GetServerTimeEntries(filter.Date, filter.ServerName, filter.PaysourceName, pagingInfo);
+            entities = _serverTimeEntryService.GetServerTimeEntries(filter.Date, filter.FirstName,filter.SecondName, filter.PaysourceName, pagingInfo);
 
             ViewBag.FilterViewModel = filter;
             var viewmodel = entities.ToMappedPagedList<ServerTimeEntry, ServerTimeEntryDetailsViewModel>(pagingInfo);
